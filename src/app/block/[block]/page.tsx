@@ -6,8 +6,7 @@ const node = "http://98.35.209.116:7076"
 
 export default async function BlockPage(){
 
-    // no idea how this works
-    // took this from https://github.com/vercel/next.js/issues/43704#issuecomment-1411186664
+    // https://github.com/vercel/next.js/issues/43704#issuecomment-1411186664
     const headersList = headers();
     // read the custom x-url header
     const header_url = headersList.get('x-url') || "";

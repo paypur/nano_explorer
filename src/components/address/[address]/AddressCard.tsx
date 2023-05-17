@@ -13,7 +13,6 @@ export default async function AddressCard(props) {
 
     return (
         <div className="flex flex-col my-8 py-2 px-4 border rounded border-sky-700">
-            <RepresentativeLabel nanoAddress={props.nanoAddress}></RepresentativeLabel>
             <p className='text-2xl'>{props.nanoAddress}</p>
             <p>Balance: Ӿ{balance}</p>
             <p>Representative: <Link className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href={"/address/" + representative}>{representative}</Link> </p>
