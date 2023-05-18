@@ -27,7 +27,7 @@ async function getTransactions(nanoAddress: string) {
         json: {
             "action": "account_history",
             "account": nanoAddress,
-            "count": "-1"
+            "count": "100"
         }
     }).json()
 
