@@ -6,21 +6,18 @@ const node = "http://98.35.209.116:7076"
 export default async function RepresentativeLabel(props) {
     if (await isRepresentative(props.nanoAddress)) {
         const votingWeight = await getVotingWeight(props.nanoAddress)
+        let label = ""
         if (await isPrincipalRepresentative(props.nanoAddress, votingWeight)) {
-            return (
-                <div className="py-2 px-4 border rounded border-sky-700">
-                    <p className="text-2xl">Principal Representative</p>
-                    <p>Voting Weight: Ӿ{parseFloat(tools.convert(votingWeight, 'RAW', 'NANO')).toFixed(6)}</p>
-                </div>
-            )
+            label = "Principal Representative"
         } else {
-            return (
-                <div className="py-2 px-4 border rounded border-sky-700">
-                    <p className="text-2xl">Representative</p>
-                    <p>Voting Weight:  Ӿ{parseFloat(tools.convert(votingWeight, 'RAW', 'NANO')).toFixed(6)}</p>
-                </div>
-            )
+            label = "Representative"
         }
+        return (
+            <div className="py-2 px-4 border rounded border-sky-700">
+                <p className="text-2xl">{label}</p>
+                <p>Voting Weight:  Ӿ{parseFloat(tools.convert(votingWeight, 'RAW', 'NANO')).toFixed(6)}</p>
+            </div>
+        )
     } else {
         return null
     }

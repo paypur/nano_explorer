@@ -2,11 +2,11 @@
 
 import { useState } from "react"
 
-import { MdOutlineHome } from "react-icons/md";
+import { MdOutlineHome } from "react-icons/md"
 
 export default function SearchBar() {
     
-    const [input, setInput] = useState("");
+    const [input, setInput] = useState("")
         
     const search = () => {
         if (input.length == 65) {

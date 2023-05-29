@@ -1,12 +1,12 @@
 "use client"
 
-import { WS } from '@/components/Socket'
-import TransactionCard from '@/components/TransactionCard'
+import { WS } from "@/components/Socket"
+import TransactionCard from "@/components/TransactionCard"
 
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
-let liveTransactions: any[] = []
+let liveTransactions: any = []
 
 export default function Home() {
     
@@ -19,9 +19,9 @@ export default function Home() {
                 "topic": "confirmation"
             }
             WS.send(JSON.stringify(confirmation_subscription))
-        
-            // Other subscriptions can go here
         }
+
+        // sender account for receive is wrong
     
         WS.onmessage = (msg) => {
             let data_json = JSON.parse(msg.data)
@@ -32,14 +32,19 @@ export default function Home() {
         }
     }, [])
 
-    return (
-        <div className="flex flex-col my-6 border divide-y rounded border-sky-700">
-            <p className='text-2xl py-2 px-4'>Recent Transactions</p>
-            {liveTransactions.map((transaction: string) => (
-                <TransactionCard transaction={transaction}></TransactionCard>
-            ))}
-        </div>
-    )
+    if (liveTransactions.length !== 0) {
+        return (
+            <div className="flex flex-col my-6 border divide-y rounded border-sky-700">
+                <p className='text-2xl py-2 px-4'>Recent Transactions</p>
+                {liveTransactions.map((transaction) => (
+                    <TransactionCard transaction={transaction}></TransactionCard>
+                ))}
+            </div>
+        )
+    }
+    else {
+        return null
+    }
 }
 
 function addTransaction(transaction: string) {

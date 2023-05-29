@@ -1,14 +1,34 @@
 import Link from 'next/link'
 import { tools } from 'nanocurrency-web'
 import { MdOutlineFileDownload, MdOutlineFileUpload } from "react-icons/md"
+import got from 'got'
+import { split } from 'postcss/lib/list'
 
-export default function TransactionCard(props) {
+const node = "http://98.35.209.116:7076"
+
+// https://stackoverflow.com/questions/63883580/tailwind-css-how-to-style-a-href-links-in-react
+
+export default function TransactionCard(props: {transaction: any}) {
+    const amount = <p>Ӿ{parseFloat(tools.convert(props.transaction.amount, 'RAW', 'NANO')).toFixed(6)}</p>
+    let type: string = ""
+    let account: string = ""
+    let accountLink: string = ""
+
+    if (props.transaction.type !== undefined) {
+        type = props.transaction.type
+        account = props.transaction.account
+        accountLink = "missing link acc"
+    }
+    // incorrect logic maybe
+    else if (props.transaction.block !== undefined) {
+        type = props.transaction.block.subtype
+        account = props.transaction.block.account
+        accountLink = props.transaction.block.link_as_account
+    }
+
     return (
         <div className='flex flex-col py-2 px-4 border-sky-700'>
-            {txnHandler(props.transaction)}
-            <Link className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href={"/address/" + props.transaction.account}>
-                <p>{props.transaction.account}</p>
-            </Link>  
+            {txnHandler(amount, type, account, accountLink)}
             <Link className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href={"/block/" + props.transaction.hash}>
                 <p>{props.transaction.hash}</p>
             </Link>
@@ -16,35 +36,40 @@ export default function TransactionCard(props) {
     )
 }
 
-function txnHandler(transaction: any) {
-    const amount = <p className="text-white">Ӿ{parseFloat(tools.convert(transaction.amount, 'RAW', 'NANO')).toFixed(6)}</p>
-    let type: string = ""
-
-    if (transaction.type !== undefined) {
-        type = transaction.type
-    } else if (transaction.block !== undefined) {
-        type = transaction.block.subtype
-    }
-
+function txnHandler(amount, type: string, account: string, accountLink: string) {
     if (type === "receive") {
         return (
-            <div className="flex flex-row text-emerald-600">
-                <MdOutlineFileDownload size="1.25rem"/> 
-                <p className="ml-1 mr-2">received</p>
+            <div className="flex flex-col">
+                <p className="flex flex-row text-emerald-600">RECEIVE</p>
                 {amount}
+                <div className='flex flex-row'>
+                    {addressFormat(account)} &#60; {addressFormat(accountLink)}
+                </div>
             </div>
-        ) 
-    } else if (type === "send") {
+        )
+    }
+    else if (type === "send") {
         return (
-            <div className="flex flex-row text-rose-600">
-                <MdOutlineFileUpload size="1.25rem"/>
-                <p className="ml-1 mr-2">sent</p>
+            <div className="flex flex-col">
+                <p className="flex flex-row text-rose-600">SEND</p>
                 {amount}
+                <div className='flex flex-row'>
+                    {addressFormat(account)} &#62; {addressFormat(accountLink)}
+                </div>
             </div>
         )
     }
 }
 
+function addressFormat(address: string) {
+    return (
+        <Link className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href={"/address/" + address}>
+            <p>{address.slice(0,12) + "..." + address.slice(-6)}</p>
+        </Link>
+    )  
+}
+
+// block history
 // type: 'receive',
 // account: 'nano_1reason1q976g9wkrt69nux7konww46ux73c7xzm7jrm3w4kqdtigym6btq3',
 // amount: '104227000000000000000000000000',
@@ -53,7 +78,27 @@ function txnHandler(transaction: any) {
 // hash: '66F87EBFE6D02434FAC8F3EF319BA61EF4141FC97A23D61A297B5490F1FF1DC6',
 // confirmed: 'true'
 
-// websocket
+// websockets
+
+// {
+//     "account": "nano_1tipnanogsu7q59pnie3qfc4w378wm43fg4ksqc8wmnnfnizrq1xrpt5geho",
+//     "amount": "3014000000000000000000000000",
+//     "hash": "3DA440BC4B9FA8A9B63800785247D3EF6BDF821BC26C932E3F7CC1350DE4CED7",
+//     "confirmation_type": "active_quorum",
+//     "block": {
+//         "type": "state",
+//         "account": "nano_1tipnanogsu7q59pnie3qfc4w378wm43fg4ksqc8wmnnfnizrq1xrpt5geho",
+//         "previous": "495475C6A61D6BE921A8C020042E1435A12CF5987150FB3A99C4C0D00732568F",
+//         "representative": "nano_1tipnanogsu7q59pnie3qfc4w378wm43fg4ksqc8wmnnfnizrq1xrpt5geho",
+//         "balance": "34481687726683523401275528777782",
+//         "link": "AF1AB09E3AB1742CDA8D74087DA38F92DDB3850F0F434594913DEA465A035E08",
+//         "link_as_account": "nano_3drtp4h5oedn7mfatx1ahpjrz6pxpg4iy5t5apcb4hhcasf18qiatmoqcwn3",
+//         "signature": "C2C8ABB6EBB5D04E10B392EA3E71C47A25C71CF8C017ADA2EAD3CF9236D488ECB6256DACC6D3EB013A75CCC0B1A41224F316D040658EC20C6CCFF58B07912207",
+//         "work": "b057af30a6376623",
+//         "subtype": "send"
+//     }
+// }
+
 // account: 'nano_1gbpbqy4m6y5i1s1hngnr3u4np63k31xpfigceafo5kpghy3gwycijh63xtn',
 // amount: '500000000000000000000000000',
 // hash: 'F773C4C3140E7C8575C7CF36363A8DC6889F5262E891CBEC24EB5A178ADC0348',
