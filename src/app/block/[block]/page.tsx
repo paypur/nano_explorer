@@ -1,6 +1,7 @@
 import got from 'got'
 import Link from 'next/link'
 import { headers } from 'next/headers';
+import TransactionCard from '@/components/TransactionCard';
 
 const node = "http://98.35.209.116:7076"
 
@@ -14,12 +15,20 @@ export default async function BlockPage(){
     const blockHash = header_url.slice(-64)
 
     const blockJson = await getBlock(blockHash)
+    let modifiedblockJson = JSON.parse(JSON.stringify(blockJson));
+    modifiedblockJson["hash"] = blockHash
 
     return (
-        <div className='flex flex-col my-6 py-2 px-4 border rounded border-sky-700'>
-            <p className='text-2xl py-2'>Raw JSON for block {blockHash}</p>
-            <pre className='py-2'><code>{JSON.stringify(blockJson, null, 4)}</code></pre>
+        <div>
+            <div className='my-6 border rounded border-sky-700'>
+                <TransactionCard transaction={modifiedblockJson}></TransactionCard>
+            </div>
+            <p className='text-1xl py-2'>Raw JSON for block {blockHash}</p>
+            <div className='flex flex-col py-2 px-4 border rounded border-sky-700'>
+                <pre className='py-2'><code>{JSON.stringify(blockJson, null, 4)}</code></pre>
+            </div>
         </div>
+
     )
 
 }

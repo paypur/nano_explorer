@@ -1,8 +1,6 @@
 import Link from 'next/link'
 import { tools } from 'nanocurrency-web'
-import { MdOutlineFileDownload, MdOutlineFileUpload } from "react-icons/md"
-import got from 'got'
-import { split } from 'postcss/lib/list'
+import { MdOutlineWest, MdOutlineEast } from "react-icons/md"
 
 const node = "http://98.35.209.116:7076"
 
@@ -14,16 +12,23 @@ export default function TransactionCard(props: {transaction: any}) {
     let account: string = ""
     let accountLink: string = ""
 
+    // block history
     if (props.transaction.type !== undefined) {
         type = props.transaction.type
         account = props.transaction.account
         accountLink = "missing link acc"
     }
-    // incorrect logic maybe
+    // websocket
     else if (props.transaction.block !== undefined) {
         type = props.transaction.block.subtype
         account = props.transaction.block.account
         accountLink = props.transaction.block.link_as_account
+    }
+    // rpc
+    else if (props.transaction.contents !== undefined) {
+        type = props.transaction.subtype
+        account = props.transaction.contents.account
+        accountLink = props.transaction.contents.link_as_account
     }
 
     return (
@@ -43,7 +48,7 @@ function txnHandler(amount, type: string, account: string, accountLink: string) 
                 <p className="flex flex-row text-emerald-600">RECEIVE</p>
                 {amount}
                 <div className='flex flex-row'>
-                    {addressFormat(account)} &#60; {addressFormat(accountLink)}
+                    {addressFormat(account)} <MdOutlineWest className='mx-2'></MdOutlineWest> {addressFormat(accountLink)}
                 </div>
             </div>
         )
@@ -54,7 +59,7 @@ function txnHandler(amount, type: string, account: string, accountLink: string) 
                 <p className="flex flex-row text-rose-600">SEND</p>
                 {amount}
                 <div className='flex flex-row'>
-                    {addressFormat(account)} &#62; {addressFormat(accountLink)}
+                    {addressFormat(account)} <MdOutlineEast className='mx-2'></MdOutlineEast> {addressFormat(accountLink)}
                 </div>
             </div>
         )
@@ -62,11 +67,14 @@ function txnHandler(amount, type: string, account: string, accountLink: string) 
 }
 
 function addressFormat(address: string) {
-    return (
-        <Link className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href={"/address/" + address}>
-            <p>{address.slice(0,12) + "..." + address.slice(-6)}</p>
-        </Link>
-    )  
+    if (address !== undefined) {
+        // <p>{address.slice(0,12) + "..." + address.slice(-6)}</p>
+        return (
+            <Link className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href={"/address/" + address}>
+                <p>{address}</p>
+            </Link>
+        )  
+    }
 }
 
 // block history
@@ -115,3 +123,26 @@ function addressFormat(address: string) {
 //     work: '00000000022f8886',
 //     subtype: 'receive'
 // }
+
+// rpc
+
+
+// "block_account": "nano_1paypur3bf9oawtbfcm4gqeekirjy37jw3ttfsidhxw99aky8auqwaf6na9q",
+// "amount": "21612000000000000000000000000",
+// "balance": "1865105545989155385246189426796649",
+// "height": "531",
+// "local_timestamp": "1684903693",
+// "successor": "0000000000000000000000000000000000000000000000000000000000000000",
+// "confirmed": "true",
+// "contents": {
+//     "type": "state",
+//     "account": "nano_1paypur3bf9oawtbfcm4gqeekirjy37jw3ttfsidhxw99aky8auqwaf6na9q",
+//     "previous": "705E236298592166C6B310D9495F80E6781C55A96D2D35CA4F5B2D5579C259E1",
+//     "representative": "nano_15zntj4a8r6bkihei788ciy1jgc5wnskan1gpgn8e8jku3r4qhr7rwifitir",
+//     "balance": "1865105545989155385246189426796649",
+//     "link": "FDD5EF4E850E13A6091D4E3C8B529F35C9747211104F1E3ADD0BB22CEE3A53BD",
+//     "link_as_account": "nano_3zgoxx9ac5imnr6jtmjwjfbbyfgbgjs3464h5rxft4xk7mq5nnxxt5hkaqbw",
+//     "signature": "5A383777537FC96908014E7548C2E8D9D4F5CE0F3802597D06CFBF3B4F20B66373131FFBAD1C6D1F42EAEB76A1ED9588842BBB6BC3776BE628BAFB0666313A01",
+//     "work": "282323d57f39ae4f"
+// },
+// "subtype": "receive"

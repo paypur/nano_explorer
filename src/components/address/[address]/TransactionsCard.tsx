@@ -4,14 +4,14 @@ import { WS } from "@/components/Socket"
 import TransactionCard from "@/components/TransactionCard"
 
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 
 let transactions: any = []
+let previousAccountDictionary: any = {}
 
 export default function TransactionsCard(props: {nanoAddress: string, transactions: any}) {
     
     const router = useRouter()
-    const [sendAddress, setSendAddress] = useState()
 
     useEffect(() => {
         transactions = props.transactions
@@ -29,18 +29,20 @@ export default function TransactionsCard(props: {nanoAddress: string, transactio
         }
         
         WS.onmessage = (msg) => {
-            let data_json = JSON.parse(msg.data)
-            if (data_json.topic === "confirmation" && transactions.filter(e => e.hash === data_json.message.hash).length === 0) {
-                //TODO: still doesnt work
-                if (data_json.message.account === props.nanoAddress) {
-                    // override with senders address
-                    data_json.message.block.link_as_account = sendAddress
-                    transactions.unshift(data_json.message)
+            let data = JSON.parse(msg.data)
+            if (data.topic === "confirmation" && transactions.filter(e => e.hash === data.message.hash).length === 0) {
+                if (data.message.account === props.nanoAddress) {
+                    if (data.message.block.subtype === "receive") {
+                        // get sender address
+                        // TODO: will still cause problems if send block is sent before websocket is active
+                        data.message.block.link_as_account = previousAccountDictionary[data.message.block.link]
+                        previousAccountDictionary[data.message.block.link]
+                    }
+                    transactions.unshift(data.message)
                     router.refresh()
-                }
-                // use send block to get sender address
-                else {
-                    setSendAddress(data_json.message.account)
+                } else if (data.message.block.subtype === "send") {
+                    // store sender address for later
+                    previousAccountDictionary[data.message.hash] = data.message.account
                 }
             }
         }

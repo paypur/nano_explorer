@@ -20,11 +20,11 @@ export default async function AddressPage() {
 
     let transactions = await getTransactions(nanoAddress)
     
-    //<RepresentativeLabel nanoAddress={nanoAddress}></RepresentativeLabel>
-
+    
     return (
         <div>
             <AddressCard nanoAddress={nanoAddress} balance={balance} representative={representative}></AddressCard>
+            <RepresentativeLabel nanoAddress={nanoAddress}></RepresentativeLabel>
             <TransactionsCard nanoAddress={nanoAddress} transactions={transactions}></TransactionsCard>
         </div>
     )
