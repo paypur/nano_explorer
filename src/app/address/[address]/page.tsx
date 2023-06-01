@@ -1,7 +1,6 @@
 import AddressCard from '@/components/address/[address]/AddressCard'
 import RepresentativeLabel from '@/components/address/[address]/RepresentativeLabel'
 import TransactionsCard from '@/components/address/[address]/TransactionsCard'
-import got from 'got'
 import { tools } from 'nanocurrency-web'
 import { headers } from 'next/headers'
 
@@ -33,36 +32,43 @@ export default async function AddressPage() {
 // https://docs.nano.org/commands/rpc-protocol/
 
 async function getBalance(nanoAddress: string) {
-    const result = await got.post(node, {
-        json: {
+    const result = await fetch(node, {
+        method: "POST",
+        body: JSON.stringify({
             "action": "account_balance",
             "account": nanoAddress
-        }
-    }).json()
+        })
+    })
+    const data = await result.json()
 
-    return parseFloat(tools.convert(result.balance, 'RAW', 'NANO')).toFixed(6)
+    return parseFloat(tools.convert(data.balance, 'RAW', 'NANO')).toFixed(6)
 }
 
+
+
 async function getRepresentative(nanoAddress: string) {
-    const result = await got.post(node, {
-        json: {
+    const result = await fetch(node, {
+        method: "POST",
+        body: JSON.stringify({
             "action": "account_representative",
             "account": nanoAddress
-          }
-          
-    }).json()
+        })   
+    })
+    const data = await result.json()
 
-    return result.representative
+    return data.representative
 }
 
 async function getTransactions(nanoAddress: string) {
-    const result = await got.post(node, {
-        json: {
+    const result = await fetch(node, {
+        method: "POST",
+        body: JSON.stringify({
             "action": "account_history",
             "account": nanoAddress,
             "count": "100"
-        }
-    }).json()
+        })
+    })
+    const data = await result.json()
 
-    return result.history
+    return data.history
 }

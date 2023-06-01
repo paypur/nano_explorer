@@ -1,4 +1,3 @@
-import got from "got"
 import { tools } from "nanocurrency-web"
 
 const node = "http://98.35.209.116:7076"
@@ -24,36 +23,40 @@ export default async function RepresentativeLabel(props) {
 }
 
 async function isRepresentative(nanoAddress: string) {
-    const result = await got.post(node, {
-        json: {
+    const result = await fetch(node, {
+        method: "POST",
+        body: JSON.stringify({
             "action": "representatives_online",
             "accounts": [nanoAddress]
-        }
-          
-    }).json()
+        })
+    })
+    const data = await result.json()
 
-    return result.representatives[0] === nanoAddress
+    return data.representatives[0] === nanoAddress
 }
 
 async function isPrincipalRepresentative(nanoAddress: string, votingWeight: number) {
-    const result = await got.post(node, {
-        json: {  
+    const result = await fetch(node, {
+        method: "POST",
+        body: JSON.stringify({  
             "action": "confirmation_quorum"      
-        }
-          
-    }).json()
+        })
+    })
+    const data = await result.json()
 
-    return votingWeight > result.online_stake_total / 1000
+    return votingWeight > (data.online_stake_total / 1000)
 
 }
 
 async function getVotingWeight(nanoAddress: string) {
-    const result = await got.post(node, {
-        json: {
+    const result = await fetch(node, {
+        method: "POST",
+        body: JSON.stringify({
             "action": "account_weight",
             "account": nanoAddress
-        }
-    }).json()
+        })
+    })
+    const data = await result.json()
 
-    return result.weight
+    return data.weight
 }

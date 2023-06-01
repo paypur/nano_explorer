@@ -1,10 +1,10 @@
-import SearchBar from '@/components/SearchBar'
 import '@/styles/globals.css'
+import SearchBar from '@/components/SearchBar'
 
 import { Roboto } from "next/font/google"
 
 const roboto = Roboto({
-    weight: ['300'],
+    weight: ['300', '400'],
     subsets: ['latin']
 })
 

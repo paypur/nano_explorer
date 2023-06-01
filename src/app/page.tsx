@@ -48,7 +48,7 @@ export default function Home() {
         <div className="flex flex-col my-6 border divide-y rounded border-sky-700">
             <p className='text-2xl py-2 px-4'>Recent Transactions</p>
             {liveTransactions.map((transaction: any) => (
-                <TransactionCard transaction={transaction}></TransactionCard>
+                <TransactionCard transaction={transaction}/>
             ))}
         </div>
     )

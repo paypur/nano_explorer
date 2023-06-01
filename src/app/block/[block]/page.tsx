@@ -1,5 +1,3 @@
-import got from 'got'
-import Link from 'next/link'
 import { headers } from 'next/headers';
 import TransactionCard from '@/components/TransactionCard';
 
@@ -36,13 +34,15 @@ export default async function BlockPage(){
 // https://docs.nano.org/commands/rpc-protocol/
 
 async function getBlock(blockHash: string) {
-    const result = await got.post(node, {
-        json: {  
+    const result = await fetch(node, {
+        method: "POST",
+        body: JSON.stringify({  
             "action": "block_info",
             "json_block": "true",
             "hash": blockHash
-        }
-    }).json()
+        })
+    })
+    const data = await result.json()
 
-    return result
+    return data
 }
