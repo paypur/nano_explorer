@@ -1,7 +1,6 @@
 import { headers } from 'next/headers';
 import TransactionCard from '@/components/TransactionCard';
-
-const node = "http://98.35.209.116:7076"
+import { NODE } from '@/components/NodeAddress';
 
 export default async function BlockPage(){
 
@@ -19,7 +18,7 @@ export default async function BlockPage(){
     return (
         <div>
             <div className='my-6 border rounded border-sky-700'>
-                <TransactionCard transaction={modifiedblockJson}></TransactionCard>
+                <TransactionCard block={modifiedblockJson}></TransactionCard>
             </div>
             <p className='text-1xl py-2'>Raw JSON for block {blockHash}</p>
             <div className='flex flex-col py-2 px-4 border rounded border-sky-700'>
@@ -34,7 +33,7 @@ export default async function BlockPage(){
 // https://docs.nano.org/commands/rpc-protocol/
 
 async function getBlock(blockHash: string) {
-    const result = await fetch(node, {
+    const result = await fetch(NODE, {
         method: "POST",
         body: JSON.stringify({  
             "action": "block_info",

@@ -9,7 +9,7 @@ import { useEffect } from "react"
 let transactions: any = []
 let previousAccountDictionary: any = {}
 
-export default function TransactionsCard(props: {nanoAddress: string, transactions: any}) {
+export default function TransactionCardList(props: {nanoAddress: string, transactions: any}) {
     
     const router = useRouter()
 
@@ -48,19 +48,14 @@ export default function TransactionsCard(props: {nanoAddress: string, transactio
         }
     }, [])
 
-    if (transactions.length !== 0) {
-        return (
-            <div className="flex flex-col my-6 border divide-y rounded border-sky-700">
-                <p className='text-2xl py-2 px-4'>Transactions</p>
-                {transactions.map((transaction: any) => (
-                    <TransactionCard transaction={transaction}></TransactionCard>
-                ))}
-            </div>
-        )
-    }
-    else {
-        return null
-    }
+    return (
+        <div className="flex flex-col my-6 border divide-y rounded border-sky-700">
+            <p className='text-2xl py-2 px-4'>Transactions</p>
+            {transactions.map((transaction: any) => (
+                <TransactionCard block={transaction}></TransactionCard>
+            ))}
+        </div>
+    )
 }
 
 // 170MB transfer
