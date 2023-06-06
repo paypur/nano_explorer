@@ -1,18 +1,10 @@
 import Link from 'next/link'
 import { tools } from 'nanocurrency-web'
 import { MdOutlineWest, MdOutlineEast } from "react-icons/md"
-
-export interface CustomBlock {
-    amount: string
-    type: string
-    account: string
-    accountLink: string
-    hash: string
-    timestamp: string
-}
+import { CustomBlock } from '@/constants/Types'
 
 // https://stackoverflow.com/questions/63883580/tailwind-css-how-to-style-a-href-links-in-react
-export default function TransactionCard(props: {block: CustomBlock}) {
+export default function BlockCard(props: {block: CustomBlock}) {
     return (
         <div className='flex flex-col py-2 px-4 border-sky-700'>
             {props.block.type === "send" ? <p className="flex flex-row text-rose-600">SEND</p>: <p className="flex flex-row text-emerald-600">RECEIVE</p>}

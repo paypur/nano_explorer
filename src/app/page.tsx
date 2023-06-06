@@ -1,59 +1,12 @@
 "use client"
 
-import { NODE } from "@/components/NodeAddress"
-import { WS } from "@/components/Socket"
-import { CustomBlock } from "@/components/TransactionCard"
-import TransactionCard from "@/components/TransactionCard"
+import { NODE } from "@/constants/NodeAddress"
+import { WS } from "@/constants/Socket"
+import BlockCard from "@/components/block/[block]/BlockCard"
 
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
-
-interface WSBlock {
-    topic: string
-    time: string
-    message: {
-        account: string
-        amount: string
-        hash: string
-        confirmation_type: string
-        block: {
-            type: string
-            account: string
-            previous: string
-            representative: string
-            balance: string
-            link: string
-            link_as_account: string
-            signature: string
-            work: string
-            subtype: string
-            // non standard
-            account_link?: string
-        }
-    }
-}
-
-interface RPCBlock {
-    block_account: string
-    amount: string
-    balance: string
-    height: string
-    local_timestamp: string
-    successor: string
-    confirmed: string
-    contents: {
-        type: string
-        account: string
-        previous: string
-        representative: string
-        balance: string
-        link: string
-        link_as_account: string
-        signature: string
-        work: string
-    },
-    subtype: string
-}
+import { CustomBlock, WSBlock } from "@/constants/Types"
 
 let liveTransactions: CustomBlock[] = []
 let previousAccountDictionary: any = {}
@@ -80,7 +33,6 @@ export default function Home() {
                 }
                 else if (data.message.block.subtype === "receive") {
                     // get sender address
-                    // TODO: will still cause problems if send block is sent before websocket is active
                     data.message.block.account_link = previousAccountDictionary[data.message.block.link]
                     delete previousAccountDictionary[data.message.block.link]
                 }
@@ -94,7 +46,7 @@ export default function Home() {
         <div className="flex flex-col my-6 border divide-y rounded border-sky-700">
             <p className='font-normal py-2 px-4'>Recent Transactions</p>
             {liveTransactions.map((transaction: CustomBlock) => (
-                <TransactionCard block={transaction}/>
+                <BlockCard block={transaction}/>
             ))}
         </div>
     )
@@ -105,12 +57,13 @@ async function addTransaction(transaction: WSBlock) {
     let link = "missing link"
 
     if (transaction.message.block.subtype === "receive") {
-        // TODO: case when acc link undefined
         link = transaction.message.block.account_link
+        if (link === undefined) {
+            link = await getBlockAddress(transaction.message.hash)
+        }
     } 
     else if (transaction.message.block.subtype === "send") {
-        // TODO: fetch receive account
-        link = await getBlockAddress(transaction.message.hash)
+        link = transaction.message.block.link_as_account
     }
 
     const customBlock: CustomBlock = {

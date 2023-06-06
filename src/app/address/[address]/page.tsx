@@ -1,9 +1,10 @@
-import { NODE } from '@/components/NodeAddress'
+import { NODE } from '@/constants/NodeAddress'
 import AddressCard from '@/components/address/[address]/AddressCard'
 import RepresentativeLabel from '@/components/address/[address]/RepresentativeLabel'
 import TransactionCardList from '@/components/address/[address]/TransactionCardList'
 import { tools } from 'nanocurrency-web'
 import { headers } from 'next/headers'
+import { AccoutnHistoryBlock } from '@/constants/Types'
 
 export default async function AddressPage() {
 
@@ -13,11 +14,10 @@ export default async function AddressPage() {
     const header_url = headersList.get('x-url') || ""
 
     const nanoAddress = header_url.slice(-65)
+
     const balance = await getBalance(nanoAddress)
     const representative = await getRepresentative(nanoAddress)
-
-    let transactions = await getTransactions(nanoAddress)
-    
+    const transactions: AccoutnHistoryBlock[] = await getAccountHistory(nanoAddress)
     
     return (
         <div>
@@ -58,7 +58,7 @@ async function getRepresentative(nanoAddress: string) {
     return data.representative
 }
 
-async function getTransactions(nanoAddress: string) {
+async function getAccountHistory(nanoAddress: string) {
     const result = await fetch(NODE, {
         method: "POST",
         body: JSON.stringify({
@@ -68,6 +68,5 @@ async function getTransactions(nanoAddress: string) {
         })
     })
     const data = await result.json()
-
     return data.history
 }
