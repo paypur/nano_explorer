@@ -41,15 +41,15 @@ export default function TransactionCardList(props: {nanoAddress: string, transac
         }
         
         WS.onmessage = (msg) => {
-            let data = JSON.parse(msg.data)
+            let data: WSBlock  = JSON.parse(msg.data)
             if (data.topic === "confirmation" && transactions.filter(e => e.hash === data.message.hash).length === 0) {
                 if (data.message.account === props.nanoAddress) {
                     if (data.message.block.subtype === "receive") {
                         // get sender address
-                        data.message.block.link_as_account = previousAccountDictionary[data.message.block.link]
-                        previousAccountDictionary[data.message.block.link]
+                        data.message.block.account_link = previousAccountDictionary[data.message.block.link]
+                        delete previousAccountDictionary[data.message.block.link]
                     }
-                    transactions.unshift(data.message)
+                    addTransaction(data)
                     router.refresh()
                 } else if (data.message.block.subtype === "send") {
                     // store sender address for later
@@ -70,7 +70,7 @@ export default function TransactionCardList(props: {nanoAddress: string, transac
 }
 
 async function addTransaction(transaction: WSBlock) {
-    let link: any = "missing link"
+    let link: any = undefined
 
     if (transaction.message.block.subtype === "receive") {
         link = transaction.message.block.account_link

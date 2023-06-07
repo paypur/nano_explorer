@@ -27,21 +27,22 @@ export default function SearchBar() {
         <div className='flex my-6 border divide-x rounded border-sky-700'>
             <button
                 className='py-2 px-4 flex-none border-sky-700'
-                onClick={home}> 
-                <MdOutlineHome size="1.25rem"/>
+                onClick={home}
+            > 
+                <MdOutlineHome size="1.2rem"/>
             </button>
             <input
-                className='py-2 px-4 flex-auto bg-black border-sky-700'
+                className='py-2 px-4 flex-auto bg-black border-sky-700 font-mono'
                 placeholder="nano_15zntj4a8r6bkihei788ciy1jgc5wnskan1gpgn8e8jku3r4qhr7rwifitir"
                 title="enter a valid nano address or block hash" 
                 autoComplete="on" 
                 maxLength={65}
-                onChange={(e) => setInput(e.target.value)}>
-            </input>
+                onChange={(e) => setInput(e.target.value)}/>
             <button 
                 className='py-2 px-4 flex-none border-sky-700'
                 type="button"
-                onClick={search}>
+                onClick={search}
+            >
                 Search
             </button>    
         </div>

@@ -53,8 +53,8 @@ export default function Home() {
 }
 
 async function addTransaction(transaction: WSBlock) {
-    const MAX_TRANSACTIONS = 8
-    let link: any = "missing link"
+    const MAX_TRANSACTIONS = 6
+    let link: any = undefined
 
     if (transaction.message.block.subtype === "receive") {
         link = transaction.message.block.account_link

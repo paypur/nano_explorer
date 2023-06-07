@@ -8,8 +8,8 @@ export default function BlockCard(props: {block: CustomBlock}) {
     return (
         <div className='flex flex-col py-2 px-4 border-sky-700'>
             <div className='flex flex-row'>
-                {props.block.type === "send" ? <p className="flex flex-row text-rose-600">SEND</p>: <p className="flex flex-row text-emerald-600">RECEIVE</p>}
-                {<p>&nbsp;Ӿ{parseFloat(tools.convert(props.block.amount, 'RAW', 'NANO')).toFixed(6)}</p>}
+                {props.block.type === "send" ? <p className="font-mono text-rose-600">SEND</p>: <p className="font-mono text-emerald-600">RECEIVE</p>}
+                {<p className='font-mono font-normal mx-2'>Ӿ{parseFloat(tools.convert(props.block.amount, 'RAW', 'NANO')).toFixed(6)}</p>}
 
             </div>
             <div className='flex flex-row'>
@@ -17,8 +17,8 @@ export default function BlockCard(props: {block: CustomBlock}) {
                 {props.block.type === "send" ? <MdOutlineEast className='mx-2'></MdOutlineEast> : <MdOutlineWest className='mx-2'></MdOutlineWest>}
                 {addressFormat(props.block.accountLink)}
             </div>
-            <Link className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href={"/block/" + props.block.hash}>
-                <p>{props.block.hash}</p>
+            <Link className="hover:underline" href={"/block/" + props.block.hash}>
+                <p className="font-mono">{props.block.hash}</p>
             </Link>
         </div>
     )
@@ -28,8 +28,8 @@ function addressFormat(address: string) {
     if (address !== undefined) {
         // <p>{address.slice(0,12) + "..." + address.slice(-6)}</p>
         return (
-            <Link className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href={"/address/" + address}>
-                <p>{address}</p>
+            <Link className="hover:underline" href={"/address/" + address}>
+                <p className="font-mono">{address}</p>
             </Link>
         )  
     }
