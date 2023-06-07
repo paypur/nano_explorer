@@ -1,19 +1,12 @@
+import { NODE } from "@/constants/NodeAddress"
 import { tools } from "nanocurrency-web"
 
-const node = "http://98.35.209.116:7076"
-
-export default async function RepresentativeLabel(props) {
+export default async function RepresentativeLabel(props: {nanoAddress: string}) {
     if (await isRepresentative(props.nanoAddress)) {
         const votingWeight = await getVotingWeight(props.nanoAddress)
-        let label = ""
-        if (await isPrincipalRepresentative(props.nanoAddress, votingWeight)) {
-            label = "Principal Representative"
-        } else {
-            label = "Representative"
-        }
         return (
             <div className="py-2 px-4 border rounded border-sky-700">
-                <p className="text-2xl">{label}</p>
+                <p className="">{await isPrincipalRepresentative(props.nanoAddress, votingWeight) ? "Principal Representative": "Representative"}</p>
                 <p>Voting Weight:  Ӿ{parseFloat(tools.convert(votingWeight, 'RAW', 'NANO')).toFixed(6)}</p>
             </div>
         )
@@ -23,7 +16,7 @@ export default async function RepresentativeLabel(props) {
 }
 
 async function isRepresentative(nanoAddress: string) {
-    const result = await fetch(node, {
+    const result = await fetch(NODE, {
         method: "POST",
         body: JSON.stringify({
             "action": "representatives_online",
@@ -36,7 +29,7 @@ async function isRepresentative(nanoAddress: string) {
 }
 
 async function isPrincipalRepresentative(nanoAddress: string, votingWeight: number) {
-    const result = await fetch(node, {
+    const result = await fetch(NODE, {
         method: "POST",
         body: JSON.stringify({  
             "action": "confirmation_quorum"      
@@ -49,7 +42,7 @@ async function isPrincipalRepresentative(nanoAddress: string, votingWeight: numb
 }
 
 async function getVotingWeight(nanoAddress: string) {
-    const result = await fetch(node, {
+    const result = await fetch(NODE, {
         method: "POST",
         body: JSON.stringify({
             "action": "account_weight",

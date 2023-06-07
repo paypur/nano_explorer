@@ -21,9 +21,10 @@ export default async function AddressPage() {
     
     return (
         <div>
-            <AddressCard nanoAddress={nanoAddress} balance={balance} representative={representative}></AddressCard>
-            <RepresentativeLabel nanoAddress={nanoAddress}></RepresentativeLabel>
-            <TransactionCardList nanoAddress={nanoAddress} transactions={transactions}></TransactionCardList>
+            <AddressCard nanoAddress={nanoAddress} balance={balance} representative={representative}/>
+            {/* @ts-expect-error Server Component */}
+            <RepresentativeLabel nanoAddress={nanoAddress}/>
+            <TransactionCardList nanoAddress={nanoAddress} transactions={transactions}/>
         </div>
     )
 }

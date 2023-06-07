@@ -46,7 +46,7 @@ export default function Home() {
         <div className="flex flex-col my-6 border divide-y rounded border-sky-700">
             <p className='font-normal py-2 px-4'>Recent Transactions</p>
             {liveTransactions.map((transaction: CustomBlock) => (
-                <BlockCard block={transaction}/>
+                <BlockCard key={transaction.hash} block={transaction}/>
             ))}
         </div>
     )
@@ -54,11 +54,11 @@ export default function Home() {
 
 async function addTransaction(transaction: WSBlock) {
     const MAX_TRANSACTIONS = 8
-    let link = "missing link"
+    let link: any = "missing link"
 
     if (transaction.message.block.subtype === "receive") {
         link = transaction.message.block.account_link
-        if (link === undefined) {
+        if (link !== undefined) {
             link = await getBlockAddress(transaction.message.hash)
         }
     } 

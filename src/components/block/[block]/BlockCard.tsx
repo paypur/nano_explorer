@@ -7,8 +7,11 @@ import { CustomBlock } from '@/constants/Types'
 export default function BlockCard(props: {block: CustomBlock}) {
     return (
         <div className='flex flex-col py-2 px-4 border-sky-700'>
-            {props.block.type === "send" ? <p className="flex flex-row text-rose-600">SEND</p>: <p className="flex flex-row text-emerald-600">RECEIVE</p>}
-            {<p>Ӿ{parseFloat(tools.convert(props.block.amount, 'RAW', 'NANO')).toFixed(6)}</p>}
+            <div className='flex flex-row'>
+                {props.block.type === "send" ? <p className="flex flex-row text-rose-600">SEND</p>: <p className="flex flex-row text-emerald-600">RECEIVE</p>}
+                {<p>&nbsp;Ӿ{parseFloat(tools.convert(props.block.amount, 'RAW', 'NANO')).toFixed(6)}</p>}
+
+            </div>
             <div className='flex flex-row'>
                 {addressFormat(props.block.account)}
                 {props.block.type === "send" ? <MdOutlineEast className='mx-2'></MdOutlineEast> : <MdOutlineWest className='mx-2'></MdOutlineWest>}

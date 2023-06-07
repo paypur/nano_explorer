@@ -11,7 +11,7 @@ import { useEffect } from "react"
 let transactions: CustomBlock[] = []
 let previousAccountDictionary: any = {}
 
-    export default function TransactionCardList(props: {nanoAddress: string, transactions: AccoutnHistoryBlock[]}) {
+export default function TransactionCardList(props: {nanoAddress: string, transactions: AccoutnHistoryBlock[]}) {
     
     const router = useRouter()
 
@@ -63,18 +63,18 @@ let previousAccountDictionary: any = {}
         <div className="flex flex-col my-6 border divide-y rounded border-sky-700">
             <p className='text-2xl py-2 px-4'>Transactions</p>
             {transactions.map((transaction: any) => (
-                <BlockCard block={transaction}></BlockCard>
+                <BlockCard key={transaction.hash} block={transaction}/>
             ))}
         </div>
     )
 }
 
 async function addTransaction(transaction: WSBlock) {
-    let link = "missing link"
+    let link: any = "missing link"
 
     if (transaction.message.block.subtype === "receive") {
         link = transaction.message.block.account_link
-        if (link === undefined) {
+        if (link !== undefined) {
             link = await getBlockAddress(transaction.message.hash)
         }
     } 

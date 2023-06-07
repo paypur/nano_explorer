@@ -10,19 +10,24 @@ export default function SearchBar() {
         
     const search = () => {
         if (input.length == 65) {
-            window.location = "/address/" + input
+            https://github.com/microsoft/TypeScript/issues/48949#issuecomment-1203967132
+            (window as Window).location = "/address/" + input
         } else if (input.length == 64) {
-            window.location = "/block/" + input
+            (window as Window).location = "/block/" + input
         } else {
             console.log("Invalid input " + input)
         }
+    }
+
+    const home = () => {
+        (window as Window).location = "/"
     }
 
     return (
         <div className='flex my-6 border divide-x rounded border-sky-700'>
             <button
                 className='py-2 px-4 flex-none border-sky-700'
-                onClick={() => {window.location = "/"}}> 
+                onClick={home}> 
                 <MdOutlineHome size="1.25rem"/>
             </button>
             <input
@@ -42,4 +47,3 @@ export default function SearchBar() {
         </div>
     )
 }
-
