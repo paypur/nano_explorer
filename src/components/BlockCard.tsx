@@ -1,38 +1,24 @@
-import Link from 'next/link'
 import { tools } from 'nanocurrency-web'
 import { MdOutlineWest, MdOutlineEast } from "react-icons/md"
 import { CustomBlock } from '@/constants/Types'
+import FormatLink from '@/components/FormatLink'
 
 // https://stackoverflow.com/questions/63883580/tailwind-css-how-to-style-a-href-links-in-react
 export default function BlockCard(props: {block: CustomBlock}) {
     return (
         <div className='flex flex-col py-2 px-4 border-sky-700'>
-            <div className='flex flex-row'>
-                {props.block.type === "send" ? <p className="font-mono text-rose-600">SEND</p>: <p className="font-mono text-emerald-600">RECEIVE</p>}
-                {<p className='font-mono font-normal mx-2'>Ӿ{parseFloat(tools.convert(props.block.amount, 'RAW', 'NANO')).toFixed(6)}</p>}
-
+            <div className='flex flex-row font-mono font-normal'>
+                {props.block.type === "send" ? <p className="text-rose-600">SEND</p>: <p className="text-emerald-600">RECEIVE</p>}
+                {<p className='mx-2'>Ӿ{parseFloat(tools.convert(props.block.amount, 'RAW', 'NANO')).toFixed(6)}</p>}
             </div>
             <div className='flex flex-row'>
-                {addressFormat(props.block.account)}
-                {props.block.type === "send" ? <MdOutlineEast className='mx-2'></MdOutlineEast> : <MdOutlineWest className='mx-2'></MdOutlineWest>}
-                {addressFormat(props.block.accountLink)}
+                <FormatLink path={props.block.account} type="address"/>
+                {props.block.type === "send" ? <MdOutlineEast className='mx-2 text-rose-600 min-w-fit'/> : <MdOutlineWest className='mx-2 text-emerald-600 min-w-fit'/>}
+                <FormatLink path={props.block.accountLink} type="address"/>
             </div>
-            <Link className="hover:underline" href={"/block/" + props.block.hash}>
-                <p className="font-mono">{props.block.hash}</p>
-            </Link>
+            <FormatLink path={props.block.hash} type="block"/>
         </div>
     )
-}
-
-function addressFormat(address: string) {
-    if (address !== undefined) {
-        // <p>{address.slice(0,12) + "..." + address.slice(-6)}</p>
-        return (
-            <Link className="hover:underline" href={"/address/" + address}>
-                <p className="font-mono">{address}</p>
-            </Link>
-        )  
-    }
 }
 
 // block history

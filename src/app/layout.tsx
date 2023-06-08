@@ -18,8 +18,8 @@ const roboto_mono = Roboto_Mono({
 export default function RootLayout({children}: {children: React.ReactNode}) {
     return (
         <html lang="en" className={`${roboto.variable} ${roboto_mono.variable}`}>
-            <body className=''>
-                <div className='px-20'>
+            <body>
+                <div className='px-16'>
                     <p className='my-6 text-3xl font-normal text-center'>Nanvigator</p>
                     <SearchBar/>
                     {children}

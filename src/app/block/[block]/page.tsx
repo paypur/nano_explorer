@@ -1,7 +1,7 @@
 import { headers } from 'next/headers';
-import { NODE } from '@/constants/NodeAddress';
-import BlockCard from '@/components/block/[block]/BlockCard';
+import BlockCard from '@/components/BlockCard';
 import { CustomBlock, RPCBlock } from '@/constants/Types';
+import { getBlockAccount, getBlockInfo } from '@/functions/RPCs';
 
 export default async function BlockPage(){
 
@@ -11,14 +11,13 @@ export default async function BlockPage(){
     const header_url = headersList.get('x-url') || "";
 
     const blockHash = header_url.slice(-64)
-
-    const blockJson: RPCBlock = await getBlock(blockHash)
+    const blockJson: RPCBlock = await getBlockInfo(blockHash)
 
     const customBlock: CustomBlock = {
         amount: blockJson.amount,
         type: blockJson.subtype,
         account: blockJson.block_account,
-        accountLink: blockJson.subtype === "send" ? blockJson.contents.link_as_account: await getBlockAddress(blockJson.contents.link),
+        accountLink: blockJson.subtype === "send" ? blockJson.contents.link_as_account: await getBlockAccount(blockJson.contents.link),
         hash: blockHash,
         timestamp: blockJson.local_timestamp
     } 
@@ -30,36 +29,8 @@ export default async function BlockPage(){
             </div>
             <p className='text-1xl py-2 px-4'>Raw JSON for block {blockHash}</p>
             <div className='flex flex-col py-2 px-4 border rounded border-sky-700'>
-                <pre className='font-mono py-2'><code>{JSON.stringify(blockJson, null, 4)}</code></pre>
+                <pre className='font-mono'><code>{JSON.stringify(blockJson, null, 4)}</code></pre>
             </div>
         </div>
     )
-
-}
-
-// https://docs.nano.org/commands/rpc-protocol/
-
-async function getBlock(blockHash: string) {
-    const result = await fetch(NODE, {
-        method: "POST",
-        body: JSON.stringify({  
-            "action": "block_info",
-            "json_block": "true",
-            "hash": blockHash
-        })
-    })
-    const data = await result.json()
-    return data
-}
-
-async function getBlockAddress(hash: string) {
-    const result = await fetch(NODE, {
-        method: "POST",
-        body: JSON.stringify({
-            "action": "block_account",
-            "hash": hash   
-        })
-    })
-    const data = await result.json()
-    return data.account
 }

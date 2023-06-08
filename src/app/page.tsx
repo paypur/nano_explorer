@@ -1,12 +1,11 @@
 "use client"
 
-import { NODE } from "@/constants/NodeAddress"
+import BlockCard from "@/components/BlockCard"
 import { WS } from "@/constants/Socket"
-import BlockCard from "@/components/block/[block]/BlockCard"
-
+import { CustomBlock, WSBlock } from "@/constants/Types"
+import { getBlockAccount } from "@/functions/RPCs"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
-import { CustomBlock, WSBlock } from "@/constants/Types"
 
 let liveTransactions: CustomBlock[] = []
 let previousAccountDictionary: any = {}
@@ -53,42 +52,29 @@ export default function Home() {
 }
 
 async function addTransaction(transaction: WSBlock) {
-    const MAX_TRANSACTIONS = 6
+    const MAX_TRANSACTIONS = 20
     let link: any = undefined
 
     if (transaction.message.block.subtype === "receive") {
         link = transaction.message.block.account_link
-        if (link !== undefined) {
-            link = await getBlockAddress(transaction.message.hash)
+        if (link !== "") {
+            link = await getBlockAccount(transaction.message.block.link)
         }
     } 
     else if (transaction.message.block.subtype === "send") {
         link = transaction.message.block.link_as_account
     }
 
-    const customBlock: CustomBlock = {
+    liveTransactions.unshift({
         amount: transaction.message.amount,
         type: transaction.message.block.subtype,
         account: transaction.message.account,
         accountLink: link,
         hash: transaction.message.hash,
         timestamp: transaction.time
-    } 
+    } as CustomBlock)
 
-    liveTransactions.unshift(customBlock)
     if (liveTransactions.length > MAX_TRANSACTIONS) {
         liveTransactions.pop()
     }
-}
-
-async function getBlockAddress(hash: string) {
-    const result = await fetch(NODE, {
-        method: "POST",
-        body: JSON.stringify({
-            "action": "block_account",
-            "hash": hash   
-        })
-    })
-    const data = await result.json()
-    return data.account
 }

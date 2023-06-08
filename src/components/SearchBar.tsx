@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-
 import { MdOutlineHome } from "react-icons/md"
 
 export default function SearchBar() {
@@ -32,7 +31,7 @@ export default function SearchBar() {
                 <MdOutlineHome size="1.2rem"/>
             </button>
             <input
-                className='py-2 px-4 flex-auto bg-black border-sky-700 font-mono'
+                className='flex-auto py-2 px-4 bg-black border-sky-700 font-mono truncate'
                 placeholder="nano_15zntj4a8r6bkihei788ciy1jgc5wnskan1gpgn8e8jku3r4qhr7rwifitir"
                 title="enter a valid nano address or block hash" 
                 autoComplete="on" 
