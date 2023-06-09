@@ -54,7 +54,7 @@ export type RPCBlock = {
     subtype: string
 }
 
-export type AccoutnHistoryBlock = {
+export type AccountHistoryBlock = {
     type: string
     account: string
     amount: string

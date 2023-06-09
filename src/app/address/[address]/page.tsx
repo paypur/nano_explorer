@@ -17,13 +17,20 @@ export default async function AddressPage() {
     const balance = await getAccountBalance(nanoAddress)
     const representative = await getAccountRepresentative(nanoAddress)
     const transactions: AccoutnHistoryBlock[] = await getAccountHistory(nanoAddress)
+    const subscription = {
+        "action": "subscribe", 
+        "topic": "confirmation",
+        "options": {
+            "accounts": [nanoAddress]
+        }
+    }
     
     return (
         <div>
             {/* @ts-expect-error Server Component */}
             <RepresentativeLabel nanoAddress={nanoAddress}/>
             <AddressCard nanoAddress={nanoAddress} balance={balance} representative={representative}/>
-            <BlockCardList nanoAddress={nanoAddress} transactions={transactions}/>
+            <BlockCardList nanoAddress={nanoAddress} transactions={transactions} subscription={subscription} MAX_TRANSACTIONS={Number.MAX_SAFE_INTEGER}/>
         </div>
     )
 }
