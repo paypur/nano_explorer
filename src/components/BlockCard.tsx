@@ -5,11 +5,15 @@ import FormatLink from '@/components/FormatLink'
 
 // https://stackoverflow.com/questions/63883580/tailwind-css-how-to-style-a-href-links-in-react
 export default function BlockCard(props: {block: CustomBlock}) {
+
+    const date = new Date(parseInt(props.block.timestamp))
+    const amount = "Ӿ" + parseFloat(tools.convert(props.block.amount, 'RAW', 'NANO')).toFixed(6)
+
     return (
         <div className='flex flex-col py-2 px-4 border-sky-700'>
-            <div className='flex flex-row font-mono font-normal'>
-                {props.block.type === "send" ? <p className="text-rose-600">SEND</p>: <p className="text-emerald-600">RECEIVE</p>}
-                {<p className='mx-2'>Ӿ{parseFloat(tools.convert(props.block.amount, 'RAW', 'NANO')).toFixed(6)}</p>}
+            <div className='flex flex-row font-normal'>
+                {props.block.type === "send" ? <p className="text-rose-600">SEND&nbsp;</p>: <p className="text-emerald-600">RECEIVE&nbsp;</p>}
+                {props.block.type === "send" ? <p className='font-mono text-rose-600'>{amount}</p>: <p className='font-mono text-emerald-600'>{amount}</p>}
             </div>
             <div className='flex flex-row'>
                 <FormatLink path={props.block.account} type="address"/>
@@ -17,6 +21,7 @@ export default function BlockCard(props: {block: CustomBlock}) {
                 <FormatLink path={props.block.accountLink} type="address"/>
             </div>
             <FormatLink path={props.block.hash} type="block"/>
+            <p className='text-slate-200'>{date.toString()}</p>
         </div>
     )
 }

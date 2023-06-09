@@ -17,15 +17,14 @@ export default function BlockCardList(props: {nanoAddress: string, transactions:
 
     useEffect(() => {
         for (const transaction of props.transactions) {
-            const customBlock: CustomBlock = {
+            transactions.push({
                 amount: transaction.amount,
                 type: transaction.type,
                 account: props.nanoAddress,
                 accountLink: transaction.account,
                 hash: transaction.hash,
-                timestamp: transaction.local_timestamp
-            }
-            transactions.unshift(customBlock)
+                timestamp: (parseInt(transaction.local_timestamp) * 1000).toString()
+            } as CustomBlock)
         }
         router.refresh()
         
@@ -61,7 +60,10 @@ export default function BlockCardList(props: {nanoAddress: string, transactions:
 
     return (
         <div className="flex flex-col my-6 border divide-y rounded border-sky-700">
-            <p className='font-normal py-2 px-4'>Transactions</p>
+            <div className="flex flex-row py-2 px-4">
+                <p>Transactions&nbsp;</p>
+                <p className="font-mono">({transactions.length})</p>
+            </div>
             {transactions.map((transaction: any) => (
                 <BlockCard key={transaction.hash} block={transaction}/>
             ))}

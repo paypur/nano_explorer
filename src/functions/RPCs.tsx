@@ -102,3 +102,15 @@ export async function getAccountVWeight(nanoAddress: string) {
     const data = await result.json()
     return data.weight
 }
+
+export async function getDelegatorsCount(nanoAddress: string) {
+    const result = await fetch(NODE, {
+        method: "POST",
+        body: JSON.stringify({
+            "action": "delegators_count",
+            "account": nanoAddress
+        })
+    })
+    const data = await result.json()
+    return data.count
+}

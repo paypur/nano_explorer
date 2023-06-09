@@ -20,7 +20,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         <html lang="en" className={`${roboto.variable} ${roboto_mono.variable}`}>
             <body>
                 <div className='px-16'>
-                    <p className='my-6 text-3xl font-normal text-center'>Nanvigator</p>
+                    <p className='my-6 text-3xl font-normal text-center'>NANVIGATOR</p>
                     <SearchBar/>
                     {children}
                 </div>

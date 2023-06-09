@@ -19,7 +19,7 @@ export default async function BlockPage(){
         account: blockJson.block_account,
         accountLink: blockJson.subtype === "send" ? blockJson.contents.link_as_account: await getBlockAccount(blockJson.contents.link),
         hash: blockHash,
-        timestamp: blockJson.local_timestamp
+        timestamp: (parseInt(blockJson.local_timestamp) * 1000).toString()
     } 
 
     return (
