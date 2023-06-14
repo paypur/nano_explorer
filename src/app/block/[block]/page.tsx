@@ -3,7 +3,7 @@ import BlockCard from '@/components/BlockCard';
 import { CustomBlock, RPCBlock } from '@/constants/Types';
 import { getBlockAccount, getBlockInfo } from '@/functions/RPCs';
 
-export default async function BlockPage(){
+export default async function BlockPage() {
 
     // https://github.com/vercel/next.js/issues/43704#issuecomment-1411186664
     const headersList = headers();
@@ -17,10 +17,10 @@ export default async function BlockPage(){
         amount: blockJson.amount,
         type: blockJson.subtype,
         account: blockJson.block_account,
-        accountLink: blockJson.subtype === "send" ? blockJson.contents.link_as_account: await getBlockAccount(blockJson.contents.link),
+        accountLink: blockJson.subtype === "send" ? blockJson.contents.link_as_account : await getBlockAccount(blockJson.contents.link),
         hash: blockHash,
         timestamp: (parseInt(blockJson.local_timestamp) * 1000).toString()
-    } 
+    }
 
     return (
         <div>

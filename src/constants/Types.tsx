@@ -56,10 +56,17 @@ export type RPCBlock = {
 
 export type AccountHistoryBlock = {
     type: string
+    representative: string
+    link: string
+    balance: string
+    previous: string
+    subtype: string
     account: string
     amount: string
     local_timestamp: string
     height: string
     hash: string
     confirmed: string
+    work: string
+    signature: string
 }

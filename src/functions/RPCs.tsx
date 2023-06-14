@@ -53,14 +53,18 @@ export async function getAccountRepresentative(nanoAddress: string) {
 
     return data.representative
 }
+           
 
-export async function getAccountHistory(nanoAddress: string) {
+export async function getAccountHistory(nanoAddress: string/*, head: string, count: number, offset: number*/ ) {
     const result = await fetch(NODE, {
         method: "POST",
         body: JSON.stringify({
             "action": "account_history",
             "account": nanoAddress,
-            "count": "100"
+            "count": "-1",/*`${count.toString}`*/
+            "raw": "true",
+            // "head": head,
+            // "offset": `${offset.toString}`
         })
     })
     const data = await result.json()
