@@ -55,20 +55,34 @@ export async function getAccountRepresentative(nanoAddress: string) {
 }
            
 
-export async function getAccountHistory(nanoAddress: string/*, head: string, count: number, offset: number*/ ) {
+export async function getAccountHistory(nanoAddress: string) {
     const result = await fetch(NODE, {
         method: "POST",
         body: JSON.stringify({
             "action": "account_history",
             "account": nanoAddress,
-            "count": "-1",/*`${count.toString}`*/
-            "raw": "true",
-            // "head": head,
-            // "offset": `${offset.toString}`
+            "count": "10",
+            "raw": "true"
         })
     })
     const data = await result.json()
     return data.history
+}
+
+export async function getAccountHistoryNext(nanoAddress: string, head: string) {
+    const result = await fetch(NODE, {
+        method: "POST",
+        body: JSON.stringify({
+            "action": "account_history",
+            "account": nanoAddress,
+            "count": "1",
+            "raw": "true",
+            "head": head,
+            "offset": "1"
+        })
+    })
+    const data = await result.json()
+    return data.history[0]
 }
 
 export async function isRepresentative(nanoAddress: string) {
@@ -117,4 +131,16 @@ export async function getDelegatorsCount(nanoAddress: string) {
     })
     const data = await result.json()
     return data.count
+}
+
+export async function getAccountBlockCount(nanoAddress: string) {
+    const result = await fetch(NODE, {
+        method: "POST",
+        body: JSON.stringify({
+            "action": "account_block_count",
+            "account": nanoAddress
+        })
+    })
+    const data = await result.json()
+    return data.block_count
 }

@@ -17,8 +17,6 @@ export default async function AddressPage() {
     const balance = await getAccountBalance(nanoAddress)
     const representative = await getAccountRepresentative(nanoAddress)
 
-
-    // TODO: add infinite scroll
     const transactions: AccountHistoryBlock[] = await getAccountHistory(nanoAddress)
     const subscription = {
         "action": "subscribe",
