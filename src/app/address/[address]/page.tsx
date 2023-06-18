@@ -27,7 +27,7 @@ export default async function AddressPage() {
     }
 
     return (
-        <div>
+        <div className='max-w-fit'>
             {/* @ts-expect-error Server Component */}
             <RepresentativeLabel nanoAddress={nanoAddress} />
             <AddressCard nanoAddress={nanoAddress} balance={balance} representative={representative} />

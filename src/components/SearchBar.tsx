@@ -23,7 +23,7 @@ export default function SearchBar() {
     }
 
     return (
-        <div className='flex my-6 border divide-x rounded border-sky-700'>
+        <div className='flex my-6 divide-x rounded border border-sky-700'>
             <button
                 className='py-2 px-4 flex-none border-sky-700'
                 onClick={home}

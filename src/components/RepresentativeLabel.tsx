@@ -6,7 +6,7 @@ export default async function RepresentativeLabel(props: { nanoAddress: string }
         const votingWeight = await getAccountVWeight(props.nanoAddress)
         //const delegatorsCount = await getDelegatorsCount(props.nanoAddress)
         return (
-            <div className="py-2 px-4 border rounded border-sky-700">
+            <div className="py-2 px-4 min-w-fit border border-sky-700 rounded">
                 <p className="font-normal">{await isPrincipalRepresentative(props.nanoAddress, votingWeight) ? "Principal Representative" : "Representative"}
                     <span className="font-mono text-lg text-slate-50">&nbsp;( Ӿ{parseFloat(tools.convert(votingWeight, 'RAW', 'NANO')).toFixed(6)} | `delegatorsCount` )</span>
                 </p>

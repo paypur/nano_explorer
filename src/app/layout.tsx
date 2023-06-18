@@ -15,13 +15,13 @@ const roboto_mono = Roboto_Mono({
     variable: '--font-roboto-mono',
 })
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en" className={`${roboto.variable} ${roboto_mono.variable}`}>
-            <body className='bg-black'>
-                <div className='px-16 font-sans font-light text-lg text-slate-50'>
-                    <p className='my-6 text-3xl font-normal text-center'>NANVIGATOR</p>
-                    <SearchBar/>
+            <body className='flex justify-center bg-black font-sans font-light text-lg text-slate-50 antialiased'>
+                <div className='min-w-0 max-w-fit mx-12'>
+                    <p className='my-8 text-4xl font-normal text-center'>NANVIGATOR</p>
+                    <SearchBar />
                     {children}
                 </div>
             </body>

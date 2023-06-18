@@ -2,12 +2,12 @@
 
 import BlockCard from "@/components/BlockCard"
 import { WS } from "@/constants/Socket"
-import { AccountHistoryBlock , CustomBlock, WSBlock } from "@/constants/Types"
+import { AccountHistoryBlock, CustomBlock, WSBlock } from "@/constants/Types"
 import { getAccountBlockCount, getAccountHistoryNext, getBlockAccount } from "@/functions/RPCs"
 import { useEffect, useState } from "react"
 
 export default function BlockCardList(props: { nanoAddress: string, subscription: any, transactions: AccountHistoryBlock[], MAX_TRANSACTIONS: number }) {
-    
+
     const [transactions, setTransactions] = useState<CustomBlock[]>([])
     const [LinkDictionary, setLinkDictionary] = useState<any>({})
     const [transactionsCount, setTransactionsCount] = useState("")
@@ -37,8 +37,7 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
             if (link !== "") {
                 link = await getBlockAccount(transaction.message.block.link)
             }
-        }
-        else if (transaction.message.block.subtype === "send") {
+        } else if (transaction.message.block.subtype === "send") {
             link = transaction.message.block.link_as_account
         }
         return ({
@@ -61,7 +60,7 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
             timestamp: (parseInt(transaction.local_timestamp) * 1000).toString()
         } as CustomBlock)
     }
-    
+
     const getTranactionsCount = async () => {
         let x = await getAccountBlockCount(props.nanoAddress)
         setTransactionsCount(props.nanoAddress !== "" ? x : "")
@@ -72,14 +71,14 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
             pushTransaction(AccountHistoryBlockToCustomBlock(await getAccountHistoryNext(props.nanoAddress, transactions[transactions.length - 1].hash)))
         }
     }
-    
+
     useEffect(() => {
         getTranactionsCount()
-        
+
         for (const transaction of props.transactions) {
             pushTransaction(AccountHistoryBlockToCustomBlock(transaction))
         }
-        
+
         WS.onopen = () => {
             WS.send(JSON.stringify(props.subscription))
         }
@@ -91,12 +90,11 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
                     if (data.message.block.subtype === "send") {
                         // store sender address for later
                         addLink(data.message.hash, data.message.account)
-                    }
-                    else if (data.message.block.subtype === "receive") {
+                    }else if (data.message.block.subtype === "receive") {
                         // get sender address
                         data.message.block.account_link = LinkDictionary[data.message.block.link]
-                        let keyToDelete = data.message.block.link
                         // delete used key
+                        let keyToDelete = data.message.block.link
                         setLinkDictionary((current: any) => {
                             const { keyToDelete, ...restOfKeys } = current;
                             return restOfKeys;
@@ -107,8 +105,8 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
                     if (data.message.block.subtype === "receive") {
                         // get sender address
                         data.message.block.account_link = LinkDictionary[data.message.block.link]
-                        let keyToDelete = data.message.block.link
                         // delete used key
+                        let keyToDelete = data.message.block.link
                         setLinkDictionary((current: any) => {
                             const { keyToDelete, ...restOfKeys } = current;
                             return restOfKeys;
@@ -122,23 +120,23 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
             }
         }
     }, [])
-    
 
-    return (    
-        <div className="flex flex-col my-6 border divide-y rounded border-sky-700">
+
+    return (
+        <div className="flex flex-col max-w-fit my-6 border border-sky-700 divide-y rounded">
             <div className="py-2 px-4">
                 <p>Transactions<span className="font-mono">&nbsp;{transactionsCount !== "" ? `(${transactionsCount})` : ""}</span></p>
             </div>
-            {props.nanoAddress !== "" ? 
-            transactions.map((transaction: CustomBlock, index) => (
-                <BlockCard key={transaction.hash} block={transaction}
-                isLast={index === transactions.length - 1}
-                /*https://stackoverflow.com/questions/41446560/react-setstate-not-updating-state*/
-                newLimit={() => setTimeout(() =>  getNextTransaction(), 10)}/>
-            )) : 
-            transactions.map((transaction: CustomBlock) => (
-                <BlockCard key={transaction.hash} block={transaction}/>
-            ))}
+            {props.nanoAddress !== "" ?
+                transactions.map((transaction: CustomBlock, index) => (
+                    <BlockCard key={transaction.hash} block={transaction}
+                        isLast={index === transactions.length - 1}
+                        /*https://stackoverflow.com/questions/41446560/react-setstate-not-updating-state*/
+                        newLimit={() => setTimeout(() => getNextTransaction(), 10)} />
+                )) :
+                transactions.map((transaction: CustomBlock) => (
+                    <BlockCard key={transaction.hash} block={transaction} />
+                ))}
         </div>
     )
 }
