@@ -10,6 +10,7 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
 
     const [transactions, setTransactions] = useState<CustomBlock[]>([])
     const [LinkDictionary, setLinkDictionary] = useState<any>({})
+    const [head, setHead] = useState("")
     const [transactionsCount, setTransactionsCount] = useState("")
 
     const pushTransaction = (transaction: any) => {
@@ -67,8 +68,8 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
     }
 
     const getNextTransaction = async () => {
-        if (transactions[transactions.length - 1].hash !== "" && transactions.length < parseInt(transactionsCount)) {
-            pushTransaction(AccountHistoryBlockToCustomBlock(await getAccountHistoryNext(props.nanoAddress, transactions[transactions.length - 1].hash)))
+        if (head !== "" && transactions.length < parseInt(transactionsCount)) {
+            pushTransaction(AccountHistoryBlockToCustomBlock(await getAccountHistoryNext(props.nanoAddress, head)))
         }
     }
 
@@ -90,7 +91,7 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
                     if (data.message.block.subtype === "send") {
                         // store sender address for later
                         addLink(data.message.hash, data.message.account)
-                    }else if (data.message.block.subtype === "receive") {
+                    } else if (data.message.block.subtype === "receive") {
                         // get sender address
                         data.message.block.account_link = LinkDictionary[data.message.block.link]
                         // delete used key
@@ -121,6 +122,9 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
         }
     }, [])
 
+    useEffect(() => {
+        getNextTransaction()
+    }, [head])
 
     return (
         <div className="flex flex-col max-w-fit my-6 border border-sky-700 divide-y rounded">
@@ -132,7 +136,7 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
                     <BlockCard key={transaction.hash} block={transaction}
                         isLast={index === transactions.length - 1}
                         /*https://stackoverflow.com/questions/41446560/react-setstate-not-updating-state*/
-                        newLimit={() => setTimeout(() => getNextTransaction(), 10)} />
+                        newLimit={() => setHead(transactions[transactions.length - 1].hash)} />
                 )) :
                 transactions.map((transaction: CustomBlock) => (
                     <BlockCard key={transaction.hash} block={transaction} />

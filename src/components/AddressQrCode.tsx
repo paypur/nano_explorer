@@ -2,7 +2,7 @@
 
 import { useQRCode } from 'next-qrcode'
 
-export default function AddressQrCode( props: { nanoAddress: string }) {
+export default function AddressQrCode(props: { nanoAddress: string }) {
     const { SVG } = useQRCode();
     return (
         <SVG
@@ -10,7 +10,7 @@ export default function AddressQrCode( props: { nanoAddress: string }) {
             options={{
                 level: 'L',
                 margin: 1,
-                    width: 144,
+                width: 164,
                 color: {
                     dark: '#000000',
                     light: '#f8fafc',

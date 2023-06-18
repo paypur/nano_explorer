@@ -12,7 +12,6 @@ export default function Home() {
 
     return (
         <div>
-            {/* @ts-expect-error Server Component */}
             <BlockCardList nanoAddress={nanoAddress} transactions={transactions} subscription={subscription} MAX_TRANSACTIONS={Number.MAX_SAFE_INTEGER} />
         </div>
     )

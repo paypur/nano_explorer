@@ -4,9 +4,9 @@ import { useState } from "react"
 import { MdOutlineHome } from "react-icons/md"
 
 export default function SearchBar() {
-    
+
     const [input, setInput] = useState("")
-        
+
     const search = () => {
         if (input.length == 65) {
             https://github.com/microsoft/TypeScript/issues/48949#issuecomment-1203967132
@@ -27,23 +27,23 @@ export default function SearchBar() {
             <button
                 className='py-2 px-4 flex-none border-sky-700'
                 onClick={home}
-            > 
-                <MdOutlineHome size="1.2rem"/>
+            >
+                <MdOutlineHome size="1.2rem" />
             </button>
             <input
                 className='flex-auto py-2 px-4 bg-black border-sky-700 font-mono truncate'
                 placeholder="nano_15zntj4a8r6bkihei788ciy1jgc5wnskan1gpgn8e8jku3r4qhr7rwifitir"
-                title="enter a valid nano address or block hash" 
-                autoComplete="on" 
+                title="enter a valid nano address or block hash"
+                autoComplete="on"
                 maxLength={65}
-                onChange={(e) => setInput(e.target.value)}/>
-            <button 
+                onChange={(e) => setInput(e.target.value)} />
+            <button
                 className='py-2 px-4 flex-none border-sky-700'
                 type="button"
                 onClick={search}
             >
                 Search
-            </button>    
+            </button>
         </div>
     )
 }

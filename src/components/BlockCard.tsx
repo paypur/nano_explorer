@@ -9,7 +9,7 @@ import { useEffect, useRef } from 'react'
 export default function BlockCard(props: { block: CustomBlock, isLast?: boolean, newLimit?: any }) {
     //https://stackoverflow.com/questions/74297001/type-mutablerefobjecthtmlinputelement-undefined-is-not-assignable-to-type
     const cardRef = useRef<HTMLInputElement>(null);
-    
+
     if (props.block.amount === undefined) {
         props.block.amount = "uh oh"
     }
