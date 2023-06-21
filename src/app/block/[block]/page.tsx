@@ -23,13 +23,13 @@ export default async function BlockPage() {
     }
 
     return (
-        <div>
-            <div className='border rounded border-sky-700'>
-                <BlockCard block={customBlock}></BlockCard>
+        <div className='w-full min-w-0'>
+            <div className='border rounded border-sky-700 my-8'>
+                <BlockCard block={customBlock}/>
             </div>
-            <p className='text-1xl py-2 px-4'>Raw JSON for block {blockHash}</p>
-            <div className='flex flex-col py-2 px-4 border rounded border-sky-700'>
-                <pre className='font-mono'><code>{JSON.stringify(blockJson, null, 4)}</code></pre>
+            <div className='flex flex-col py-2 px-4 my-8 border rounded border-sky-700'>
+                <p>Raw JSON for block<span className='font-mono'>&nbsp;{blockHash}</span></p>
+                <pre className='text-sm'><code>{JSON.stringify(blockJson, null, 4)}</code></pre>
             </div>
         </div>
     )

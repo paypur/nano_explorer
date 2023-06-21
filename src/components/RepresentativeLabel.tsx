@@ -1,17 +1,18 @@
-import { getAccountVWeight, getDelegatorsCount, isPrincipalRepresentative, isRepresentative } from "@/functions/RPCs"
+import { getConfirmationQuorum , getAccountVWeight, isRepresentative } from "@/functions/RPCs"
 import { tools } from "nanocurrency-web"
 
 export default async function RepresentativeLabel(props: { nanoAddress: string }) {
     if (await isRepresentative(props.nanoAddress)) {
         const votingWeight = await getAccountVWeight(props.nanoAddress)
-        //const delegatorsCount = await getDelegatorsCount(props.nanoAddress)
+        const onlineStakeTotal = await getConfirmationQuorum(props.nanoAddress)
+        const precentVotingWeight = votingWeight / onlineStakeTotal
         return (
-            <div className="py-2 px-4 min-w-fit border border-sky-700 rounded">
-                <p className="font-normal">{await isPrincipalRepresentative(props.nanoAddress, votingWeight) ? "Principal Representative" : "Representative"}
-                    <span className="font-mono text-lg text-slate-50">&nbsp;( Ӿ{parseFloat(tools.convert(votingWeight, 'RAW', 'NANO')).toFixed(6)} | `delegatorsCount` )</span>
+            <div className={`py-1 px-2 my-1 w-fit rounded ${precentVotingWeight > 0.001  ? "bg-fuchsia-900" : "bg-fuchsia-600"}`}>
+                <p className="font-normal text-sm">{precentVotingWeight > 0.001  ? "Principal Representative" : "Representative"}
+                    <span className="font-mono text-sm text-slate-50">
+                        &nbsp;(Ӿ{parseFloat(tools.convert(votingWeight, 'RAW', 'NANO')).toFixed(6)} | {(precentVotingWeight * 100).toFixed(2)}%)
+                        </span>
                 </p>
-                <p className='font-sans text-sm text-slate-200'>Voting Weight<span className="font-mono text-lg text-slate-50">&nbsp;Ӿ{parseFloat(tools.convert(votingWeight, 'RAW', 'NANO')).toFixed(6)}</span></p>
-                <p className='font-sans text-sm text-slate-200'>Delegators<span className="font-mono text-lg text-slate-50">&nbsp;PLACEHOLDER</span></p>
             </div>
         )
     } else {

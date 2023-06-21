@@ -6,7 +6,7 @@ import { tools } from "nanocurrency-web"
 export async function getBlockInfo(blockHash: string) {
     const result = await fetch(NODE, {
         method: "POST",
-        body: JSON.stringify({  
+        body: JSON.stringify({
             "action": "block_info",
             "json_block": "true",
             "hash": blockHash
@@ -21,7 +21,7 @@ export async function getBlockAccount(hash: string) {
         method: "POST",
         body: JSON.stringify({
             "action": "block_account",
-            "hash": hash   
+            "hash": hash
         })
     })
     const data = await result.json()
@@ -47,13 +47,13 @@ export async function getAccountRepresentative(nanoAddress: string) {
         body: JSON.stringify({
             "action": "account_representative",
             "account": nanoAddress
-        })   
+        })
     })
     const data = await result.json()
 
     return data.representative
 }
-           
+
 
 export async function getAccountHistory(nanoAddress: string) {
     const result = await fetch(NODE, {
@@ -97,18 +97,6 @@ export async function isRepresentative(nanoAddress: string) {
     return data.representatives[0] === nanoAddress
 }
 
-export async function isPrincipalRepresentative(nanoAddress: string, votingWeight: number) {
-    const result = await fetch(NODE, {
-        method: "POST",
-        body: JSON.stringify({  
-            "action": "confirmation_quorum"      
-        })
-    })
-    const data = await result.json()
-    return votingWeight > (data.online_stake_total / 1000)
-
-}
-
 export async function getAccountVWeight(nanoAddress: string) {
     const result = await fetch(NODE, {
         method: "POST",
@@ -119,6 +107,17 @@ export async function getAccountVWeight(nanoAddress: string) {
     })
     const data = await result.json()
     return data.weight
+}
+
+export async function getConfirmationQuorum(nanoAddress: string) {
+    const result = await fetch(NODE, {
+        method: "POST",
+        body: JSON.stringify({
+            "action": "confirmation_quorum"
+        })
+    })
+    const data = await result.json()
+    return data.online_stake_total
 }
 
 export async function getDelegatorsCount(nanoAddress: string) {

@@ -127,7 +127,7 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
     }, [head])
 
     return (
-        <div className="flex flex-col max-w-fit my-6 border border-sky-700 divide-y rounded">
+        <div className="w-full flex flex-col my-6 border border-sky-700 divide-y rounded">
             <div className="py-2 px-4">
                 <p>Transactions<span className="font-mono">&nbsp;{transactionsCount !== "" ? `(${transactionsCount})` : ""}</span></p>
             </div>
@@ -135,7 +135,6 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
                 transactions.map((transaction: CustomBlock, index) => (
                     <BlockCard key={transaction.hash} block={transaction}
                         isLast={index === transactions.length - 1}
-                        /*https://stackoverflow.com/questions/41446560/react-setstate-not-updating-state*/
                         newLimit={() => setHead(transactions[transactions.length - 1].hash)} />
                 )) :
                 transactions.map((transaction: CustomBlock) => (

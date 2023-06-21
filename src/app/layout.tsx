@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="en" className={`${roboto.variable} ${roboto_mono.variable}`}>
             <body className='flex justify-center bg-black font-sans font-light text-lg text-slate-50 antialiased'>
-                <div className='min-w-0 max-w-fit mx-12'>
+                <div className='w-[93.625rem] min-w-0 mx-16'>
                     <p className='my-8 text-4xl font-normal text-center'>NANVIGATOR</p>
                     <SearchBar />
                     {children}

@@ -1,6 +1,5 @@
 import AddressCard from '@/components/AddressCard'
 import BlockCardList from '@/components/BlockCardList'
-import RepresentativeLabel from '@/components/RepresentativeLabel'
 import { AccountHistoryBlock } from '@/constants/Types'
 import { getAccountBalance, getAccountHistory, getAccountRepresentative } from '@/functions/RPCs'
 import { headers } from 'next/headers'
@@ -27,9 +26,7 @@ export default async function AddressPage() {
     }
 
     return (
-        <div className='max-w-fit'>
-            {/* @ts-expect-error Server Component */}
-            <RepresentativeLabel nanoAddress={nanoAddress} />
+        <div className='w-full min-w-0'>
             <AddressCard nanoAddress={nanoAddress} balance={balance} representative={representative} />
             <BlockCardList nanoAddress={nanoAddress} transactions={transactions} subscription={subscription} MAX_TRANSACTIONS={Number.MAX_SAFE_INTEGER} />
         </div>

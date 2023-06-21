@@ -10,7 +10,7 @@ export default function AddressQrCode(props: { nanoAddress: string }) {
             options={{
                 level: 'L',
                 margin: 1,
-                width: 164,
+                width: 200,
                 color: {
                     dark: '#000000',
                     light: '#f8fafc',
