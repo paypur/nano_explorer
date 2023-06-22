@@ -6,24 +6,25 @@ import { AccountHistoryBlock, CustomBlock, WSBlock } from "@/constants/Types"
 import { getAccountBlockCount, getAccountHistoryNext, getBlockAccount } from "@/functions/RPCs"
 import { useEffect, useState } from "react"
 
-export default function BlockCardList(props: { nanoAddress: string, subscription: any, transactions: AccountHistoryBlock[], MAX_TRANSACTIONS: number }) {
+export default function BlockCardList(props: { nanoAddress: string, blocks: AccountHistoryBlock[], MAX_BLOCKS: number, text: string, subscription: any }) {
 
-    const [transactions, setTransactions] = useState<CustomBlock[]>([])
+    const [receivableList, setReceivableList] = useState<CustomBlock[]>([])
+    const [blockList, setBlockList] = useState<CustomBlock[]>([])
     const [LinkDictionary, setLinkDictionary] = useState<any>({})
     const [head, setHead] = useState("")
     const [transactionsCount, setTransactionsCount] = useState("")
 
-    const pushTransaction = (transaction: any) => {
-        setTransactions(prev => [...prev, transaction])
-        if (transactions.length > props.MAX_TRANSACTIONS) {
-            setTransactions(transactions.slice(0, -1))
+    const pushBlock = (block: any) => {
+        setBlockList(prev => [...prev, block])
+        if (blockList.length > props.MAX_BLOCKS) {
+            setBlockList(blockList.slice(0, -1))
         }
     }
 
-    const unshiftTransaction = (transaction: any) => {
-        setTransactions(prev => [transaction, ...prev])
-        if (transactions.length > props.MAX_TRANSACTIONS) {
-            setTransactions(transactions.slice(0, -1))
+    const unshiftBlock = (block: any) => {
+        setBlockList(prev => [block, ...prev])
+        if (blockList.length > props.MAX_BLOCKS) {
+            setBlockList(blockList.slice(0, -1))
         }
     }
 
@@ -31,53 +32,53 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
         setLinkDictionary({ ...LinkDictionary, [key]: value })
     }
 
-    const WSBlockTOCustomBlock = async (transaction: WSBlock) => {
+    const WSBlockTOCustomBlock = async (block: WSBlock) => {
         let link: any = undefined
-        if (transaction.message.block.subtype === "receive") {
-            link = transaction.message.block.account_link
+        if (block.message.block.subtype === "receive") {
+            link = block.message.block.account_link
             if (link !== "") {
-                link = await getBlockAccount(transaction.message.block.link)
+                link = await getBlockAccount(block.message.block.link)
             }
-        } else if (transaction.message.block.subtype === "send") {
-            link = transaction.message.block.link_as_account
+        } else if (block.message.block.subtype === "send") {
+            link = block.message.block.link_as_account
         }
         return ({
-            amount: transaction.message.amount,
-            type: transaction.message.block.subtype,
-            account: transaction.message.account,
+            amount: block.message.amount,
+            type: block.message.block.subtype,
+            account: block.message.account,
             accountLink: link,
-            hash: transaction.message.hash,
-            timestamp: transaction.time
+            hash: block.message.hash,
+            timestamp: block.time
         } as CustomBlock)
     }
 
-    const AccountHistoryBlockToCustomBlock = (transaction: AccountHistoryBlock) => {
+    const AccountHistoryBlockToCustomBlock = (block: AccountHistoryBlock) => {
         return ({
-            amount: transaction.amount,
-            type: transaction.subtype,
+            amount: block.amount,
+            type: block.subtype,
             account: props.nanoAddress,
-            accountLink: transaction.account,
-            hash: transaction.hash,
-            timestamp: (parseInt(transaction.local_timestamp) * 1000).toString()
+            accountLink: block.account,
+            hash: block.hash,
+            timestamp: (parseInt(block.local_timestamp) * 1000).toString()
         } as CustomBlock)
     }
 
-    const getTranactionsCount = async () => {
+    const getBlockCount = async () => {
         let x = await getAccountBlockCount(props.nanoAddress)
         setTransactionsCount(props.nanoAddress !== "" ? x : "")
     }
 
-    const getNextTransaction = async () => {
-        if (head !== "" && transactions.length < parseInt(transactionsCount)) {
-            pushTransaction(AccountHistoryBlockToCustomBlock(await getAccountHistoryNext(props.nanoAddress, head)))
+    const getNextBlock = async () => {
+        if (head !== "" && blockList.length < parseInt(transactionsCount)) {
+            pushBlock(AccountHistoryBlockToCustomBlock(await getAccountHistoryNext(props.nanoAddress, head)))
         }
     }
 
     useEffect(() => {
-        getTranactionsCount()
+        getBlockCount()
 
-        for (const transaction of props.transactions) {
-            pushTransaction(AccountHistoryBlockToCustomBlock(transaction))
+        for (const block of props.blocks) {
+            pushBlock(AccountHistoryBlockToCustomBlock(block))
         }
 
         WS.onopen = () => {
@@ -86,7 +87,7 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
         // super ugly
         WS.onmessage = async (msg) => {
             let data: WSBlock = JSON.parse(msg.data)
-            if (data.topic === "confirmation" && transactions.filter(e => e.hash === data.message.hash).length === 0) {
+            if (data.topic === "confirmation" && blockList.filter(e => e.hash === data.message.hash).length === 0) {
                 if (props.nanoAddress === "") {
                     if (data.message.block.subtype === "send") {
                         // store sender address for later
@@ -101,7 +102,7 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
                             return restOfKeys;
                         })
                     }
-                    unshiftTransaction(await WSBlockTOCustomBlock(data))
+                    unshiftBlock(await WSBlockTOCustomBlock(data))
                 } else if (data.message.account === props.nanoAddress) {
                     if (data.message.block.subtype === "receive") {
                         // get sender address
@@ -113,7 +114,7 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
                             return restOfKeys;
                         })
                     }
-                    unshiftTransaction(await WSBlockTOCustomBlock(data))
+                    unshiftBlock(await WSBlockTOCustomBlock(data))
                 } else if (data.message.block.subtype === "send") {
                     // store sender address for later
                     addLink(data.message.hash, data.message.account)
@@ -123,21 +124,21 @@ export default function BlockCardList(props: { nanoAddress: string, subscription
     }, [])
 
     useEffect(() => {
-        getNextTransaction()
+        getNextBlock()
     }, [head])
 
     return (
         <div className="w-full flex flex-col my-6 border border-sky-700 divide-y rounded">
             <div className="py-2 px-4">
-                <p>Transactions<span className="font-mono">&nbsp;{transactionsCount !== "" ? `(${transactionsCount})` : ""}</span></p>
+                <p>{props.text}<span className="font-mono">&nbsp;{transactionsCount !== "" ? `(${transactionsCount})` : ""}</span></p>
             </div>
             {props.nanoAddress !== "" ?
-                transactions.map((transaction: CustomBlock, index) => (
+                blockList.map((transaction: CustomBlock, index) => (
                     <BlockCard key={transaction.hash} block={transaction}
-                        isLast={index === transactions.length - 1}
-                        newLimit={() => setHead(transactions[transactions.length - 1].hash)} />
+                        isLast={index === blockList.length - 1}
+                        newLimit={() => setHead(blockList[blockList.length - 1].hash)} />
                 )) :
-                transactions.map((transaction: CustomBlock) => (
+                blockList.map((transaction: CustomBlock) => (
                     <BlockCard key={transaction.hash} block={transaction} />
                 ))}
         </div>

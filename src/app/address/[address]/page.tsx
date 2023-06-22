@@ -28,7 +28,7 @@ export default async function AddressPage() {
     return (
         <div className='w-full min-w-0'>
             <AddressCard nanoAddress={nanoAddress} balance={balance} representative={representative} />
-            <BlockCardList nanoAddress={nanoAddress} transactions={transactions} subscription={subscription} MAX_TRANSACTIONS={Number.MAX_SAFE_INTEGER} />
+            <BlockCardList nanoAddress={nanoAddress} blocks={transactions} MAX_BLOCKS={Number.MAX_SAFE_INTEGER} text="Confirmed Transactions" subscription={subscription}/>
         </div>
     )
 }

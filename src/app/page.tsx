@@ -12,7 +12,7 @@ export default function Home() {
 
     return (
         <div>
-            <BlockCardList nanoAddress={nanoAddress} transactions={transactions} subscription={subscription} MAX_TRANSACTIONS={Number.MAX_SAFE_INTEGER} />
+            <BlockCardList nanoAddress={nanoAddress} blocks={transactions} MAX_BLOCKS={100} text="Confirmed Transactions" subscription={subscription}/>
         </div>
     )
 }

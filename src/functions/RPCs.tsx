@@ -85,7 +85,7 @@ export async function getAccountHistoryNext(nanoAddress: string, head: string) {
     return data.history[0]
 }
 
-export async function isRepresentative(nanoAddress: string) {
+export async function getRepresentativesOnline(nanoAddress: string) {
     const result = await fetch(NODE, {
         method: "POST",
         body: JSON.stringify({
@@ -94,10 +94,21 @@ export async function isRepresentative(nanoAddress: string) {
         })
     })
     const data = await result.json()
-    return data.representatives[0] === nanoAddress
+    return data.representatives
 }
 
-export async function getAccountVWeight(nanoAddress: string) {
+export async function getRepresentatives(nanoAddress: string) {
+    const result = await fetch(NODE, {
+        method: "POST",
+        body: JSON.stringify({
+            "action": "representatives",
+        })
+    })
+    const data = await result.json()
+    return data.representatives
+}
+
+export async function getAccountWeight(nanoAddress: string) {
     const result = await fetch(NODE, {
         method: "POST",
         body: JSON.stringify({
