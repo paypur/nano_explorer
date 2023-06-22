@@ -154,3 +154,16 @@ export async function getAccountBlockCount(nanoAddress: string) {
     const data = await result.json()
     return data.block_count
 }
+
+export async function getAccountsReceivable(nanoAddress: string) {
+    const result = await fetch(NODE, {
+        method: "POST",
+        body: JSON.stringify({
+            "action": "accounts_receivable",
+            "accounts": [nanoAddress],
+            "count": "-1"
+        })
+    })
+    const data = await result.json()
+    return data.blocks[nanoAddress]
+}

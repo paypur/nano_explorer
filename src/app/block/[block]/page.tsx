@@ -2,6 +2,7 @@ import { headers } from 'next/headers';
 import BlockCard from '@/components/BlockCard';
 import { CustomBlock, RPCBlock } from '@/constants/Types';
 import { getBlockAccount, getBlockInfo } from '@/functions/RPCs';
+import { RPCBlockTOCustomBlock } from '@/functions/Functions';
 
 export default async function BlockPage() {
 
@@ -12,15 +13,7 @@ export default async function BlockPage() {
 
     const blockHash = header_url.slice(-64)
     const blockJson: RPCBlock = await getBlockInfo(blockHash)
-
-    const customBlock: CustomBlock = {
-        amount: blockJson.amount,
-        type: blockJson.subtype,
-        account: blockJson.block_account,
-        accountLink: blockJson.subtype === "send" ? blockJson.contents.link_as_account : await getBlockAccount(blockJson.contents.link),
-        hash: blockHash,
-        timestamp: (parseInt(blockJson.local_timestamp) * 1000).toString()
-    }
+    const customBlock: CustomBlock = await RPCBlockTOCustomBlock(blockHash, blockJson)
 
     return (
         <div className='w-full min-w-0'>

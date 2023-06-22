@@ -11,8 +11,8 @@ export default async function RepresentativeLabel(props: { nanoAddress: string }
         const isOnline = ((await getRepresentativesOnline(props.nanoAddress))[0] === props.nanoAddress)
         return (
             <>
-                <div className="flex flex-row">
-                    <div className={`py-1 px-2 my-1 mr-2 w-fit rounded ${isOnline ? "bg-green-600" : "bg-red-600"}`}>
+                <div className="flex flex-row space-x-2">
+                    <div className={`py-1 px-2 my-1 w-fit rounded ${isOnline ? "bg-emerald-600" : "bg-rose-600"}`}>
                         <p className="text-sm">
                             {isOnline ? "Online" : "Offline"}
                         </p>

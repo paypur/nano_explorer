@@ -1,10 +1,6 @@
-import BlockCardList from "@/components/BlockCardList";
-import { AccountHistoryBlock, CustomBlock, WSBlock } from "@/constants/Types"
+import BlockInfo from "@/components/BlockInfo"
 
 export default function Home() {
-
-    const nanoAddress = ""
-    const transactions: AccountHistoryBlock[] = []
     const subscription = {
         "action": "subscribe",
         "topic": "confirmation",
@@ -12,7 +8,7 @@ export default function Home() {
 
     return (
         <div>
-            <BlockCardList nanoAddress={nanoAddress} blocks={transactions} MAX_BLOCKS={100} text="Confirmed Transactions" subscription={subscription}/>
+            <BlockInfo nanoAddress={""} MAX_BLOCKS={100} subscription={subscription}/>
         </div>
     )
 }

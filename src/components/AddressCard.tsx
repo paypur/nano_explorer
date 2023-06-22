@@ -1,5 +1,4 @@
 import AddressQrCode from './AddressQrCode'
-import FormatLink from './FormatLink'
 
 import { MdSmartphone } from 'react-icons/md'
 import RepresentativeLabel from './RepresentativeLabel'
