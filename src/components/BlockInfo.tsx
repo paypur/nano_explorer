@@ -2,15 +2,14 @@
 
 import { WS } from "@/constants/Socket"
 import { AccountHistoryBlock, CustomBlock, WSBlock } from "@/constants/Types"
-import { AccountHistoryBlockToCustomBlock, RPCBlockTOCustomBlock, WSBlockTOCustomBlock } from "@/functions/Functions"
-import { getAccountBlockCount, getAccountHistory, getAccountHistoryNext, getAccountRepresentative, getAccountsReceivable, getBlockInfo } from "@/functions/RPCs"
+import { AccountHistoryBlockToCustomBlock, RPCBlockTOCustomBlock, WSBlockTOCustomBlock, pushBlock, unshiftBlock } from "@/functions/Functions"
+import { getAccountBlockCount, getAccountHistory, getAccountHistoryNext, getAccountsReceivable, getBlockInfo } from "@/functions/RPCs"
 import { useEffect, useState } from "react"
 import BlockCardList from "./BlockCardList"
 
 export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: number, subscription: any }) {
 
     const [receivableList, setReceivableList] = useState<CustomBlock[]>([])
-    //const [receivableCount, setReceivableCount] = useState("")
     
     const [confirmedList, setConfirmedList] = useState<CustomBlock[]>([])
     const [confirmedCount, setConfirmedCount] = useState("")
@@ -18,51 +17,34 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
     const [LinkDictionary, setLinkDictionary] = useState<any>({})
     const [head, setHead] = useState("")
 
-    const pushBlock = (blockList: any, setFunction: any, block: CustomBlock) => {
-        setFunction((prev: any) => [...prev, block])
-        if (blockList.length > props.MAX_BLOCKS) {
-            setFunction(confirmedList.slice(0, -1))
+    useEffect(() => {
+        const addLink = (key: string, value: string) => {
+            setLinkDictionary({ ...LinkDictionary, [key]: value })
         }
-    }
-
-    const unshiftBlock = (blockList: any, setFunction: any, block: CustomBlock) => {
-        setFunction((prev: any) => [block, ...prev])
-        if (blockList.length > props.MAX_BLOCKS) {
-            setFunction(blockList.slice(0, -1))
-        }
-    }
-
-    const addLink = (key: string, value: string) => {
-        setLinkDictionary({ ...LinkDictionary, [key]: value })
-    }
-    
-    const getReceivable = async () => {
-        const hashList: string[] = await getAccountsReceivable(props.nanoAddress)
-        if (hashList !== undefined) {
-            for (const hash of hashList) {
-                unshiftBlock(receivableList, setReceivableList, await RPCBlockTOCustomBlock(hash, await getBlockInfo(hash)))
+        
+        const getReceivable = async () => {
+            const hashList: string[] = await getAccountsReceivable(props.nanoAddress)
+            if (hashList !== undefined) {
+                for (const hash of hashList) {
+                    const customBlock = await RPCBlockTOCustomBlock(hash, await getBlockInfo(hash))
+                    unshiftBlock(receivableList, setReceivableList, customBlock, props.MAX_BLOCKS)
+                }
+            }
+        }    
+        
+        const getConfirmed = async () => {
+            const blocks: AccountHistoryBlock[] = await getAccountHistory(props.nanoAddress)
+            for (const block of blocks) {
+                // needs to handle change blocks
+                const customBlock = AccountHistoryBlockToCustomBlock(block, props.nanoAddress)
+                pushBlock(confirmedList, setConfirmedList, customBlock, props.MAX_BLOCKS)
             }
         }
-    }
-    
-    const getConfirmedCount = async () => {
-        setConfirmedCount(await getAccountBlockCount(props.nanoAddress))
-    }
 
-    const getConfirmed = async () => {
-        const blocks: AccountHistoryBlock[] = await getAccountHistory(props.nanoAddress)
-        for (const block of blocks) {
-            pushBlock(confirmedList, setConfirmedList, AccountHistoryBlockToCustomBlock(block, props.nanoAddress))
+        const getConfirmedCount = async () => {
+            setConfirmedCount(await getAccountBlockCount(props.nanoAddress))
         }
-    }
 
-    const getNextBlock = async () => {
-        if (head !== "" && confirmedList.length < parseInt(confirmedCount)) {
-            pushBlock(confirmedList, setConfirmedList, AccountHistoryBlockToCustomBlock(await getAccountHistoryNext(props.nanoAddress, head), props.nanoAddress))
-        }
-    }
-
-    useEffect(() => {
         if (props.nanoAddress !== "") {
             getReceivable()
             getConfirmed()
@@ -90,7 +72,7 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
                             return restOfKeys;
                         })
                     }
-                    unshiftBlock(confirmedList, setConfirmedList, await WSBlockTOCustomBlock(data))
+                    unshiftBlock(confirmedList, setConfirmedList, await WSBlockTOCustomBlock(data), props.MAX_BLOCKS)
                 } else if (data.message.account === props.nanoAddress) {
                     if (data.message.block.subtype === "receive") {
                         // get sender address
@@ -102,17 +84,24 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
                             return restOfKeys;
                         })
                     }
-                    unshiftBlock(confirmedList, setConfirmedList, await WSBlockTOCustomBlock(data))
+                    unshiftBlock(confirmedList, setConfirmedList, await WSBlockTOCustomBlock(data), props.MAX_BLOCKS)
                 } else if (data.message.block.subtype === "send") {
                     // store sender address for later
                     addLink(data.message.hash, data.message.account)
-                    unshiftBlock(receivableList, setReceivableList, await WSBlockTOCustomBlock(data))
+                    unshiftBlock(receivableList, setReceivableList, await WSBlockTOCustomBlock(data), props.MAX_BLOCKS)
                 }
             }
         }
     }, [])
 
     useEffect(() => {
+        const getNextBlock = async () => {
+            if (head !== "" && confirmedList.length < parseInt(confirmedCount)) {
+                // needs to handle change blocks
+                const customBlock = AccountHistoryBlockToCustomBlock(await getAccountHistoryNext(props.nanoAddress, head), props.nanoAddress)
+                pushBlock(confirmedList, setConfirmedList, customBlock, props.MAX_BLOCKS)
+            }
+        }
         getNextBlock()
     }, [head])
 
@@ -130,17 +119,4 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
             </div>
         )
     }
-    // <div className="w-full flex flex-col my-6 border border-sky-700 divide-y rounded">
-    //     <div className="py-2 px-4">
-    //         <p>{props.text}<span className="font-mono">&nbsp;{transactionsCount !== "" ? `(${transactionsCount})` : ""}</span></p>
-    //     </div>
-    //     {confirmedList.map((transaction: CustomBlock, index) => (
-    //         <BlockCard
-    //             key={transaction.hash}
-    //             block={transaction}
-    //             isLast={index === confirmedList.length - 1}
-    //             newHead={() => setHead(confirmedList[confirmedList.length - 1].hash)}
-    //         />
-    //     ))}
-    // </div>
 }

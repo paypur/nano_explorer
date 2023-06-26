@@ -1,6 +1,6 @@
 import { getConfirmationQuorum, getAccountWeight, getRepresentativesOnline, getRepresentatives } from "@/functions/RPCs"
 import { tools } from "nanocurrency-web"
-import FormatLink from "./FormatLink"
+import AddressAlias from "./AddressAlias"
 
 export default async function RepresentativeLabel(props: { nanoAddress: string }) {
     const reps: any[] = await getRepresentatives(props.nanoAddress)
@@ -17,16 +17,17 @@ export default async function RepresentativeLabel(props: { nanoAddress: string }
                             {isOnline ? "Online" : "Offline"}
                         </p>
                     </div>
-                    <div className={`py-1 px-2 my-1 w-fit rounded ${precentVotingWeight > 0.001 ? "bg-fuchsia-900" : "bg-fuchsia-600"}`}>
+                    <div className={`py-1 px-2 my-1 w-fit rounded ${precentVotingWeight > 0.001 ? "bg-fuchsia-800" : "bg-fuchsia-600"}`}>
                         <p className="text-sm">
                             {precentVotingWeight > 0.001 ? "Principal Representative" : "Representative"}
-                            <span className="font-mono text-sm text-slate-50">
+                            <span className="font-mono text-sm">
                                 &nbsp;(Ӿ{parseFloat(tools.convert(votingWeight, 'RAW', 'NANO')).toFixed(6)} | {(precentVotingWeight * 100).toFixed(2)}%)
                             </span>
                         </p>
                     </div>
                 </div>
-                <FormatLink path={props.nanoAddress} type="address" />
+                {/* @ts-expect-error Server Component */}
+                <AddressAlias nanoAddress={props.nanoAddress} />
             </>
         )
     } else {
