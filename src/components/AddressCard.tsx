@@ -1,13 +1,33 @@
 import AddressQrCode from './AddressQrCode'
-
-import { MdSmartphone } from 'react-icons/md'
-import RepresentativeLabel from './RepresentativeLabel'
-import { getAccountBalance, getAccountRepresentative } from '@/functions/RPCs'
 import AddressAlias from './AddressAlias'
+import RepresentativeLabel from './RepresentativeLabel'
+import { getAccountBalance, getAccountRepresentative, getAccountWeight, getConfirmationQuorum } from '@/functions/RPCs'
+import { MdSmartphone } from 'react-icons/md'
+import { tools } from 'nanocurrency-web'
 
 export default async function AddressCard(props: { nanoAddress: string }) {
-    const balance = await getAccountBalance(props.nanoAddress)
+
+    const balanceRaw = await getAccountBalance(props.nanoAddress)
+    const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=nano&vs_currencies=usd")
+    const data = await response.json()
+    const balanceUSD = parseFloat(tools.convert(balanceRaw, 'RAW', 'NANO')) * parseFloat(data.nano.usd)
+
+    const isRepresentative = (await getAccountWeight(props.nanoAddress)) !== "0"
+
     const representative = await getAccountRepresentative(props.nanoAddress)
+
+    const repWeight = async () => {
+        const votingWeight = await getAccountWeight(props.nanoAddress)
+        const onlineStakeTotal = await getConfirmationQuorum()
+        const precentVotingWeight = votingWeight / onlineStakeTotal
+        return (
+            <>
+                <p className='text-sm text-gray-400'>Voting Weight</p>
+                <p className='font-mono font-medium text-white truncate'>Ӿ{parseFloat(tools.convert(votingWeight, 'RAW', 'NANO')).toFixed(6)}</p>
+                <p><span className='font-mono truncate'>{(precentVotingWeight * 100).toFixed(2)}%&nbsp;</span>of online voting weight</p>
+            </>
+        )
+    }
 
     return (
         <div className="w-full min-w-0 flex flex-row justify-between my-8 py-2 px-4 border border-sky-700 rounded">
@@ -15,7 +35,9 @@ export default async function AddressCard(props: { nanoAddress: string }) {
                 <p className='text-sm text-gray-400'>Account</p>
                 <AddressAlias nanoAddress={props.nanoAddress}/>
                 <p className='text-sm text-gray-400'>Balance</p>
-                <p className='font-mono truncate'>Ӿ{balance}</p>
+                <p className='font-mono font-medium text-white truncate'>Ӿ{parseFloat(tools.convert(balanceRaw, 'RAW', 'NANO')).toFixed(6)}</p>
+                <p>${balanceUSD.toFixed(2)}</p>
+                {isRepresentative ? await repWeight(): null}
                 <p className='text-sm text-gray-400'>Representative</p>
                 {/* @ts-expect-error Server Component */}
                 <RepresentativeLabel nanoAddress={representative} />

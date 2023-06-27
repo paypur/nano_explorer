@@ -1,5 +1,6 @@
+'use server'
+
 import { NODE } from "@/constants/NodeAddress"
-import { tools } from "nanocurrency-web"
 
 // https://docs.nano.org/commands/rpc-protocol/
 
@@ -37,8 +38,7 @@ export async function getAccountBalance(nanoAddress: string) {
         })
     })
     const data = await result.json()
-
-    return parseFloat(tools.convert(data.balance, 'RAW', 'NANO')).toFixed(6)
+    return data.balance
 }
 
 export async function getAccountRepresentative(nanoAddress: string) {
@@ -50,8 +50,7 @@ export async function getAccountRepresentative(nanoAddress: string) {
         })
     })
     const data = await result.json()
-
-    return data.representative
+    return data.representative.toString()
 }
 
 
@@ -61,7 +60,7 @@ export async function getAccountHistory(nanoAddress: string) {
         body: JSON.stringify({
             "action": "account_history",
             "account": nanoAddress,
-            "count": "10",
+            "count": "5",
             "raw": "true"
         })
     })
@@ -97,11 +96,11 @@ export async function getRepresentativesOnline(nanoAddress: string) {
     return data.representatives
 }
 
-export async function getRepresentatives(nanoAddress: string) {
+export async function getRepresentatives() {
     const result = await fetch(NODE, {
         method: "POST",
         body: JSON.stringify({
-            "action": "representatives",
+            "action": "representatives"
         })
     })
     const data = await result.json()
@@ -120,7 +119,7 @@ export async function getAccountWeight(nanoAddress: string) {
     return data.weight
 }
 
-export async function getConfirmationQuorum(nanoAddress: string) {
+export async function getConfirmationQuorum() {
     const result = await fetch(NODE, {
         method: "POST",
         body: JSON.stringify({

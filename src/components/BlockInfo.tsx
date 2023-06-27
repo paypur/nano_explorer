@@ -1,11 +1,11 @@
 "use client"
 
-import { WS } from "@/constants/Socket"
 import { AccountHistoryBlock, CustomBlock, WSBlock } from "@/constants/Types"
 import { AccountHistoryBlockToCustomBlock, RPCBlockTOCustomBlock, WSBlockTOCustomBlock, pushBlock, unshiftBlock } from "@/functions/Functions"
 import { getAccountBlockCount, getAccountHistory, getAccountHistoryNext, getAccountsReceivable, getBlockInfo } from "@/functions/RPCs"
 import { useEffect, useState } from "react"
 import BlockCardList from "./BlockCardList"
+import { WSC } from "@/constants/Socket"
 
 export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: number, subscription: any }) {
 
@@ -17,7 +17,7 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
     const [LinkDictionary, setLinkDictionary] = useState<any>({})
     const [head, setHead] = useState("")
 
-    useEffect(() => {
+    useEffect(() => { 
         const addLink = (key: string, value: string) => {
             setLinkDictionary({ ...LinkDictionary, [key]: value })
         }
@@ -51,11 +51,11 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
             getConfirmedCount()
         }
 
-        WS.onopen = () => {
-            WS.send(JSON.stringify(props.subscription))
+        WSC.onopen = () => {
+            WSC.send(JSON.stringify(props.subscription))
         }
         // super ugly
-        WS.onmessage = async (msg) => {
+        WSC.onmessage = async (msg: any) => {
             let data: WSBlock = JSON.parse(msg.data)
             if (data.topic === "confirmation" && confirmedList.filter(e => e.hash === data.message.hash).length === 0) {
                 if (props.nanoAddress === "") {
@@ -104,6 +104,24 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
         }
         getNextBlock()
     }, [head])
+
+
+    // return (
+    //     <div className="w-full min-w-0 flex my-8 divide-x rounded border border-sky-700">
+    //         <button
+    //             className='py-2 px-4 flex-auto border-sky-700 rounded'
+    //             onClick={}
+    //         >
+    //             Confirmed
+    //         </button>
+    //         <button
+    //             className='py-2 px-4 flex-auto border-sky-700'
+    //             onClick={}
+    //         >
+    //             Receivable
+    //         </button>
+    //     </div>
+    // )
 
     if (props.nanoAddress === "") {
         return (
