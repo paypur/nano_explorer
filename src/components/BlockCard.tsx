@@ -32,7 +32,7 @@ export default function BlockCard(props: { block: CustomBlock, isLast?: boolean,
 
     return (
         <div className='flex flex-col py-2 px-4 border-sky-700' ref={cardRef}>
-            {props.block.type === "send" ? <p className="text-rose-600">SEND{amount}</p> : <p className="text-emerald-600">RECEIVE{amount}</p>}
+            {props.block.type === "send" ? <p className="text-rose-600">SEND{amount}</p> : props.block.type === "receive" ? <p className="text-emerald-600">RECEIVE{amount}</p> : <p className='text-sky-700'>CHANGE</p>}
             <div className='flex flex-row'>
                 <div className='flex flex-col min-w-0 self-end'>
                     <AddressAlias nanoAddress={props.block.account}/>
