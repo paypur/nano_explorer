@@ -1,6 +1,6 @@
 "use server"
 
-export async function getAlias( nanoAddress: string ) {
+export async function getAlias(nanoAddress: string) {
     const result = await fetch(`https://nano.to/.well-known/nano-currency.json?names=${nanoAddress}`, { next: { revalidate: 3600 } })
     return await result.json()
 }

@@ -1,4 +1,6 @@
-'use server'
+//'use server'
+// use server causes caching??
+
 
 import { NODE } from "@/constants/NodeAddress"
 
@@ -16,6 +18,35 @@ export async function getBlockInfo(blockHash: string) {
     const data = await result.json()
     return data
 }
+
+export async function getBlockInfoReceiveHash(blockHash: string) {
+    const result = await fetch(NODE, {
+        method: "POST",
+        body: JSON.stringify({
+            "action": "blocks_info",
+            "json_block": "true",
+            "hashes": [blockHash],
+            "receive_hash": "true"
+        })
+    })
+    const data = await result.json()
+    for (const hash in data.blocks) {
+        return data.blocks[hash].receive_hash
+    }
+}
+export async function getBlocksInfo(blockHash: string[]) {
+    const result = await fetch(NODE, {
+        method: "POST",
+        body: JSON.stringify({
+            "action": "blocks_info",
+            "json_block": "true",
+            "hashes": blockHash
+        })
+    })
+    const data = await result.json()
+    return data
+}
+
 
 export async function getBlockAccount(hash: string) {
     const result = await fetch(NODE, {
@@ -60,8 +91,8 @@ export async function getAccountHistory(nanoAddress: string) {
         body: JSON.stringify({
             "action": "account_history",
             "account": nanoAddress,
-            "count": "5",
-            "raw": "true"
+            "raw": "true",
+            "count": "5"
         })
     })
     const data = await result.json()
@@ -74,10 +105,10 @@ export async function getAccountHistoryNext(nanoAddress: string, head: string) {
         body: JSON.stringify({
             "action": "account_history",
             "account": nanoAddress,
-            "count": "1",
             "raw": "true",
-            "head": head,
-            "offset": "1"
+            "count": "1",
+            "offset": "1",
+            "head": head
         })
     })
     const data = await result.json()

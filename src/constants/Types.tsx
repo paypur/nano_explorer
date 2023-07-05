@@ -2,9 +2,14 @@ export type CustomBlock = {
     amount: string
     type: string
     account: string
-    accountLink: string
     hash: string
     timestamp: string
+    link: string
+}
+
+export type CustomBlockPair = {
+    block1: CustomBlock
+    block2?: CustomBlock
 }
 
 export type WSBlock = {
@@ -26,8 +31,6 @@ export type WSBlock = {
             signature: string
             work: string
             subtype: string
-            // non standard
-            account_link?: string
         }
     }
 }
