@@ -7,7 +7,8 @@ export const WSBlockToCustomBlock = (block: WSBlock) => {
         account: block.message.account,
         hash: block.message.hash,
         timestamp: block.time,
-        link: block.message.block.link
+        link: block.message.block.link,
+        account_link: block.message.block.link_as_account
     } as CustomBlock)
 }
 
@@ -18,7 +19,8 @@ export const RPCBlockToCustomBlock = (block: RPCBlock, blockHash: string) => {
         account: block.block_account,
         hash: blockHash,
         timestamp: (parseInt(block.local_timestamp) * 1000).toString(),
-        link: block.contents.link
+        link: block.contents.link,
+        account_link: block.contents.link_as_account
     } as CustomBlock)
 }
 
@@ -29,7 +31,8 @@ export const AHBlockToCustomBlock = (block: AccountHistoryBlock, nanoAddress: st
         account: nanoAddress,
         hash: block.hash,
         timestamp: (parseInt(block.local_timestamp) * 1000).toString(),
-        link: block.link
+        link: block.link,
+        account_link: block.account
     } as CustomBlock)
 }
 

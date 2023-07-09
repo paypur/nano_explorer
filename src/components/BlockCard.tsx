@@ -24,7 +24,8 @@ export default function BlockCard (props: { block1: CustomBlock, block2?: Custom
     return (
         <div className='flex flex-row py-2 px-4 border-sky-700' ref={cardRef}>
             <BlockHalf block={props.block1}/>
-            {props.block1.type === "send" ? <MdOutlineEast className='mx-2 text-rose-600 min-w-fit self-center' /> : <MdOutlineWest className='mx-2 text-emerald-600 min-w-fit self-center' />}
+            {props.block1.type === "send" ? <MdOutlineEast className='mx-2 text-rose-600 min-w-fit self-center' /> : null}
+            {props.block1.type === "receive" ? <MdOutlineWest className='mx-2 text-emerald-600 min-w-fit self-center' /> : null}
             {/* https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator */}
             {props.block1.type !== "change" ? <BlockHalf block={props.block2!}/> : null}
         </div>

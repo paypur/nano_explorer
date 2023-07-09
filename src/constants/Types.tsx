@@ -5,6 +5,7 @@ export type CustomBlock = {
     hash: string
     timestamp: string
     link: string
+    account_link: string
 }
 
 export type CustomBlockPair = {

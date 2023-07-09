@@ -1,8 +1,8 @@
 "use client"
 
-import { AccountHistoryBlock, CustomBlockPair, WSBlock } from "@/constants/Types"
+import { AccountHistoryBlock, CustomBlock, CustomBlockPair, WSBlock } from "@/constants/Types"
 import { AHBlockToCustomBlock, RPCBlockToCustomBlock, WSBlockToCustomBlock, pushBlock, pushBlocks, unshiftBlock } from "@/functions/Functions"
-import { getAccountBlockCount, getAccountHistory, getAccountHistoryNext, getAccountsReceivable, getBlockInfo, getBlockInfoReceiveHash } from "@/functions/RPCs"
+import { getAccountBlockCount, getAccountHistory, getAccountHistoryNext, getBlockInfo, getBlockInfoReceiveHash } from "@/functions/RPCs"
 import { useEffect, useState } from "react"
 import BlockCardList from "./BlockCardList"
 import { WSC } from "@/constants/Socket"
@@ -15,22 +15,20 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
     const [head, setHead] = useState("")
 
     useEffect(() => {
-        const getConfirmed = async () => {
-            // push all blocks at once to so there is only 1 refresh
-            const blockPairArray: CustomBlockPair[] = []
-            const blocks: AccountHistoryBlock[] = await getAccountHistory(props.nanoAddress)
-            console.log(blocks)
-            for (const block of blocks) {
-                blockPairArray.push(await getBlockPairData(AHBlockToCustomBlock(block, props.nanoAddress)))
-            }
-            pushBlocks(confirmedList, setConfirmedList, blockPairArray, props.MAX_BLOCKS)
-        }
-
-        const getConfirmedCount = async () => {
-            setConfirmedCount(await getAccountBlockCount(props.nanoAddress))
-        }
-
         if (props.nanoAddress !== "") {
+            const getConfirmed = async () => {
+                // push all blocks at once to so there is only 1 refresh
+                const blockPairArray: CustomBlockPair[] = []
+                const blocks: AccountHistoryBlock[] = await getAccountHistory(props.nanoAddress)
+                for (const block of blocks) {
+                    blockPairArray.push(await getBlockPairData(AHBlockToCustomBlock(block, props.nanoAddress)))
+                }
+                pushBlocks(confirmedList, setConfirmedList, blockPairArray, props.MAX_BLOCKS)
+            }
+            const getConfirmedCount = async () => {
+                setConfirmedCount(await getAccountBlockCount(props.nanoAddress))
+            }
+
             getConfirmed()
             getConfirmedCount()
         }
@@ -58,24 +56,6 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
         getNextBlock()
     }, [head])
 
-
-    // return (
-    //     <div className="w-full min-w-0 flex my-8 divide-x rounded border border-sky-700">
-    //         <button
-    //             className='py-2 px-4 flex-auto border-sky-700 rounded'
-    //             onClick={}
-    //         >
-    //             Confirmed
-    //         </button>
-    //         <button
-    //             className='py-2 px-4 flex-auto border-sky-700'
-    //             onClick={}
-    //         >
-    //             Receivable
-    //         </button>
-    //     </div>
-    // )
-
     if (props.nanoAddress === "") {
         return (
             <div className="my-8">
@@ -92,17 +72,22 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
     }
 }
 
-async function getBlockPairData(block: any) {
+async function getBlockPairData(block: CustomBlock) {
     const blockPair: CustomBlockPair = { block1: block }
     if (blockPair.block1.type === "send") {
-        // guaranteed to be missing
-        let receiveHash = await getBlockInfoReceiveHash(blockPair.block1.hash)
+        // guaranteed to be missing for websockets
+        let receiveHash = await getBlockInfoReceiveHash(block.hash)
         if (receiveHash !== "0000000000000000000000000000000000000000000000000000000000000000") {
             blockPair["block2"] = RPCBlockToCustomBlock(await getBlockInfo(receiveHash), receiveHash)
         }
+        else {
+            blockPair["block2"] = {
+                account: block.account_link
+            } as CustomBlock 
+        }
     }
     else if (blockPair.block1.type === "receive") {
-        blockPair["block2"] = RPCBlockToCustomBlock(await getBlockInfo(blockPair.block1.link), blockPair.block1.link)
+        blockPair["block2"] = RPCBlockToCustomBlock(await getBlockInfo(block.link), block.link)
     }
     return blockPair
 }
