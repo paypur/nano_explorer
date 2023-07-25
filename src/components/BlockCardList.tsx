@@ -8,7 +8,9 @@ export default function BlockCardList(props: { blockList: CustomBlockPair[], blo
             <div className="flex flex-row py-2 px-4">
                 <p className="max-h-[1.75rem]">{props.text}</p>
                 <p className="font-mono">&nbsp;</p>
-                {props.blockHeight !== "" ? <p className="font-mono">({props.blockHeight})</p> : <SkeletonText/>}
+                {props.blockHeight !== undefined ?
+                    props.blockHeight !== "" ?
+                    <p className="font-mono">({props.blockHeight})</p> : <SkeletonText/> : null}
             </div>
             {props.newHead === undefined ? props.blockList.map((transaction: CustomBlockPair, index) => (
                 <BlockCard

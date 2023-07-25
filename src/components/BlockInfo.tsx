@@ -59,7 +59,7 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
     if (props.nanoAddress === "") {
         return (
             <div className="my-8">
-                <BlockCardList blockList={confirmedList} blockHeight={confirmedCount} text={"Confirmed Transactions"} />
+                <BlockCardList blockList={[]} blockHeight={undefined} text={"Confirmed Transactions"} />
             </div>
         )
     } else {
