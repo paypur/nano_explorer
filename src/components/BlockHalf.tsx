@@ -10,8 +10,10 @@ export default function BlockHalf (props: { block: CustomBlock }) {
         const date = new Date(parseInt(props.block.timestamp))
         return (
             <div className="flex flex-col min-w-0">
-                {props.block.type === "send" ? <p className="max-h-[1.75rem] text-rose-600">SEND{amount}</p> : props.block.type === "receive" ? <p className="max-h-[1.75rem] text-emerald-600">RECEIVE{amount}</p> : <p className='text-sky-700'>CHANGE</p>}
-                <AddressAlias nanoAddress={props.block.account}/>
+                {props.block.type === "send" ? 
+                    <p className="max-h-[1.75rem] text-rose-600">SEND{amount}</p> : props.block.type === "receive" ?
+                        <p className="max-h-[1.75rem] text-emerald-600">RECEIVE{amount}</p> : <p className='text-sky-700'>CHANGE</p>}
+                <AddressAlias nanoAddress={props.block.account} />
                 <FormatLink path={props.block.hash} type="block" />
                 <p className="truncate">{date.toString()}</p>
             </div>
@@ -21,7 +23,7 @@ export default function BlockHalf (props: { block: CustomBlock }) {
         return (
             <div className="flex flex-col w-[44.688rem] min-w-0">
                 <p className="text-emerald-600">RECEIVEABLE</p>
-                <AddressAlias nanoAddress={props.block.account}/>
+                <AddressAlias nanoAddress={props.block.account} />
                 <SkeletonTextWide/>
                 <SkeletonTextWide/>
             </div>

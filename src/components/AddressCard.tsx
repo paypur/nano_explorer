@@ -1,15 +1,15 @@
 import AddressQrCode from './AddressQrCode'
 import AddressAlias from './AddressAlias'
-import RepresentativeLabel from './RepresentativeLabel'
-import { getAccountBalance, getAccountRepresentative, getAccountWeight, getConfirmationQuorum } from '@/functions/RPCs'
+import { getAccountBalance, getAccountWeight, getConfirmationQuorum } from '@/functions/RPCs'
 import { tools } from 'nanocurrency-web'
 import { getNanoUSD } from '@/functions/ServerFunctions'
 
 import { Suspense } from 'react'
 import SkeletonText from './SkeletonText'
+import AddressRepresentativeInfo from './AccountRepresentativeInfo'
 
 export default async function AddressCard(props: { nanoAddress: string }) {
-    
+
     const isRepresentative = (await getAccountWeight(props.nanoAddress)) !== "0"
 
     const Balance = async () => {
@@ -19,17 +19,6 @@ export default async function AddressCard(props: { nanoAddress: string }) {
             <>
                 <p className='font-mono font-medium text-white truncate'>Ӿ{parseFloat(tools.convert(balanceRaw, 'RAW', 'NANO')).toFixed(6)}</p>
                 <p className='font-mono truncate'>${balanceUSD.toFixed(2)}</p>
-            </>
-        )
-    }
-
-    const Representative = async () => {
-        const rep = await getAccountRepresentative(props.nanoAddress)
-        return (
-            <>
-                {/* @ts-expect-error Server Component */}
-                <RepresentativeLabel nanoAddress={rep} />
-                <AddressAlias nanoAddress={rep}/>
             </>
         )
     }
@@ -51,35 +40,35 @@ export default async function AddressCard(props: { nanoAddress: string }) {
         <div className="flex flex-row justify-between my-8 py-2 px-4 border border-sky-700 rounded">
             <div className='flex flex-col min-w-0 mr-4'>
                 <p className='text-sm text-gray-400'>Account</p>
-                <AddressAlias nanoAddress={props.nanoAddress}/>
+                <AddressAlias nanoAddress={props.nanoAddress} />
 
                 <p className='text-sm text-gray-400'>Balance</p>
                 <Suspense fallback={
                     <>
-                        <SkeletonText/>
-                        <SkeletonText/>
+                        <SkeletonText />
+                        <SkeletonText />
                     </>
                 }>
                     {/* @ts-expect-error Server Component */}
-                    <Balance/>
+                    <Balance />
                 </Suspense>
 
-                {isRepresentative  ? 
+                {isRepresentative ?
                     <Suspense fallback={<></>}>
                         {/* @ts-expect-error Server Component */}
-                        <RepWeight/>
+                        <RepWeight />
                     </Suspense>
-                : null}
+                    : null}
 
                 <p className='text-sm text-gray-400'>Representative</p>
                 <Suspense fallback={
                     <>
-                        <SkeletonText/>
-                        <SkeletonText/>
+                        <SkeletonText />
+                        <SkeletonText />
                     </>
                 }>
                     {/* @ts-expect-error Server Component */}
-                    <Representative/>
+                    <AddressRepresentativeInfo nanoAddress={props.nanoAddress}/>
                 </Suspense>
             </div>
             <div className='flex flex-row items-center'>
