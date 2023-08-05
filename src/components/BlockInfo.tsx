@@ -1,11 +1,12 @@
 "use client"
 
-import { AccountHistoryBlock, CustomBlock, CustomBlockPair, WSBlock } from "@/constants/Types"
-import { AHBlockToCustomBlock, RPCBlockToCustomBlock, WSBlockToCustomBlock, pushBlock, pushBlocks, unshiftBlock } from "@/functions/Functions"
-import { getAccountBlockCount, getAccountHistory, getAccountHistoryNext, getBlockInfo, getBlockInfoReceiveHash } from "@/functions/RPCs"
+import { AccountHistoryBlock, CustomBlockPair, WSBlock } from "@/constants/Types"
+import { AHBlockToCustomBlock, WSBlockToCustomBlock, pushBlock, pushBlocks, unshiftBlock } from "@/functions/Functions"
+import { getAccountBlockCount, getAccountHistory, getAccountHistoryNext } from "@/functions/RPCs"
 import { useEffect, useState } from "react"
 import BlockCardList from "./BlockCardList"
 import { WSC } from "@/constants/Socket"
+import { getBlockPairData } from "@/functions/ServerFunctions"
 
 export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: number, subscription: any }) {
 
@@ -25,6 +26,7 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
                 }
                 pushBlocks(confirmedList, setConfirmedList, blockPairArray, props.MAX_BLOCKS)
             }
+
             const getConfirmedCount = async () => {
                 setConfirmedCount(await getAccountBlockCount(props.nanoAddress))
             }
@@ -56,38 +58,18 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
         getNextBlock()
     }, [head])
 
-    if (props.nanoAddress === "") {
-        return (
-            <div className="my-8">
-                <BlockCardList blockList={[]} blockHeight={undefined} text={"Confirmed Transactions"} />
-            </div>
-        )
-    } else {
-        return (
-            <div className="flex flex-row space-x-8 my-8">
-                {/* {receivableList.length !== 0 ? <BlockCardList blockList={receivableList} blockHeight={receivableList.length.toString()} text={"Receivable Transactions"} />: null} */}
-                <BlockCardList blockList={confirmedList} blockHeight={confirmedCount} text={"Confirmed Transactions"} newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)} />
-            </div>
-        )
-    }
-}
 
-async function getBlockPairData(block: CustomBlock) {
-    const blockPair: CustomBlockPair = { block1: block }
-    if (blockPair.block1.type === "send") {
-        // guaranteed to be missing for websockets
-        let receiveHash = await getBlockInfoReceiveHash(block.hash)
-        if (receiveHash !== "0000000000000000000000000000000000000000000000000000000000000000") {
-            blockPair["block2"] = RPCBlockToCustomBlock(await getBlockInfo(receiveHash), receiveHash)
-        }
-        else {
-            blockPair["block2"] = {
-                account: block.account_link
-            } as CustomBlock 
-        }
-    }
-    else if (blockPair.block1.type === "receive") {
-        blockPair["block2"] = RPCBlockToCustomBlock(await getBlockInfo(block.link), block.link)
-    }
-    return blockPair
+    return (
+        <div className="my-8">
+            {props.nanoAddress === "" ?
+            <BlockCardList 
+                blockList={confirmedList} 
+                text={"New Confirmed Transactions"} /> :
+            <BlockCardList 
+                blockList={confirmedList} 
+                blockHeight={confirmedCount} 
+                text={"Confirmed Transactions"} 
+                newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)} />}
+        </div>
+    )
 }

@@ -1,4 +1,4 @@
-import AddressCard from '@/components/AddressCard'
+import AddressCard from '@/components/address/AddressCard'
 import BlockInfo from '@/components/BlockInfo'
 import { headers } from 'next/headers'
 

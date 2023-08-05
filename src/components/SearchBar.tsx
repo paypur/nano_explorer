@@ -23,12 +23,12 @@ export default function SearchBar() {
     }
 
     return (
-        <div className='w-full min-w-0 flex my-8 divide-x rounded border border-sky-700'>
+        <div className='w-[54rem] min-w-0 flex divide-x rounded border border-sky-700'>
             <button
                 className='py-2 px-4 flex-none border-sky-700'
                 onClick={home}
             >
-                <MdOutlineHome size="1.2rem" />
+                <MdOutlineHome size="1.25rem" />
             </button>
             <input
                 className='flex-auto py-2 px-4 bg-black border-sky-700 font-mono placeholder:text-gray-400 truncate'

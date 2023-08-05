@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -13,6 +13,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { getNodeWeights } from '@/functions/ServerFunctions';
+import { ChartData } from '@/constants/Types';
 
 ChartJS.register(
     CategoryScale,
@@ -24,9 +25,9 @@ ChartJS.register(
     Tooltip,
 );
 
-export default function page() {
+export default function Page() {
 
-    const [dataset, setDataset] = useState([])
+    const [dataset, setDataset] = useState<ChartData[]>([])
 
     useEffect(() => {
         const update = async () => {

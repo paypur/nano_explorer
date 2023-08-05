@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import FormatLink from "./FormatLink"
 import { getAlias } from "@/functions/ServerFunctions"
-import SkeletonText from "./SkeletonText"
+import SkeletonText from "../SkeletonText"
+import FormatLink from "../FormatLink"
 
 export default function AddressAlias(props: { nanoAddress: string }) {
     

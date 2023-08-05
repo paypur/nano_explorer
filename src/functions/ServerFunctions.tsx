@@ -1,6 +1,9 @@
 "use server"
 
-import { ChartData } from "@/constants/Types"
+import { ChartData, CustomBlock, CustomBlockPair } from "@/constants/Types"
+import { RPCBlockToCustomBlock } from "./Functions"
+import { getBlockInfoReceiveHash, getBlockInfo } from "./RPCs"
+
 import { MongoClient } from "mongodb"
 
 export async function getAlias(nanoAddress: string) {
@@ -14,36 +17,50 @@ export async function getNanoUSD() {
     return data.nano.usd
 }
 
+export async function getBlockPairData(block: CustomBlock) {
+    let blockPair: CustomBlockPair = { block1: block }
+    if (blockPair.block1.type === "send") {
+        // guaranteed to be missing for websockets
+        let receiveHash = await getBlockInfoReceiveHash(block.hash)
+        if (receiveHash !== "0000000000000000000000000000000000000000000000000000000000000000") {
+            blockPair["block2"] = RPCBlockToCustomBlock(await getBlockInfo(receiveHash), receiveHash)
+        }
+        else {
+            blockPair["block2"] = {
+                account: block.account_link
+            } as CustomBlock 
+        }
+    }
+    else if (blockPair.block1.type === "receive") {
+        blockPair["block2"] = RPCBlockToCustomBlock(await getBlockInfo(block.link), block.link)
+    }
+    return blockPair
+}
+
 export async function getNodeWeights() {
 
     const client = new MongoClient("mongodb://127.0.0.1:27017");
+
+    let dataSet: ChartData[] = []
     
-    async function main() {
-        let dataSet: ChartData[] = []
-        
-        await client.connect();
+    await client.connect();
 
-        const dbName = "test"
-        const db = client.db(dbName);
-        
-        let collections = await db.listCollections().toArray()
-        
-        for (const collectionOBJ of collections) {
-            const collection = db.collection(collectionOBJ.name)
-            const docs = await collection.find({}).project({_id:0}).sort({weight:-1}).toArray()
-            dataSet.push({
-                fill: true,
-                label: collectionOBJ.name,
-                data: docs,
-            })
-        }
-
-        dataSet.sort((a,b) => b.data[0].weight - a.data[0].weight)
-
-        return dataSet.slice(0,100)
+    const dbName = "test"
+    const db = client.db(dbName);
+    
+    let collections = await db.listCollections().toArray()
+    
+    for (const collectionOBJ of collections) {
+        const collection = db.collection(collectionOBJ.name)
+        const docs = await collection.find({}).project({_id:0}).sort({weight:-1}).toArray()
+        dataSet.push({
+            fill: true,
+            label: collectionOBJ.name,
+            data: docs,
+        })
     }
 
-    return(await main()
-        .catch(console.error)
-        .finally(() => setTimeout(() => { client.close() }, 1000)))
+    dataSet.sort((a,b) => b.data[0].weight - a.data[0].weight)
+
+    return dataSet.slice(0,100)
 }
