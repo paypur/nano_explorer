@@ -1,17 +1,10 @@
 import { CustomBlockPair } from "@/constants/Types";
 import BlockCard from "./BlockCard";
-import SkeletonText from "./SkeletonText";
+import SkeletonBlockPair from "./skeletons/SkeletonBlockPair";
 
-export default function BlockCardList(props: { blockList: CustomBlockPair[], blockHeight?: string, text: string, newHead?: any }) {
+export default function BlockCardList(props: { blockList: CustomBlockPair[], blockHeight?: string, newHead?: any }) {
     return (
-        <div className="w-full min-w-0 h-fit flex flex-col">
-            <div className="text-lg font-medium flex flex-row py-2 px-4">
-                <p className="max-h-[1.75rem]">{props.text}</p>
-                <p className="font-mono">&nbsp;</p>
-                {props.blockHeight !== undefined ?
-                    props.blockHeight !== "" ?
-                        <p className="font-mono">({props.blockHeight})</p> : <SkeletonText /> : null}
-            </div>
+        <>
             {props.blockList.map((blockPair: CustomBlockPair, index) => (
                 props.newHead === undefined ?
                     <BlockCard
@@ -26,6 +19,6 @@ export default function BlockCardList(props: { blockList: CustomBlockPair[], blo
                         newHead={props.newHead}
                     />
             ))}
-        </div>
+        </>
     )
 }

@@ -1,6 +1,6 @@
 import { CustomBlock } from "@/constants/Types"
 import FormatLink from "./FormatLink"
-import SkeletonTextWide from "./SkeletonTextWide"
+import SkeletonTextWide from "./skeletons/SkeletonTextWide"
 import AddressAlias from "./address/AddressAlias"
 
 import { tools } from "nanocurrency-web"
@@ -22,7 +22,7 @@ export default function BlockHalf (props: { block: CustomBlock }) {
     } else {
         // really bad
         return (
-            <div className="flex flex-col w-[44.688rem] min-w-0">
+            <div className="flex flex-col w-[40.625rem] min-w-0">
                 <p className="text-emerald-600">RECEIVEABLE</p>
                 <AddressAlias nanoAddress={props.block.account} />
                 <SkeletonTextWide/>

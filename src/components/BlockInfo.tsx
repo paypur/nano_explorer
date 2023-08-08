@@ -7,11 +7,16 @@ import { useEffect, useState } from "react"
 import BlockCardList from "./BlockCardList"
 import { WSC } from "@/constants/Socket"
 import { getBlockPairData } from "@/functions/ServerFunctions"
+import SkeletonText from "./skeletons/SkeletonText"
+import SkeletonBlockPair from "./skeletons/SkeletonBlockPair"
 
 export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: number, subscription: any }) {
 
     const [confirmedList, setConfirmedList] = useState<CustomBlockPair[]>([])
     const [confirmedCount, setConfirmedCount] = useState("")
+
+    const [receivableList, setReceivableList] = useState<CustomBlockPair[]>([])
+    const [receivableCount, setReceivableCount] = useState("")
 
     const [head, setHead] = useState("")
 
@@ -60,16 +65,27 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
 
 
     return (
-        <div className="my-8">
-            {props.nanoAddress === "" ?
-            <BlockCardList 
-                blockList={confirmedList} 
-                text={"New Confirmed Transactions"} /> :
-            <BlockCardList 
-                blockList={confirmedList} 
-                blockHeight={confirmedCount} 
-                text={"Confirmed Transactions"} 
-                newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)} />}
+        <div className="my-8 w-full min-w-0 h-fit flex flex-col">
+            <div className="text-lg font-medium flex flex-row py-2 px-4">
+                <p className="">{props.nanoAddress !== "" ? "New Confirmed Transactions" : "Confirmed Transactions"}</p>
+                <p className="font-mono">&nbsp;</p>
+                {props.nanoAddress !== "" ?
+                    confirmedCount !== "" ?
+                        <p className="font-mono">({confirmedCount})</p> :
+                        <SkeletonText /> :
+                    null}
+            </div>
+            {props.nanoAddress !== "" ?
+                confirmedList.length !== 0 ?
+                    <BlockCardList
+                        blockList={confirmedList}
+                        blockHeight={confirmedCount}
+                        newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
+                    />
+                    : <SkeletonBlockPair />
+                : <BlockCardList
+                    blockList={confirmedList}
+                />}
         </div>
     )
 }

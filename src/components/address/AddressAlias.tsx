@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react"
 import { getAlias } from "@/functions/ServerFunctions"
-import SkeletonText from "../SkeletonText"
 import FormatLink from "../FormatLink"
+import SkeletonText from "../skeletons/SkeletonText"
 
 export default function AddressAlias(props: { nanoAddress: string }) {
     
@@ -12,7 +12,7 @@ export default function AddressAlias(props: { nanoAddress: string }) {
     useEffect(() => {
         const func = async () => {
             const data = await getAlias(props.nanoAddress)
-            setAlias((data.names.length !== 0) ? data.names[0]["name"] : "no alias")
+            setAlias((data.names.length !== 0) ? data.names[0]["name"] : null)
         }
         func()
     },[])
@@ -20,7 +20,7 @@ export default function AddressAlias(props: { nanoAddress: string }) {
     return ( 
         <>
             {alias !== "" 
-            ? <p className={`font-medium text-white truncate ${alias === "no alias" ? "italic" : null}`}>{alias}</p>
+            ? <p className={`font-medium text-white truncate ${alias === null ? "italic" : null}`}>{alias === null ? "No Alias" : alias}</p>
             : <SkeletonText/>}
             <FormatLink path={props.nanoAddress} type="address"/>
         </>
