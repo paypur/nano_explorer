@@ -1,6 +1,5 @@
 import { CustomBlockPair } from "@/constants/Types";
 import BlockCard from "./BlockCard";
-import SkeletonBlockPair from "./skeletons/SkeletonBlockPair";
 
 export default function BlockCardList(props: { blockList: CustomBlockPair[], blockHeight?: string, newHead?: any }) {
     return (
@@ -19,6 +18,6 @@ export default function BlockCardList(props: { blockList: CustomBlockPair[], blo
                         newHead={props.newHead}
                     />
             ))}
-        </>
+        </> 
     )
 }

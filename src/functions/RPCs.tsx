@@ -195,5 +195,5 @@ export async function getAccountsReceivable(nanoAddress: string) {
         })
     })
     const data = await result.json()
-    return data.blocks[nanoAddress]
+    return data.blocks !== "" ? data.blocks[nanoAddress] : []
 }

@@ -1,16 +1,18 @@
 "use client"
 
-import { AccountHistoryBlock, CustomBlockPair, WSBlock } from "@/constants/Types"
-import { AHBlockToCustomBlock, WSBlockToCustomBlock, pushBlock, pushBlocks, unshiftBlock } from "@/functions/Functions"
-import { getAccountBlockCount, getAccountHistory, getAccountHistoryNext } from "@/functions/RPCs"
+import { AccountHistoryBlock, CustomBlock, CustomBlockPair, WSBlock } from "@/constants/Types"
+import { AHBlockToCustomBlock, RPCBlockToCustomBlock, WSBlockToCustomBlock, pushBlock, pushBlocks, unshiftBlock } from "@/functions/Functions"
+import { getAccountBlockCount, getAccountHistory, getAccountHistoryNext, getAccountsReceivable } from "@/functions/RPCs"
 import { useEffect, useState } from "react"
 import BlockCardList from "./BlockCardList"
 import { WSC } from "@/constants/Socket"
 import { getBlockPairData } from "@/functions/ServerFunctions"
 import SkeletonText from "./skeletons/SkeletonText"
-import SkeletonBlockPair from "./skeletons/SkeletonBlockPair"
+import { getBlockInfo } from "@/functions/RPCs"
 
-export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: number, subscription: any }) {
+export default function BlockInfo(props: { nanoAddress: string, subscription: any }) {
+
+    const MAX_BLOCKS = Number.MAX_SAFE_INTEGER
 
     const [confirmedList, setConfirmedList] = useState<CustomBlockPair[]>([])
     const [confirmedCount, setConfirmedCount] = useState("")
@@ -29,15 +31,42 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
                 for (const block of blocks) {
                     blockPairArray.push(await getBlockPairData(AHBlockToCustomBlock(block, props.nanoAddress)))
                 }
-                pushBlocks(confirmedList, setConfirmedList, blockPairArray, props.MAX_BLOCKS)
+                pushBlocks(confirmedList, setConfirmedList, blockPairArray, MAX_BLOCKS)
             }
 
             const getConfirmedCount = async () => {
                 setConfirmedCount(await getAccountBlockCount(props.nanoAddress))
             }
+            
+            const getReceivable = async () => {
+                // push all blocks at once to so there is only 1 refresh
+                const blockPairArray: CustomBlockPair[] = []
+                const hashes: string[] = await getAccountsReceivable(props.nanoAddress)
+                for (const hash of hashes) {
+                    blockPairArray.push(await getBlockPairData(RPCBlockToCustomBlock(await getBlockInfo(hash), hash)))
+                }
+                pushBlocks(receivableList, setReceivableList, blockPairArray, MAX_BLOCKS)
 
+            }
+            
+            const getReceivableCount = async () => {
+                setReceivableCount((await getAccountsReceivable(props.nanoAddress)).length)
+            }
+            
             getConfirmed()
             getConfirmedCount()
+
+            getReceivable()
+            getReceivableCount()
+
+            const matchBlockPair = (block: CustomBlock) => {
+                for (const blockPair of confirmedList) {
+                    if (block.link === blockPair.block1.hash) {
+
+                    }
+                }
+                
+            }
         }
 
         WSC.onopen = () => {
@@ -48,7 +77,7 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
             let data: WSBlock = JSON.parse(msg.data)
             if (data.topic === "confirmation" && confirmedList.filter((e: CustomBlockPair) => e.block1.hash === data.message.hash).length === 0) {
                 if (props.nanoAddress === "" || data.message.account === props.nanoAddress) {
-                    unshiftBlock(confirmedList, setConfirmedList, await getBlockPairData(WSBlockToCustomBlock(data)), props.MAX_BLOCKS)
+                    unshiftBlock(confirmedList, setConfirmedList, await getBlockPairData(WSBlockToCustomBlock(data)), MAX_BLOCKS)
                 }
             }
         }
@@ -57,7 +86,7 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
     useEffect(() => {
         const getNextBlock = async () => {
             if (head !== "" && confirmedList.length < parseInt(confirmedCount)) {
-                pushBlock(confirmedList, setConfirmedList, await getBlockPairData(AHBlockToCustomBlock(await getAccountHistoryNext(props.nanoAddress, head), props.nanoAddress)), props.MAX_BLOCKS)
+                pushBlock(confirmedList, setConfirmedList, await getBlockPairData(AHBlockToCustomBlock(await getAccountHistoryNext(props.nanoAddress, head), props.nanoAddress)), MAX_BLOCKS)
             }
         }
         getNextBlock()
@@ -66,26 +95,53 @@ export default function BlockInfo(props: { nanoAddress: string, MAX_BLOCKS: numb
 
     return (
         <div className="my-8 w-full min-w-0 h-fit flex flex-col">
-            <div className="text-lg font-medium flex flex-row py-2 px-4">
-                <p className="">{props.nanoAddress !== "" ? "New Confirmed Transactions" : "Confirmed Transactions"}</p>
-                <p className="font-mono">&nbsp;</p>
-                {props.nanoAddress !== "" ?
-                    confirmedCount !== "" ?
-                        <p className="font-mono">({confirmedCount})</p> :
-                        <SkeletonText /> :
-                    null}
-            </div>
-            {props.nanoAddress !== "" ?
-                confirmedList.length !== 0 ?
-                    <BlockCardList
-                        blockList={confirmedList}
-                        blockHeight={confirmedCount}
-                        newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
-                    />
-                    : <SkeletonBlockPair />
-                : <BlockCardList
-                    blockList={confirmedList}
-                />}
+            {
+                props.nanoAddress !== "" ?
+                    <>
+
+                        <div className="text-lg font-medium flex flex-row py-2 px-4">
+                            <p>Pending Transactions</p>
+                            <p className="font-mono">&nbsp;</p>
+                            {receivableCount !== undefined ?
+                                receivableCount !== "" ?
+                                    <p className="font-mono">({receivableCount})</p> :
+                                    <SkeletonText /> :
+                                    null}
+                        </div>
+                        <BlockCardList
+                            blockList={receivableList}
+                        /> 
+
+                        <div className="text-lg font-medium flex flex-row py-2 px-4">
+                            <p>Confirmed Transactions</p>
+                            <p className="font-mono">&nbsp;</p>
+                            {confirmedCount !== undefined ?
+                                confirmedCount !== "" ?
+                                    <p className="font-mono">({confirmedCount})</p> :
+                                    <SkeletonText /> :
+                                    null}
+                        </div>
+                        <BlockCardList
+                            blockList={confirmedList}
+                            blockHeight={confirmedCount}
+                            newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
+                        /> 
+                    </>
+                :   <>
+                        <div className="text-lg font-medium flex flex-row py-2 px-4">
+                            <p>Recently Confirmed Transactions</p>
+                            <p className="font-mono">&nbsp;</p>
+                            {confirmedCount !== undefined ?
+                                confirmedCount !== "" ?
+                                    <p className="font-mono">({confirmedCount})</p> :
+                                    <SkeletonText /> :
+                                    null}
+                        </div>
+                        <BlockCardList
+                            blockList={confirmedList}
+                        /> 
+                    </>
+           }
         </div>
     )
 }
