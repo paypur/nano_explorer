@@ -59,25 +59,31 @@ export default function BlockInfo(props: { nanoAddress: string, subscription: an
             getReceivable()
             getReceivableCount()
 
-            const matchBlockPair = (block: CustomBlock) => {
-                for (const blockPair of confirmedList) {
-                    if (block.link === blockPair.block1.hash) {
-
-                    }
-                }
-                
-            }
         }
+        
+        // const matchBlockPair = (block: CustomBlock) => {
+        //     let array = [...confirmedList] 
+        //     for (let i = 0; i < array.length; i ++) {
+        //         if (block.link === array[i].block1.hash) {
+        //             //doesnt work
+        //             //https://stackoverflow.com/questions/36326612/how-to-delete-an-item-from-state-array
+        //             array.unshift({block1: block, block2: array.splice(i, 1)[0].block1})
+        //         }
+        //     }
+        // }
 
         WSC.onopen = () => {
             WSC.send(JSON.stringify(props.subscription))
         }
-        // super ugly
+
         WSC.onmessage = async (msg: any) => {
             let data: WSBlock = JSON.parse(msg.data)
             if (data.topic === "confirmation" && confirmedList.filter((e: CustomBlockPair) => e.block1.hash === data.message.hash).length === 0) {
                 if (props.nanoAddress === "" || data.message.account === props.nanoAddress) {
                     unshiftBlock(confirmedList, setConfirmedList, await getBlockPairData(WSBlockToCustomBlock(data)), MAX_BLOCKS)
+                    // if (data.message.block.type == "receive") {
+                    //     matchBlockPair(WSBlockToCustomBlock(data))
+                    // }
                 }
             }
         }
@@ -92,56 +98,53 @@ export default function BlockInfo(props: { nanoAddress: string, subscription: an
         getNextBlock()
     }, [head])
 
-
     return (
         <div className="my-8 w-full min-w-0 h-fit flex flex-col">
-            {
-                props.nanoAddress !== "" ?
-                    <>
+            {props.nanoAddress !== "" ?
+                <>
+                    <div className="text-lg font-medium flex flex-row py-2 px-4">
+                        <p>Pending Transactions</p>
+                        <p className="font-mono">&nbsp;</p>
+                        {receivableCount !== undefined ?
+                            receivableCount !== "" ?
+                                <p className="font-mono">({receivableCount})</p> :
+                                <SkeletonText /> :
+                                null}
+                    </div>
+                    <BlockCardList
+                        blockList={receivableList}
+                    /> 
 
-                        <div className="text-lg font-medium flex flex-row py-2 px-4">
-                            <p>Pending Transactions</p>
-                            <p className="font-mono">&nbsp;</p>
-                            {receivableCount !== undefined ?
-                                receivableCount !== "" ?
-                                    <p className="font-mono">({receivableCount})</p> :
-                                    <SkeletonText /> :
-                                    null}
-                        </div>
-                        <BlockCardList
-                            blockList={receivableList}
-                        /> 
-
-                        <div className="text-lg font-medium flex flex-row py-2 px-4">
-                            <p>Confirmed Transactions</p>
-                            <p className="font-mono">&nbsp;</p>
-                            {confirmedCount !== undefined ?
-                                confirmedCount !== "" ?
-                                    <p className="font-mono">({confirmedCount})</p> :
-                                    <SkeletonText /> :
-                                    null}
-                        </div>
-                        <BlockCardList
-                            blockList={confirmedList}
-                            blockHeight={confirmedCount}
-                            newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
-                        /> 
-                    </>
-                :   <>
-                        <div className="text-lg font-medium flex flex-row py-2 px-4">
-                            <p>Recently Confirmed Transactions</p>
-                            <p className="font-mono">&nbsp;</p>
-                            {confirmedCount !== undefined ?
-                                confirmedCount !== "" ?
-                                    <p className="font-mono">({confirmedCount})</p> :
-                                    <SkeletonText /> :
-                                    null}
-                        </div>
-                        <BlockCardList
-                            blockList={confirmedList}
-                        /> 
-                    </>
-           }
+                    <div className="text-lg font-medium flex flex-row py-2 px-4">
+                        <p>Confirmed Transactions</p>
+                        <p className="font-mono">&nbsp;</p>
+                        {confirmedCount !== undefined ?
+                            confirmedCount !== "" ?
+                                <p className="font-mono">({confirmedCount})</p> :
+                                <SkeletonText /> :
+                                null}
+                    </div>
+                    <BlockCardList
+                        blockList={confirmedList}
+                        blockHeight={confirmedCount}
+                        newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
+                    /> 
+                </>
+            :   <>
+                    <div className="text-lg font-medium flex flex-row py-2 px-4">
+                        <p>Recently Confirmed Transactions</p>
+                        <p className="font-mono">&nbsp;</p>
+                        {confirmedCount !== undefined ?
+                            confirmedCount !== "" ?
+                                <p className="font-mono">({confirmedCount})</p> :
+                                <SkeletonText /> :
+                                null}
+                    </div>
+                    <BlockCardList
+                        blockList={confirmedList}
+                    /> 
+                </>
+            }
         </div>
     )
 }

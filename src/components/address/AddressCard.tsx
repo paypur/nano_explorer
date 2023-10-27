@@ -36,42 +36,40 @@ export default async function AddressCard(props: { nanoAddress: string }) {
     }
 
     return (
-        <div className="flex flex-row justify-between my-8 py-2 px-4">
-            <div className='flex flex-col min-w-0 space-y-2'>
-                <p className='text-lg font-medium'>Account Info</p>
-                
+        <div className="flex flex-col my-8 py-2 px-4">
+            <p className='text-lg font-medium'>Account Info</p>
+            <div className='flex flex-row space-x-4 justify-between'>
+                <div className='flex flex-col min-w-0 space-y-2'>
+                    <div>
+                        <p className='text-gray-400'>Address</p>
+                        <AddressAlias nanoAddress={props.nanoAddress} />
+                    </div>
+
+                    <div className='flex flex-row justify-between space-x-4'>
+                        <div>
+                            <p className='text-gray-400'>Balance</p>
+                            {/* @ts-expect-error Server Component */}
+                            <AddressBalance />
+                        </div>
+
+                        <div>
+                            {/* @ts-expect-error Server Component */}
+                            <AddressRepresentativeInfo nanoAddress={props.nanoAddress}/>
+                        </div>
+                    </div>
+
+                    {isRepresentative ?
+                        <Suspense fallback={<></>}>
+                            {/* @ts-expect-error Server Component */}
+                            <AddressRepWeight />
+                        </Suspense>
+                        : null}
+                </div>
                 <div>
-                    <p className='text-gray-400'>Address</p>
-                    <AddressAlias nanoAddress={props.nanoAddress} />
+                    <p className='text-gray-400'>Address QR Code</p>
+                    <AddressQrCode nanoAddress={props.nanoAddress} />
                 </div>
-
-                <div className='flex flex-row justify-between space-x-4'>
-                    <div>
-                        <p className='text-gray-400'>Balance</p>
-                        {/* @ts-expect-error Server Component */}
-                        <AddressBalance />
-                    </div>
-
-                    <div>
-                        {/* @ts-expect-error Server Component */}
-                        <AddressRepresentativeInfo nanoAddress={props.nanoAddress}/>
-                    </div>
-                </div>
-
-                {isRepresentative ?
-                    <Suspense fallback={<></>}>
-                        {/* @ts-expect-error Server Component */}
-                        <AddressRepWeight />
-                    </Suspense>
-                    : null}
             </div>
         </div>
     )
 }
-            // <div className='flex flex-row items-center'>
-            //     <div className='flex flex-col items-center mr-4'>
-            //         <p className='font-sans text-slate-50'>Account<br />QR code</p>
-            //         {/* <MdSmartphone className='text-slate-50 pt-2' size="2rem" /> */}
-            //     </div>
-            //     <AddressQrCode nanoAddress={props.nanoAddress} />
-            // </div>

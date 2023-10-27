@@ -10,6 +10,7 @@ import {
     LineElement,
     Title,
     Tooltip,
+    TimeScale,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { getNodeWeights } from '@/functions/ServerFunctions';
@@ -41,7 +42,11 @@ export default function Page() {
         scales: {
             y: {
                 beginAtZero: true,
-                stacked: false
+                stacked: false,
+                
+            },
+            x: {
+                
             }
         },
         interaction: {
@@ -66,7 +71,7 @@ export default function Page() {
     };
 
     return (
-        <div className='border border-sky-600 rounded my-8'>
+        <div className='border border-sky-600 rounded my-8 w-[72rem]'>
             <Line className='py-2 px-4' options={options} data={data}/>
         </div>
     )

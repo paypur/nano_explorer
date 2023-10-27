@@ -52,7 +52,7 @@ export async function getNodeWeights() {
     
     for (const collectionOBJ of collections) {
         const collection = db.collection(collectionOBJ.name)
-        const docs = await collection.find({}).project({_id:0}).sort({weight:-1}).toArray()
+        const docs = await collection.find({}).project({_id:0}).sort({time:1}).toArray()
         dataSet.push({
             fill: true,
             label: collectionOBJ.name,
@@ -62,5 +62,5 @@ export async function getNodeWeights() {
 
     dataSet.sort((a,b) => b.data[0].weight - a.data[0].weight)
 
-    return dataSet.slice(0,100)
+    return dataSet.slice(0,10)
 }
