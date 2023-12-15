@@ -40,7 +40,7 @@ export default async function AddressCard(props: { nanoAddress: string }) {
             <p className='text-lg font-medium'>Account Info</p>
             <div className='flex flex-row space-x-4 justify-between'>
                 <div className='flex flex-col min-w-0 space-y-2'>
-                    <div>
+                    <div className='flex-col'>
                         <p className='text-gray-400'>Address</p>
                         <AddressAlias nanoAddress={props.nanoAddress} />
                     </div>
@@ -52,7 +52,7 @@ export default async function AddressCard(props: { nanoAddress: string }) {
                             <AddressBalance />
                         </div>
 
-                        <div>
+                        <div className='w-min-0'>
                             {/* @ts-expect-error Server Component */}
                             <AddressRepresentativeInfo nanoAddress={props.nanoAddress}/>
                         </div>
@@ -65,7 +65,7 @@ export default async function AddressCard(props: { nanoAddress: string }) {
                         </Suspense>
                         : null}
                 </div>
-                <div>
+                <div className='shrink-0'>
                     <p className='text-gray-400'>Address QR Code</p>
                     <AddressQrCode nanoAddress={props.nanoAddress} />
                 </div>

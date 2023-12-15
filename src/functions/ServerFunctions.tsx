@@ -39,14 +39,13 @@ export async function getBlockPairData(block: CustomBlock) {
 
 export async function getNodeWeights() {
 
+    // setup db connection
     const client = new MongoClient("mongodb://127.0.0.1:27017");
-
-    let dataSet: ChartData[] = []
-    
     await client.connect();
-
     const dbName = "test"
     const db = client.db(dbName);
+    
+    let dataSet: ChartData[] = []
     
     let collections = await db.listCollections().toArray()
     

@@ -37,23 +37,28 @@ export default function Page() {
         update()
     }, [])
 
+    ChartJS.defaults.color = '#f3f4f6';
+
     const options = {
         responsive: true,
         scales: {
             y: {
                 beginAtZero: true,
                 stacked: false,
-                
+                border: {
+                    color: '#f3f4f6'
+                }
             },
             x: {
-                
+                border: {
+                    color: '#f3f4f6'
+                }
             }
         },
         interaction: {
-            // mode: 'index' as const,
-            // intersect: false,
+            mode: 'index' as const,
+            intersect: false,
         },
-
         maintainAspectRatio: true,
         parsing: {
             xAxisKey: 'time',
@@ -71,8 +76,10 @@ export default function Page() {
     };
 
     return (
-        <div className='border border-sky-600 rounded my-8 w-[72rem]'>
-            <Line className='py-2 px-4' options={options} data={data}/>
-        </div>
+        <>
+            <div className='border border-sky-600 rounded my-8 w-[72rem]'>
+                <Line className='py-2 px-4' options={options} data={data}/>
+            </div>
+        </>
     )
 }

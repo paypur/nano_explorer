@@ -12,8 +12,8 @@ export default function BlockHalf (props: { block: CustomBlock }) {
         return (
             <div className="flex flex-col min-w-0">
                 {props.block.type === "send" ? 
-                    <p className="max-h-[1.5rem] text-rose-600">SEND{amount}</p> : props.block.type === "receive" ?
-                        <p className="max-h-[1.5rem] text-emerald-600">RECEIVE{amount}</p> : <p className='text-sky-700'>CHANGE</p>}
+                    <p className="max-h-[1.5rem] text-rose-600 truncate">SEND{amount}</p> : props.block.type === "receive" ?
+                        <p className="max-h-[1.5rem] text-emerald-600 truncate">RECEIVE{amount}</p> : <p className='text-sky-700 truncate'>CHANGE</p>}
                 <AddressAlias nanoAddress={props.block.account} />
                 <FormatLink path={props.block.hash} type="block" />
                 <p className="truncate">{date.toString()}</p>

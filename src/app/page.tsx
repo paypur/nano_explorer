@@ -8,7 +8,7 @@ export default function Home() {
 
     return (
         <div className="w-full">
-            <BlockInfo nanoAddress={""} MAX_BLOCKS={100} subscription={subscription}/>
+            <BlockInfo nanoAddress={""} subscription={subscription}/>
         </div>
     )
 }
