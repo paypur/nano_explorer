@@ -30,7 +30,7 @@ export default async function AddressCard(props: { nanoAddress: string }) {
             <div>
                 <p className='text-gray-400'>Voting Weight</p>
                 <p className='font-mono font-medium text-white truncate'>Ӿ{parseFloat(tools.convert(votingWeight, 'RAW', 'NANO')).toFixed(6)}</p>
-                <p className='max-h-[1.75rem]'><span className='font-mono truncate'>{(precentVotingWeight * 100).toFixed(2)}%&nbsp;</span>of online voting weight</p>
+                <p className='max-h-[1.75rem] truncate'><span className='font-mono'>{(precentVotingWeight * 100).toFixed(2)}%&nbsp;</span>of online voting weight</p>
             </div>
         )
     }
@@ -39,20 +39,21 @@ export default async function AddressCard(props: { nanoAddress: string }) {
         <div className="flex flex-col my-8 py-2 px-4">
             <p className='text-lg font-medium'>Account Info</p>
             <div className='flex flex-row space-x-4 justify-between'>
-                <div className='flex flex-col min-w-0 space-y-2'>
-                    <div className='flex-col'>
+                <div className='flex flex-col space-y-2 min-w-0'>
+
+                    <div className='flex flex-col'>
                         <p className='text-gray-400'>Address</p>
                         <AddressAlias nanoAddress={props.nanoAddress} />
                     </div>
 
                     <div className='flex flex-row justify-between space-x-4'>
-                        <div>
+                        <div className='flex flex-col'>
                             <p className='text-gray-400'>Balance</p>
                             {/* @ts-expect-error Server Component */}
                             <AddressBalance />
                         </div>
 
-                        <div className='w-min-0'>
+                        <div className='flex flex-col min-w-0'>
                             {/* @ts-expect-error Server Component */}
                             <AddressRepresentativeInfo nanoAddress={props.nanoAddress}/>
                         </div>

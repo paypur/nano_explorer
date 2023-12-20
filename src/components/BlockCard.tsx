@@ -22,7 +22,7 @@ export default function BlockCard(props: { blockPair: CustomBlockPair, isLast?: 
     }, [props.isLast]);
 
     return (
-        <div className='flex flex-row py-2 px-4 border-sky-700' ref={cardRef}>
+        <div className='flex flex-row py-2 px-4' ref={cardRef}>
             <BlockHalf block={props.blockPair.block1} />
             {props.blockPair.block1.type === "send" ? <MdOutlineEast className='mx-2 text-rose-600 min-w-fit self-center' /> : null}
             {props.blockPair.block1.type === "receive" ? <MdOutlineWest className='mx-2 text-emerald-600 min-w-fit self-center' /> : null}

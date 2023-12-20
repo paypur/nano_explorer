@@ -99,7 +99,7 @@ export default function BlockInfo(props: { nanoAddress: string, subscription: an
     }, [head])
 
     return (
-        <div className="my-8 w-full min-w-0 h-fit flex flex-col">
+        <div className="my-8">
             {props.nanoAddress !== "" ?
                 <>
                     <div className="text-lg font-medium flex flex-row py-2 px-4">

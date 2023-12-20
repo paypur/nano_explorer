@@ -3,7 +3,7 @@ import BlockCard from "./BlockCard";
 
 export default function BlockCardList(props: { blockList: CustomBlockPair[], blockHeight?: string, newHead?: any }) {
     return (
-        <>
+        <div className="min-w-0 flex flex-col h-fit">
             {props.blockList.map((blockPair: CustomBlockPair, index) => (
                 props.newHead === undefined ?
                     <BlockCard
@@ -18,6 +18,6 @@ export default function BlockCardList(props: { blockList: CustomBlockPair[], blo
                         newHead={props.newHead}
                     />
             ))}
-        </> 
+        </div>
     )
 }

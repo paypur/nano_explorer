@@ -20,10 +20,10 @@ export default function AddressPage() {
     }
 
     return (
-        <div className='w-full'>
+        <>
             {/* @ts-expect-error Server Component */}
             <AddressCard nanoAddress={nanoAddress} />
             <BlockInfo nanoAddress={nanoAddress} subscription={subscription}/>
-        </div>
+        </>
     )
 }

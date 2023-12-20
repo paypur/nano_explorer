@@ -23,7 +23,7 @@ export default function SearchBar() {
     }
 
     return (
-        <div className='w-[52rem] flex divide-x rounded border border-sky-700'>
+        <div className="justify-center flex flex-row">
             <button
                 className='py-2 px-4 flex-none border-sky-700'
                 onClick={home}
@@ -32,7 +32,7 @@ export default function SearchBar() {
                 <MdOutlineHome size="1.25rem" />
             </button>
             <input
-                className='w-full py-2 px-4 bg-black border-sky-700 font-mono placeholder:text-gray-400 truncate'
+                className='flex-initial w-[42rem] py-2 px-4 bg-black border-sky-700 font-mono placeholder:text-gray-400 truncate'
                 placeholder="nano_15zntj4a8r6bkihei788ciy1jgc5wnskan1gpgn8e8jku3r4qhr7rwifitir"
                 title="Enter a valid nano address or block hash"
                 autoComplete="on"
