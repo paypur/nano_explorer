@@ -131,14 +131,8 @@ export default function BlockInfo(props: { nanoAddress: string, subscription: an
                     /> 
                 </>
             :   <>
-                    <div className="text-lg font-medium flex flex-row py-2 px-4">
+                    <div className="text-lg font-medium py-2 px-4">
                         <p>Recently Confirmed Transactions</p>
-                        <p className="font-mono">&nbsp;</p>
-                        {confirmedCount !== undefined ?
-                            confirmedCount !== "" ?
-                                <p className="font-mono">({confirmedCount})</p> :
-                                <SkeletonText /> :
-                                null}
                     </div>
                     <BlockCardList
                         blockList={confirmedList}

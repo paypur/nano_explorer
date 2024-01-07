@@ -30,7 +30,7 @@ export default async function AddressCard(props: { nanoAddress: string }) {
             <div>
                 <p className='text-gray-400'>Voting Weight</p>
                 <p className='font-mono font-medium text-white truncate'>Ӿ{parseFloat(tools.convert(votingWeight, 'RAW', 'NANO')).toFixed(6)}</p>
-                <p className='max-h-[1.75rem] truncate'><span className='font-mono'>{(precentVotingWeight * 100).toFixed(2)}%&nbsp;</span>of online voting weight</p>
+                <p className='max-h-[1.5rem] truncate'><span className='font-mono'>{(precentVotingWeight * 100).toFixed(2)}%&nbsp;</span>of online voting weight</p>
             </div>
         )
     }
@@ -60,10 +60,10 @@ export default async function AddressCard(props: { nanoAddress: string }) {
                     </div>
 
                     {isRepresentative ?
-                        <Suspense fallback={<></>}>
+                        <>
                             {/* @ts-expect-error Server Component */}
                             <AddressRepWeight />
-                        </Suspense>
+                        </>
                         : null}
                 </div>
                 <div className='shrink-0'>

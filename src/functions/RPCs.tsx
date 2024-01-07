@@ -115,7 +115,19 @@ export async function getAccountHistoryNext(nanoAddress: string, head: string) {
     return data.history[0]
 }
 
-export async function getRepresentativesOnline(nanoAddress: string) {
+export async function getRepresentativesOnline() {
+    const result = await fetch(NODE, {
+        method: "POST",
+        body: JSON.stringify({
+            "action": "representatives_online",
+            "weight": "true"
+        })
+    })
+    const data = await result.json()
+    return data.representatives
+}
+
+export async function getRepresentativesOnlineByAddress(nanoAddress: string) {
     const result = await fetch(NODE, {
         method: "POST",
         body: JSON.stringify({

@@ -1,7 +1,7 @@
-import { getConfirmationQuorum, getAccountWeight, getRepresentativesOnline } from "@/functions/RPCs"
+import { getConfirmationQuorum, getAccountWeight, getRepresentativesOnlineByAddress } from "@/functions/RPCs"
 
 export default async function RepresentativeStatus(props: { nanoAddress: string }) {
-    const isOnline = ((await getRepresentativesOnline(props.nanoAddress))[0] === props.nanoAddress)
+    const isOnline = ((await getRepresentativesOnlineByAddress(props.nanoAddress))[0] === props.nanoAddress)
 
     const votingWeight = await getAccountWeight(props.nanoAddress)
     const onlineStakeTotal = await getConfirmationQuorum()
