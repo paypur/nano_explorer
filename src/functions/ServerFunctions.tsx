@@ -28,7 +28,7 @@ export async function getBlockPairData(block: CustomBlock) {
         else {
             blockPair["block2"] = {
                 account: block.account_link
-            } as CustomBlock 
+            } as CustomBlock
         }
     }
     else if (blockPair.block1.type === "receive") {
@@ -44,14 +44,14 @@ export async function getNodeWeights() {
     await client.connect();
     const dbName = "test"
     const db = client.db(dbName);
-    
+
     let dataSet: ChartData[] = []
-    
+
     let collections = await db.listCollections().toArray()
-    
+
     for (const collectionOBJ of collections) {
         const collection = db.collection(collectionOBJ.name)
-        const docs = await collection.find({}).project({_id:0}).sort({time:1}).toArray()
+        const docs = await collection.find({}).project({ _id: 0 }).sort({ time: 1 }).toArray()
         dataSet.push({
             fill: true,
             label: collectionOBJ.name,
@@ -59,7 +59,7 @@ export async function getNodeWeights() {
         })
     }
 
-    dataSet.sort((a,b) => b.data[0].weight - a.data[0].weight)
+    dataSet.sort((a, b) => b.data[0].weight - a.data[0].weight)
 
-    return dataSet.slice(0,10)
+    return dataSet.slice(0, 10)
 }

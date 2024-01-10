@@ -14,7 +14,7 @@ export default function SearchBar() {
         } else if (input.length == 64) {
             (window as Window).location = "/block/" + input
         } else {
-            console.log("Invalid input " + input)
+            console.error("Invalid input " + input)
         }
     }
 
@@ -34,7 +34,7 @@ export default function SearchBar() {
             <input
                 className='flex-initial w-[42rem] py-2 px-4 bg-black border-sky-700 font-mono placeholder:text-gray-400 truncate'
                 placeholder="nano_15zntj4a8r6bkihei788ciy1jgc5wnskan1gpgn8e8jku3r4qhr7rwifitir"
-                title="Enter a valid nano address or block hash"
+                title="Enter a valid Nano address or block hash"
                 autoComplete="on"
                 maxLength={65}
                 onChange={(e) => setInput(e.target.value)} />

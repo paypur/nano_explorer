@@ -2,7 +2,6 @@ import '@/styles/globals.css'
 import SearchBar from '@/components/SearchBar'
 
 import { Roboto, Roboto_Mono } from "next/font/google"
-import Background from '@/components/Background'
 
 
 const roboto = Roboto({

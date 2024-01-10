@@ -1,14 +1,14 @@
 "use client"
 
-import { AccountHistoryBlock, CustomBlock, CustomBlockPair, WSBlock } from "@/constants/Types"
+import { AccountHistoryBlock, CustomBlockPair, WSBlock } from "@/constants/Types"
 import { AHBlockToCustomBlock, RPCBlockToCustomBlock, WSBlockToCustomBlock, pushBlock, pushBlocks, unshiftBlock } from "@/functions/Functions"
 import { getAccountBlockCount, getAccountHistory, getAccountHistoryNext, getAccountsReceivable } from "@/functions/RPCs"
-import { useEffect, useState } from "react"
-import BlockCardList from "./BlockCardList"
 import { WSC } from "@/constants/Socket"
 import { getBlockPairData } from "@/functions/ServerFunctions"
-import SkeletonText from "./skeletons/SkeletonText"
 import { getBlockInfo } from "@/functions/RPCs"
+import BlockCardList from "./BlockCardList"
+import SkeletonText from "./skeletons/SkeletonText"
+import { useEffect, useState } from "react"
 
 export default function BlockInfo(props: { nanoAddress: string, subscription: any }) {
 
@@ -19,6 +19,8 @@ export default function BlockInfo(props: { nanoAddress: string, subscription: an
 
     const [receivableList, setReceivableList] = useState<CustomBlockPair[]>([])
     const [receivableCount, setReceivableCount] = useState("")
+
+    const [confirmedTab, setConfirmedTab] = useState(true)
 
     const [head, setHead] = useState("")
 
@@ -102,33 +104,38 @@ export default function BlockInfo(props: { nanoAddress: string, subscription: an
         <div className="my-8">
             {props.nanoAddress !== "" ?
                 <>
-                    <div className="text-lg font-medium flex flex-row py-2 px-4">
-                        <p>Pending Transactions</p>
-                        <p className="font-mono">&nbsp;</p>
-                        {receivableCount !== undefined ?
-                            receivableCount !== "" ?
-                                <p className="font-mono">({receivableCount})</p> :
-                                <SkeletonText /> :
-                                null}
+                    <div className="flex flex-row justify-between">
+                        <button className={`text-lg ${confirmedTab ? "font-medium" : "font-normal"} flex flex-row py-2 px-4`} onClick={() => setConfirmedTab(true)}>
+                            <p>Confirmed Transactions</p>
+                            <p className="font-mono">&nbsp;</p>
+                            {confirmedCount !== "" ?
+                                    <p className="font-mono">({confirmedCount})</p> :
+                                    <SkeletonText />}
+                        </button>
+                        <button className={`text-lg ${confirmedTab ? "font-normal" : "font-medium"} flex flex-row py-2 px-4`} onClick={() => setConfirmedTab(false)}>
+                            <p>Receivable Transactions</p>
+                            <p className="font-mono">&nbsp;</p>
+                            {/* idk why check for */}
+                            {receivableCount !== undefined ?
+                                receivableCount !== "" ?
+                                    <p className="font-mono">({receivableCount})</p> :
+                                    <SkeletonText /> :
+                                    null}
+                        </button>
                     </div>
-                    <BlockCardList
-                        blockList={receivableList}
-                    /> 
-
-                    <div className="text-lg font-medium flex flex-row py-2 px-4">
-                        <p>Confirmed Transactions</p>
-                        <p className="font-mono">&nbsp;</p>
-                        {confirmedCount !== undefined ?
-                            confirmedCount !== "" ?
-                                <p className="font-mono">({confirmedCount})</p> :
-                                <SkeletonText /> :
-                                null}
-                    </div>
-                    <BlockCardList
-                        blockList={confirmedList}
-                        blockHeight={confirmedCount}
-                        newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
-                    /> 
+                    
+                    {confirmedTab ? 
+                        <BlockCardList
+                            blockList={confirmedList}
+                            blockHeight={confirmedCount}
+                            newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
+                        /> 
+                        : 
+                        <BlockCardList
+                            blockList={receivableList}
+                        />
+                    }
+                    
                 </>
             :   <>
                     <div className="text-lg font-medium py-2 px-4">
