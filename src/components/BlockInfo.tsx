@@ -2,13 +2,15 @@
 
 import { AccountHistoryBlock, CustomBlockPair, WSBlock } from "@/constants/Types"
 import { AHBlockToCustomBlock, RPCBlockToCustomBlock, WSBlockToCustomBlock, pushBlock, pushBlocks, unshiftBlock } from "@/functions/Functions"
-import { getAccountBlockCount, getAccountHistory, getAccountHistoryNext, getAccountsReceivable } from "@/functions/RPCs"
+import { getAccountBlockCount, getAccountHistory, getAccountHistoryNext, getAccountReceivable } from "@/functions/RPCs"
 import { WSC } from "@/constants/Socket"
 import { getBlockPairData } from "@/functions/ServerFunctions"
 import { getBlockInfo } from "@/functions/RPCs"
 import BlockCardList from "./BlockCardList"
 import SkeletonText from "./skeletons/SkeletonText"
-import { useEffect, useState } from "react"
+
+import { useState } from "react"
+import useAsyncEffect from "use-async-effect"
 
 export default function BlockInfo(props: { nanoAddress: string, subscription: any }) {
 
@@ -24,45 +26,35 @@ export default function BlockInfo(props: { nanoAddress: string, subscription: an
 
     const [head, setHead] = useState("")
 
-    useEffect(() => {
+    useAsyncEffect(async () => {
         if (props.nanoAddress !== "") {
-            const getConfirmed = async () => {
-                // push all blocks at once to so there is only 1 refresh
-                const blockPairArray: CustomBlockPair[] = []
-                const blocks: AccountHistoryBlock[] = await getAccountHistory(props.nanoAddress)
-                for (const block of blocks) {
-                    blockPairArray.push(await getBlockPairData(AHBlockToCustomBlock(block, props.nanoAddress)))
-                }
-                pushBlocks(confirmedList, setConfirmedList, blockPairArray, MAX_BLOCKS)
-            }
 
-            const getConfirmedCount = async () => {
-                setConfirmedCount(await getAccountBlockCount(props.nanoAddress))
+            // get Recieved Blocks
+            // push all blocks at once to so there is only 1 refresh
+            const confirmedPairArray: CustomBlockPair[] = []
+            const blocks: AccountHistoryBlock[] = await getAccountHistory(props.nanoAddress)
+            for (const block of blocks) {
+                confirmedPairArray.push(await getBlockPairData(AHBlockToCustomBlock(block, props.nanoAddress)))
             }
-            
-            const getReceivable = async () => {
-                // push all blocks at once to so there is only 1 refresh
-                const blockPairArray: CustomBlockPair[] = []
-                const hashes: string[] = await getAccountsReceivable(props.nanoAddress)
-                for (const hash of hashes) {
-                    blockPairArray.push(await getBlockPairData(RPCBlockToCustomBlock(await getBlockInfo(hash), hash)))
-                }
-                pushBlocks(receivableList, setReceivableList, blockPairArray, MAX_BLOCKS)
+            pushBlocks(confirmedList, setConfirmedList, confirmedPairArray, MAX_BLOCKS)
 
-            }
-            
-            const getReceivableCount = async () => {
-                setReceivableCount((await getAccountsReceivable(props.nanoAddress)).length)
-            }
-            
-            getConfirmed()
-            getConfirmedCount()
+            // get Number of Recieved Blocks
+            setConfirmedCount(await getAccountBlockCount(props.nanoAddress))
 
-            getReceivable()
-            getReceivableCount()
+            // get Recieveable Blocks
+            // push all blocks at once to so there is only 1 refresh
+            const blockPairArray: CustomBlockPair[] = []
+            const hashes: string[] = await getAccountReceivable(props.nanoAddress)
+            for (const hash of hashes) {
+                blockPairArray.push(await getBlockPairData(RPCBlockToCustomBlock(await getBlockInfo(hash), hash)))
+            }
+            pushBlocks(receivableList, setReceivableList, blockPairArray, MAX_BLOCKS)
+
+            // get number of Recieveable Blocks
+            setReceivableCount((await getAccountReceivable(props.nanoAddress)).length)
 
         }
-        
+
         // const matchBlockPair = (block: CustomBlock) => {
         //     let array = [...confirmedList] 
         //     for (let i = 0; i < array.length; i ++) {
@@ -89,15 +81,13 @@ export default function BlockInfo(props: { nanoAddress: string, subscription: an
                 }
             }
         }
+
     }, [])
 
-    useEffect(() => {
-        const getNextBlock = async () => {
-            if (head !== "" && confirmedList.length < parseInt(confirmedCount)) {
-                pushBlock(confirmedList, setConfirmedList, await getBlockPairData(AHBlockToCustomBlock(await getAccountHistoryNext(props.nanoAddress, head), props.nanoAddress)), MAX_BLOCKS)
-            }
+    useAsyncEffect(async () => {
+        if (head !== "" && confirmedList.length < parseInt(confirmedCount)) {
+            pushBlock(confirmedList, setConfirmedList, await getBlockPairData(AHBlockToCustomBlock(await getAccountHistoryNext(props.nanoAddress, head), props.nanoAddress)), MAX_BLOCKS)
         }
-        getNextBlock()
     }, [head])
 
     return (
@@ -109,8 +99,8 @@ export default function BlockInfo(props: { nanoAddress: string, subscription: an
                             <p>Confirmed Transactions</p>
                             <p className="font-mono">&nbsp;</p>
                             {confirmedCount !== "" ?
-                                    <p className="font-mono">({confirmedCount})</p> :
-                                    <SkeletonText />}
+                                <p className="font-mono">({confirmedCount})</p> :
+                                <SkeletonText />}
                         </button>
                         <button className={`text-lg ${confirmedTab ? "font-normal" : "font-medium"} flex flex-row py-2 px-4`} onClick={() => setConfirmedTab(false)}>
                             <p>Receivable Transactions</p>
@@ -120,30 +110,30 @@ export default function BlockInfo(props: { nanoAddress: string, subscription: an
                                 receivableCount !== "" ?
                                     <p className="font-mono">({receivableCount})</p> :
                                     <SkeletonText /> :
-                                    null}
+                                null}
                         </button>
                     </div>
-                    
-                    {confirmedTab ? 
+
+                    {confirmedTab ?
                         <BlockCardList
                             blockList={confirmedList}
                             blockHeight={confirmedCount}
                             newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
-                        /> 
-                        : 
+                        />
+                        :
                         <BlockCardList
                             blockList={receivableList}
                         />
                     }
-                    
+
                 </>
-            :   <>
+                : <>
                     <div className="text-lg font-medium py-2 px-4">
                         <p>Recently Confirmed Transactions</p>
                     </div>
                     <BlockCardList
                         blockList={confirmedList}
-                    /> 
+                    />
                 </>
             }
         </div>

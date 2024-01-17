@@ -1,13 +1,13 @@
 "use server"
+
+import { RPCBlock } from "@/constants/Types"
+
 // use server causes caching??
-
-
-import { NODE } from "@/constants/NodeAddress"
 
 // https://docs.nano.org/commands/rpc-protocol/
 
-export async function getBlockInfo(blockHash: string) {
-    const result = await fetch(NODE, {
+export async function getBlockInfo(blockHash: string): Promise<RPCBlock> {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({
             "action": "block_info",
@@ -20,7 +20,7 @@ export async function getBlockInfo(blockHash: string) {
 }
 
 export async function getBlockInfoReceiveHash(blockHash: string) {
-    const result = await fetch(NODE, {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({
             "action": "blocks_info",
@@ -35,7 +35,7 @@ export async function getBlockInfoReceiveHash(blockHash: string) {
     }
 }
 export async function getBlocksInfo(blockHash: string[]) {
-    const result = await fetch(NODE, {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({
             "action": "blocks_info",
@@ -49,7 +49,7 @@ export async function getBlocksInfo(blockHash: string[]) {
 
 
 export async function getBlockAccount(hash: string) {
-    const result = await fetch(NODE, {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({
             "action": "block_account",
@@ -61,7 +61,7 @@ export async function getBlockAccount(hash: string) {
 }
 
 export async function getAccountBalance(nanoAddress: string) {
-    const result = await fetch(NODE, {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({
             "action": "account_balance",
@@ -73,7 +73,7 @@ export async function getAccountBalance(nanoAddress: string) {
 }
 
 export async function getAccountRepresentative(nanoAddress: string) {
-    const result = await fetch(NODE, {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({
             "action": "account_representative",
@@ -86,7 +86,7 @@ export async function getAccountRepresentative(nanoAddress: string) {
 
 
 export async function getAccountHistory(nanoAddress: string) {
-    const result = await fetch(NODE, {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({
             "action": "account_history",
@@ -100,7 +100,7 @@ export async function getAccountHistory(nanoAddress: string) {
 }
 
 export async function getAccountHistoryNext(nanoAddress: string, head: string) {
-    const result = await fetch(NODE, {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({
             "action": "account_history",
@@ -116,7 +116,7 @@ export async function getAccountHistoryNext(nanoAddress: string, head: string) {
 }
 
 export async function getRepresentativesOnline() {
-    const result = await fetch(NODE, {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({
             "action": "representatives_online",
@@ -128,7 +128,7 @@ export async function getRepresentativesOnline() {
 }
 
 export async function getRepresentativesOnlineByAddress(nanoAddress: string) {
-    const result = await fetch(NODE, {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({
             "action": "representatives_online",
@@ -140,7 +140,7 @@ export async function getRepresentativesOnlineByAddress(nanoAddress: string) {
 }
 
 export async function getRepresentatives() {
-    const result = await fetch(NODE, {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({
             "action": "representatives"
@@ -151,7 +151,7 @@ export async function getRepresentatives() {
 }
 
 export async function getAccountWeight(nanoAddress: string) {
-    const result = await fetch(NODE, {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({
             "action": "account_weight",
@@ -163,7 +163,7 @@ export async function getAccountWeight(nanoAddress: string) {
 }
 
 export async function getConfirmationQuorum() {
-    const result = await fetch(NODE, {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({
             "action": "confirmation_quorum"
@@ -174,7 +174,7 @@ export async function getConfirmationQuorum() {
 }
 
 export async function getDelegatorsCount(nanoAddress: string) {
-    const result = await fetch(NODE, {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({
             "action": "delegators_count",
@@ -186,7 +186,7 @@ export async function getDelegatorsCount(nanoAddress: string) {
 }
 
 export async function getAccountBlockCount(nanoAddress: string) {
-    const result = await fetch(NODE, {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({
             "action": "account_block_count",
@@ -197,8 +197,8 @@ export async function getAccountBlockCount(nanoAddress: string) {
     return data.block_count
 }
 
-export async function getAccountsReceivable(nanoAddress: string) {
-    const result = await fetch(NODE, {
+export async function getAccountReceivable(nanoAddress: string) {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({
             "action": "accounts_receivable",

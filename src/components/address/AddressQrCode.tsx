@@ -9,11 +9,11 @@ export default function AddressQrCode(props: { nanoAddress: string }) {
             text={`nano:${props.nanoAddress}`}
             options={{
                 level: 'L',
-                margin: 1,
-                width: 144,
+                margin: 2,
+                width: 208,
                 color: {
                     dark: '#000000',
-                    light: '#f8fafc',
+                    light: '#f3f4f6',
                 },
             }}
         />
