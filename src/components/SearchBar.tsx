@@ -2,12 +2,13 @@
 
 import { useState } from "react"
 import { MdOutlineHome } from "react-icons/md"
+import { FaServer } from "react-icons/fa"
 
 export default function SearchBar() {
 
     const [input, setInput] = useState("")
 
-    const search = () => {
+    const search = () => { 
         if (input.length == 65) {
             https://github.com/microsoft/TypeScript/issues/48949#issuecomment-1203967132
             (window as Window).location = "/address/" + input
@@ -25,21 +26,27 @@ export default function SearchBar() {
     return (
         <div className="justify-center flex flex-row">
             <button
-                className='py-2 px-4 flex-none border-sky-700'
+                className='py-2 px-4 flex-none'
                 onClick={home}
                 title="Home"
             >
                 <MdOutlineHome size="1.25rem" />
             </button>
+            <button
+                className='py-2 px-4 flex-none'
+                title="Node"
+            >
+                <FaServer size="1.25rem" />
+            </button>
             <input
-                className='flex-initial w-[42rem] py-2 px-4 bg-black border-sky-700 font-mono placeholder:text-gray-400 truncate'
+                className='flex-initial w-[42rem] py-2 px-4 bg-black font-mono placeholder:text-gray-400 truncate'
                 placeholder="nano_15zntj4a8r6bkihei788ciy1jgc5wnskan1gpgn8e8jku3r4qhr7rwifitir"
                 title="Enter a valid Nano address or block hash"
                 autoComplete="on"
                 maxLength={65}
                 onChange={(e) => setInput(e.target.value)} />
             <button
-                className='py-2 px-4 flex-none border-sky-700'
+                className='py-2 px-4 flex-none'
                 type="button"
                 onClick={search}
                 title="Search"

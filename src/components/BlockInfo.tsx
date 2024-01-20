@@ -27,6 +27,7 @@ export default function BlockInfo(props: { nanoAddress: string, subscription: an
     const [head, setHead] = useState("")
 
     useAsyncEffect(async () => {
+
         if (props.nanoAddress !== "") {
 
             // get Recieved Blocks
@@ -52,9 +53,29 @@ export default function BlockInfo(props: { nanoAddress: string, subscription: an
 
             // get number of Recieveable Blocks
             setReceivableCount((await getAccountReceivable(props.nanoAddress)).length)
-
+            
         }
-
+        
+        // https://elixirforum.com/t/websocket-is-closed-before-the-connection-is-established/40481/5
+        WSC.onopen = () => {
+            WSC.send(JSON.stringify(props.subscription))
+        }
+    
+        WSC.onmessage = async (msg: any) => {
+            let data: WSBlock = JSON.parse(msg.data)
+            if (data.topic === "confirmation" && confirmedList.filter((e: CustomBlockPair) => e.block1.hash === data.message.hash).length === 0) {
+                if (props.nanoAddress === "" || data.message.account === props.nanoAddress) {
+                    unshiftBlock(confirmedList, setConfirmedList, await getBlockPairData(WSBlockToCustomBlock(data)), MAX_BLOCKS)
+                    if (props.nanoAddress !== "") {
+                        setConfirmedCount((parseInt(confirmedCount) + 1).toString())
+                    }
+                    // if (data.message.block.type == "receive") {
+                    //     matchBlockPair(WSBlockToCustomBlock(data))
+                    // }
+                }
+            }
+        }
+        
         // const matchBlockPair = (block: CustomBlock) => {
         //     let array = [...confirmedList] 
         //     for (let i = 0; i < array.length; i ++) {
@@ -66,24 +87,8 @@ export default function BlockInfo(props: { nanoAddress: string, subscription: an
         //     }
         // }
 
-        WSC.onopen = () => {
-            WSC.send(JSON.stringify(props.subscription))
-        }
-
-        WSC.onmessage = async (msg: any) => {
-            let data: WSBlock = JSON.parse(msg.data)
-            if (data.topic === "confirmation" && confirmedList.filter((e: CustomBlockPair) => e.block1.hash === data.message.hash).length === 0) {
-                if (props.nanoAddress === "" || data.message.account === props.nanoAddress) {
-                    unshiftBlock(confirmedList, setConfirmedList, await getBlockPairData(WSBlockToCustomBlock(data)), MAX_BLOCKS)
-                    // if (data.message.block.type == "receive") {
-                    //     matchBlockPair(WSBlockToCustomBlock(data))
-                    // }
-                }
-            }
-        }
-
     }, [])
-
+    
     useAsyncEffect(async () => {
         if (head !== "" && confirmedList.length < parseInt(confirmedCount)) {
             pushBlock(confirmedList, setConfirmedList, await getBlockPairData(AHBlockToCustomBlock(await getAccountHistoryNext(props.nanoAddress, head), props.nanoAddress)), MAX_BLOCKS)
@@ -105,12 +110,9 @@ export default function BlockInfo(props: { nanoAddress: string, subscription: an
                         <button className={`text-lg ${confirmedTab ? "font-normal" : "font-medium"} flex flex-row py-2 px-4`} onClick={() => setConfirmedTab(false)}>
                             <p>Receivable Transactions</p>
                             <p className="font-mono">&nbsp;</p>
-                            {/* idk why check for */}
-                            {receivableCount !== undefined ?
-                                receivableCount !== "" ?
-                                    <p className="font-mono">({receivableCount})</p> :
-                                    <SkeletonText /> :
-                                null}
+                            {receivableCount !== "" ?
+                                <p className="font-mono">({receivableCount})</p> :
+                                <SkeletonText />}
                         </button>
                     </div>
 
@@ -119,8 +121,7 @@ export default function BlockInfo(props: { nanoAddress: string, subscription: an
                             blockList={confirmedList}
                             blockHeight={confirmedCount}
                             newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
-                        />
-                        :
+                        /> :
                         <BlockCardList
                             blockList={receivableList}
                         />

@@ -16,12 +16,13 @@ export default async function BlockPage() {
     const customBlock: CustomBlock = await RPCBlockToCustomBlock(blockJson, blockHash)
 
     return (
-        <div className='w-full min-w-0 my-8 space-y-2'>
-            <div className='py-2 px-4'>
+        <div className='w-full min-w-0 my-8 px-4 space-y-2'>
+            <div>
+                <p className='text-gray-400'>Block</p>
                 <BlockHalf block={customBlock} />
             </div>
             <div className='overflow-x-scroll'>
-                <p className='px-4 py-2 truncate'>Raw JSON for block<span className='font-mono'>&nbsp;{blockHash}</span></p>
+                <p className=' text-gray-400'>Raw JSON</p>
                 <pre className='px-4 py-2 border-sky-700 text-sm'><code>{JSON.stringify(blockJson, null, 4)}</code></pre>
             </div>
         </div>

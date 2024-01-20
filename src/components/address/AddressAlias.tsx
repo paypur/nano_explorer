@@ -1,21 +1,20 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { getAlias } from "@/functions/ServerFunctions"
 import FormatLink from "../FormatLink"
 import SkeletonText from "../skeletons/SkeletonText"
+
+import { useState } from "react"
+import { useAsyncEffect } from "use-async-effect"
 
 export default function AddressAlias(props: { nanoAddress: string }) {
     
     const [alias, setAlias] = useState("")
     
-    useEffect(() => {
-        const func = async () => {
+    useAsyncEffect(async () => {
             const data = await getAlias(props.nanoAddress)
             setAlias((data.names.length !== 0) ? data.names[0]["name"] : null)
-        }
-        func()
-    },[])
+    }, [])
 
     return ( 
         <>
