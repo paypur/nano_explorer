@@ -7,10 +7,10 @@ import { WSC } from "@/constants/Socket"
 import { AHBlockToCustomBlock, RPCBlockToCustomBlock, WSBlockToCustomBlock, getBlockPairData } from "@/functions/ServerFunctions"
 import { getBlockInfo } from "@/functions/RPCs"
 import BlockCardList from "./BlockCardList"
-import SkeletonText from "./skeletons/SkeletonText"
 
 import useAsyncEffect from "use-async-effect"
 import { useState } from "react"
+import SkeletonTextSmall from "./skeletons/SkeletonTextSmall"
 
 export default function BlockManager(props: { nanoAddress: string, subscription: any }) {
 
@@ -106,14 +106,14 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                     <p className="font-mono">&nbsp;</p>
                     {confirmedCount !== "" ?
                         <p className="font-mono">({confirmedCount})</p> :
-                        <SkeletonText />}
+                        <SkeletonTextSmall />}
                 </button>
                 <button className={`text-lg ${confirmedTab ? "font-normal text-gray-400" : "font-medium"} flex flex-row py-2 px-4`} onClick={() => setConfirmedTab(false)}>
                     <p>Receivable Transactions</p>
                     <p className="font-mono">&nbsp;</p>
                     {receivableCount !== "" ?
                         <p className="font-mono">({receivableCount})</p> :
-                        <SkeletonText />}
+                        <SkeletonTextSmall />}
                 </button>
             </div>
 
