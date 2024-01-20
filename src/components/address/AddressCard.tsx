@@ -1,12 +1,12 @@
 
+import AddressAlias from './AddressAlias'
+import AddressBalance from './AddressBalance'
+import AddressQrCode from './AddressQrCode'
+import AddressReceivableBalance from './AddressReceivableBalance'
 import AddressRepresentativeInfo from './AddressRepresentativeInfo'
 import AddressWeight from './AddressWeight'
-import AddressBalance from './AddressBalance'
-import AddressReceivableBalance from './AddressReceivableBalance'
-import AddressAlias from './AddressAlias'
 import SkeletonTextWide from '../skeletons/SkeletonTextWide'
 
-import AddressQrCode from './AddressQrCode'
 import { Suspense } from 'react'
 
 export default function AddressCard(props: { nanoAddress: string }) {
@@ -28,6 +28,7 @@ export default function AddressCard(props: { nanoAddress: string }) {
                     </div>
 
                     <div className='flex flex-row space-x-4'>
+
                         <div className='flex flex-col'>
                             <p className='text-gray-400'>Balance</p>
                             <Suspense fallback={<div className='flex flex-col'>
