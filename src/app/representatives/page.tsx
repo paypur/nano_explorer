@@ -19,12 +19,12 @@ export default async function representativesPage() {
     }
 
 
-    return (
-        <div>
-            <p>Representatives</p>
-            {repWeightArray.map((repWeight: string) => {
-                return <p>{repWeight}</p>
-            })}
-        </div>
-    )
+    // return (
+    //     <div>
+    //         <p>Representatives</p>
+    //         {repWeightArray.map((repWeight: string) => {
+    //             return <p>{repWeight}</p>
+    //         })}
+    //     </div>
+    // )
 }

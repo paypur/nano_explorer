@@ -1,7 +1,5 @@
-
-
 import AddressCard from '@/components/address/AddressCard'
-import BlockInfo from '@/components/BlockInfo'
+import BlockManager from '@/components/BlockManager'
 import { headers } from 'next/headers'
 
 export default function AddressPage() {
@@ -24,7 +22,7 @@ export default function AddressPage() {
     return (
         <>
             <AddressCard nanoAddress={nanoAddress} />
-            <BlockInfo nanoAddress={nanoAddress} subscription={subscription}/>
+            <BlockManager nanoAddress={nanoAddress} subscription={subscription} />
         </>
     )
 }

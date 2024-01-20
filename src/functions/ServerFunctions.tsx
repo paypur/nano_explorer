@@ -56,14 +56,6 @@ export async function AHBlockToCustomBlock(block: AccountHistoryBlock, nanoAddre
     } as CustomBlock)
 }
 
-export async function getAccountTransactions(nanoAddress: string): Promise<any[]> {
-    const confirmedTransactions = await getAccountHistory(nanoAddress) 
-    const confirmedCount = await getAccountBlockCount(nanoAddress)
-    const receivableTransactions = (await getAccountReceivable(nanoAddress))
-    const receivableCount = receivableTransactions.length
-    return [confirmedTransactions, confirmedCount, receivableTransactions, receivableCount]
-}
-
 export async function getBlockPairData(block: CustomBlock) {
     let blockPair: CustomBlockPair = { block1: block }
     if (blockPair.block1.type === "send") {

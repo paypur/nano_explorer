@@ -1,4 +1,4 @@
-import BlockInfo from "@/components/BlockInfo"
+import BlockManager from "@/components/BlockManager"
 
 export default function Home() {
     const subscription = {
@@ -8,7 +8,7 @@ export default function Home() {
 
     return (
         <div className="w-full">
-            <BlockInfo nanoAddress={""} subscription={subscription}/>
+            <BlockManager nanoAddress={""} subscription={subscription} />
         </div>
     )
 }

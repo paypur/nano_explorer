@@ -2,7 +2,7 @@
 
 import { useQRCode } from 'next-qrcode'
 
-export default async function AddressQrCode(props: { nanoAddress: string }) {
+export default function AddressQrCode(props: { nanoAddress: string }) {
     const { SVG } = useQRCode();
     return (
         <SVG

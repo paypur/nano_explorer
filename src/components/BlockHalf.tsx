@@ -19,7 +19,6 @@ export default function BlockHalf(props: { block: CustomBlock }) {
                     <SkeletonTextWide />
                     <SkeletonTextWide />
                 </div>}>
-                    {/* @ts-expect-error Server Component */}
                     <AddressAlias nanoAddress={props.block.account} />
                 </Suspense>
                 <FormatLink path={props.block.hash} type="block" />
@@ -35,7 +34,6 @@ export default function BlockHalf(props: { block: CustomBlock }) {
                     <SkeletonTextWide />
                     <SkeletonTextWide />
                 </div>}>
-                    {/* @ts-expect-error Server Component */}
                     <AddressAlias nanoAddress={props.block.account} />
                 </Suspense>
                 <SkeletonTextWide />
