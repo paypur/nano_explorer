@@ -20,7 +20,7 @@ export async function getBlockInfo(blockHash: string): Promise<RPCBlock> {
     return data
 }
 
-export async function getBlockInfoReceiveHash(blockHash: string) {
+export async function getBlockInfoReceiveHash(blockHash: string): Promise<string> {
     const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC, {
         method: "POST",
         body: JSON.stringify({

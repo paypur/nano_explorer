@@ -1,3 +1,5 @@
+
+
 import AddressCard from '@/components/address/AddressCard'
 import BlockInfo from '@/components/BlockInfo'
 import { headers } from 'next/headers'
@@ -21,7 +23,6 @@ export default function AddressPage() {
 
     return (
         <>
-            {/* @ts-expect-error Server Component */}
             <AddressCard nanoAddress={nanoAddress} />
             <BlockInfo nanoAddress={nanoAddress} subscription={subscription}/>
         </>

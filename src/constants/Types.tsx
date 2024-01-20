@@ -2,6 +2,7 @@ export type CustomBlock = {
     amount: string
     type: string
     account: string
+    alias: string
     hash: string
     timestamp: string
     link: string
@@ -84,4 +85,17 @@ export type ChartData = {
     fill: boolean
     label: string
     data: any[]
-} 
+}
+
+export type NanoTOResponse = {
+    names: NanoTONames[]
+}
+
+export type NanoTONames = {
+    name: string
+    address: string
+    created: string
+    expires: string
+    created_unix: string
+    expires_unix: string
+}

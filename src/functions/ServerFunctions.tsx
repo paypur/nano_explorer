@@ -1,14 +1,14 @@
 "use server"
 
-import { ChartData, CustomBlock, CustomBlockPair } from "@/constants/Types"
-import { RPCBlockToCustomBlock } from "./Functions"
-import { getBlockInfoReceiveHash, getBlockInfo } from "./RPCs"
+import { AccountHistoryBlock, ChartData, CustomBlock, CustomBlockPair, NanoTOResponse, RPCBlock, WSBlock } from "@/constants/Types"
+import { getBlockInfoReceiveHash, getBlockInfo, getAccountBlockCount, getAccountReceivable, getBlocksInfo, getAccountHistory } from "./RPCs"
 
 import { MongoClient } from "mongodb"
 
 export async function getAlias(nanoAddress: string) {
     const result = await fetch(`https://nano.to/.well-known/nano-currency.json?names=${nanoAddress}`, { next: { revalidate: 3600 } })
-    return await result.json()
+    const data: Promise<NanoTOResponse> = await result.json()
+    return ((await data).names.length !== 0) ? (await data).names[0]["name"] : null
 }
 
 export async function getNanoUSD() {
@@ -17,13 +17,60 @@ export async function getNanoUSD() {
     return data.nano.usd
 }
 
+export async function WSBlockToCustomBlock(block: WSBlock) {
+    return ({
+        amount: block.message.amount,
+        type: block.message.block.subtype,
+        account: block.message.account,
+        alias: await getAlias(block.message.account),
+        hash: block.message.hash,
+        timestamp: block.time,
+        link: block.message.block.link,
+        account_link: block.message.block.link_as_account
+    } as CustomBlock)
+}
+
+export async function RPCBlockToCustomBlock(block: RPCBlock, blockHash: string) {
+    return ({
+        amount: block.amount,
+        type: block.subtype,
+        account: block.block_account,
+        alias: await getAlias(block.block_account),
+        hash: blockHash,
+        timestamp: (parseInt(block.local_timestamp) * 1000).toString(),
+        link: block.contents.link,
+        account_link: block.contents.link_as_account
+    } as CustomBlock)
+}
+
+export async function AHBlockToCustomBlock(block: AccountHistoryBlock, nanoAddress: string) {
+    return ({
+        amount: block.amount,
+        type: block.subtype,
+        account: nanoAddress,
+        alias: await getAlias(nanoAddress),
+        hash: block.hash,
+        timestamp: (parseInt(block.local_timestamp) * 1000).toString(),
+        link: block.link,
+        account_link: block.account
+    } as CustomBlock)
+}
+
+export async function getAccountTransactions(nanoAddress: string): Promise<any[]> {
+    const confirmedTransactions = await getAccountHistory(nanoAddress) 
+    const confirmedCount = await getAccountBlockCount(nanoAddress)
+    const receivableTransactions = (await getAccountReceivable(nanoAddress))
+    const receivableCount = receivableTransactions.length
+    return [confirmedTransactions, confirmedCount, receivableTransactions, receivableCount]
+}
+
 export async function getBlockPairData(block: CustomBlock) {
     let blockPair: CustomBlockPair = { block1: block }
     if (blockPair.block1.type === "send") {
         // guaranteed to be missing for websockets
         let receiveHash = await getBlockInfoReceiveHash(block.hash)
         if (receiveHash !== "0000000000000000000000000000000000000000000000000000000000000000") {
-            blockPair["block2"] = RPCBlockToCustomBlock(await getBlockInfo(receiveHash), receiveHash)
+            blockPair["block2"] = await RPCBlockToCustomBlock(await getBlockInfo(receiveHash), receiveHash)
         }
         else {
             blockPair["block2"] = {
@@ -32,7 +79,7 @@ export async function getBlockPairData(block: CustomBlock) {
         }
     }
     else if (blockPair.block1.type === "receive") {
-        blockPair["block2"] = RPCBlockToCustomBlock(await getBlockInfo(block.link), block.link)
+        blockPair["block2"] = await RPCBlockToCustomBlock(await getBlockInfo(block.link), block.link)
     }
     return blockPair
 }
