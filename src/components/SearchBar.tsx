@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { MdOutlineHome } from "react-icons/md"
 import { FaServer } from "react-icons/fa"
+import { NODE_ADDRESS } from "@/constants/Constants"
 
 export default function SearchBar() {
 
@@ -19,28 +20,25 @@ export default function SearchBar() {
         }
     }
 
-    const home = () => {
-        (window as Window).location = "/"
-    }
-
     return (
         <div className="justify-center flex flex-row">
             <button
                 className='py-2 px-4 flex-none'
-                onClick={home}
+                onClick={() => {(window as Window).location = "/"}}
                 title="Home"
             >
                 <MdOutlineHome size="1.25rem" />
             </button>
             <button
                 className='py-2 px-4 flex-none'
+                onClick={() => {(window as Window).location = "/node"}}
                 title="Node"
             >
                 <FaServer size="1.25rem" />
             </button>
             <input
                 className='flex-initial w-[42rem] py-2 px-4 bg-black font-mono placeholder:text-gray-400 truncate'
-                placeholder="nano_15zntj4a8r6bkihei788ciy1jgc5wnskan1gpgn8e8jku3r4qhr7rwifitir"
+                placeholder={NODE_ADDRESS}
                 title="Enter a valid Nano address or block hash"
                 autoComplete="on"
                 maxLength={65}

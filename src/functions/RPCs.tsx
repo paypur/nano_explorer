@@ -1,6 +1,6 @@
 "use server"
 
-import { RPCBlock } from "@/constants/Types"
+import { RPCBlock, Telemetry } from "@/constants/Types"
 
 // use server causes caching??
 
@@ -224,4 +224,19 @@ export async function getAccountReceivable(nanoAddress: string) {
     })
     const data = await result.json()
     return data.blocks !== "" ? data.blocks[nanoAddress] : []
+}
+
+export async function getNodeTelemetry(): Promise<Telemetry> {
+    const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC!, {
+        method: "POST",
+        body: JSON.stringify({
+            "action": "telemetry",
+            "raw" : "true",
+            "address": "127.0.0.1",
+            "port": "7075"
+        }),
+        next: { revalidate: 60 }
+    })
+    const data = await result.json()
+    return data
 }
