@@ -1,6 +1,6 @@
 import { getAccountRepresentative } from "@/functions/RPCs"
 import AddressAlias from "./AddressAlias"
-import RepresentativeStatus from "../RepresentativeStatus"
+import RepresentativeStatus from "../representative/RepresentativeStatus"
 
 export default async function AccountRepresentativeInfo(props: { nanoAddress: string }) {
     const repAddress = await getAccountRepresentative(props.nanoAddress)

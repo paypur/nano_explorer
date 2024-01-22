@@ -1,4 +1,5 @@
 import AddressCard from '@/components/address/AddressCard'
+import RepresentativeCard from '@/components/representative/RepresentativeCard'
 import BlockManager from '@/components/BlockManager'
 import { headers } from 'next/headers'
 
@@ -24,6 +25,8 @@ export default function AddressPage() {
         // https://www.joshwcomeau.com/css/rules-of-margin-collapse/
         <div>
             <AddressCard nanoAddress={nanoAddress} />
+            {/* @ts-expect-error Server Component */}
+            <RepresentativeCard nanoAddress={nanoAddress} />
             <BlockManager nanoAddress={nanoAddress} subscription={subscription} />
         </div>
     )

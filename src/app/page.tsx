@@ -7,8 +7,6 @@ export default function Home() {
     }
 
     return (
-        <div className="w-full">
-            <BlockManager nanoAddress={""} subscription={subscription} />
-        </div>
+        <BlockManager nanoAddress={""} subscription={subscription} />
     )
 }

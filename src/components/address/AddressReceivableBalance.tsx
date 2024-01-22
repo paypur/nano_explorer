@@ -1,18 +1,24 @@
 import { getAccountReceivable, getBlockInfo } from "@/functions/RPCs"
+import { getNanoUSD } from "@/functions/ServerFunctions"
 import { tools } from "nanocurrency-web"
 
 export default async function AddressReceivableBalance(props: {nanoAddress: string}) {
 
-    let recieveableBalance = 0
-
     const recieveableArray = await getAccountReceivable(props.nanoAddress)
-
+    
+    let receiveableRaw = 0
     for (const hash of recieveableArray) {
         const block = await getBlockInfo(hash)
-        recieveableBalance += parseInt(block.amount)
+        receiveableRaw += parseInt(block.amount)
     }
 
+    const receiveableNano = parseFloat(tools.convert(receiveableRaw.toString(), 'RAW', 'NANO'))
+    const receiveableUSD = receiveableNano * parseFloat(await getNanoUSD())
+
     return (
-        <p className='font-mono medium text-emerald-600 truncate'>Ӿ{parseFloat(tools.convert(recieveableBalance.toString(), 'RAW', 'NANO')).toFixed(6)}</p>
+        <div className='flex-row'>
+            <p className='text-emerald-600 font-mono font-medium truncate'>Ӿ{receiveableNano.toFixed(6)}</p>
+            <p className='text-emerald-600 font-mono truncate'>${receiveableUSD.toFixed(2)}</p>
+        </div>
     )
 }

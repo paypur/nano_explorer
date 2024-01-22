@@ -19,7 +19,7 @@ export default function AddressAlias(props: { nanoAddress: string }) {
     return ( 
         <>
             {alias !== "" 
-            ? <p className={`font-medium text-white truncate ${alias === null ? "italic" : null}`}>{alias === null ? "No Alias" : alias}</p>
+            ? <p className={`text-white truncate ${alias !== null ? "font-medium" : "font-light"}`}>{alias !== null ? alias : "No Alias"}</p>
             : <SkeletonText/>}
             <FormatLink path={props.nanoAddress} type="address"/>
         </>

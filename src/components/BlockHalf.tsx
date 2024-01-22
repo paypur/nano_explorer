@@ -5,6 +5,7 @@ import SkeletonTextWide from "./skeletons/SkeletonTextWide"
 import { tools } from "nanocurrency-web"
 import { Suspense } from "react"
 import AddressAlias from "./address/AddressAlias"
+import SkeletonText from "./skeletons/SkeletonText"
 
 export default function BlockHalf(props: { block: CustomBlock }) {
     if (props.block.hash !== undefined) {
@@ -16,7 +17,7 @@ export default function BlockHalf(props: { block: CustomBlock }) {
                     <p className="max-h-[1.5rem] text-rose-600 truncate">SEND{amount}</p> : props.block.type === "receive" ?
                         <p className="max-h-[1.5rem] text-emerald-600 truncate">RECEIVE{amount}</p> : <p className='text-sky-700 truncate'>CHANGE</p>}
                 <Suspense fallback={<div className='flex flex-col'>
-                    <SkeletonTextWide />
+                    <SkeletonText />
                     <SkeletonTextWide />
                 </div>}>
                     <AddressAlias nanoAddress={props.block.account} />
@@ -31,7 +32,7 @@ export default function BlockHalf(props: { block: CustomBlock }) {
             <div className="flex flex-col w-[40.625rem] min-w-0">
                 <p className="text-emerald-600">RECEIVEABLE</p>
                 <Suspense fallback={<div className='flex flex-col'>
-                    <SkeletonTextWide />
+                    <SkeletonText />
                     <SkeletonTextWide />
                 </div>}>
                     <AddressAlias nanoAddress={props.block.account} />

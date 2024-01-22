@@ -10,7 +10,8 @@ import SkeletonTextSmall from "./skeletons/SkeletonTextSmall"
 import useAsyncEffect from "use-async-effect"
 import { useState } from "react"
 import BlockCard from "./BlockCard"
-import { block } from "nanocurrency-web"
+import SkeletonTextWide from "./skeletons/SkeletonTextWide"
+import SkeletonBlockPair from "./skeletons/SkeletonBlockPair"
 
 export default function BlockManager(props: { nanoAddress: string, subscription: any }) {
 
@@ -97,7 +98,8 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
     }, [head])
 
     return (
-        <div className="flex flex-col my-8">
+        <div className=" my-8">
+
             {props.nanoAddress !== "" ? 
                 <>
                     <div className="flex flex-row justify-between">
@@ -118,23 +120,28 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                     </div>
 
                     <div className="min-w-0 flex flex-col h-fit">
-                        {confirmedList.map((blockPair: CustomBlockPair, index) => (
-                            confirmedTab ?
+                        {confirmedTab ? 
+                            confirmedList.map((blockPair: CustomBlockPair, index) => (
                                 <BlockCard
                                     key={blockPair.block1.hash}
                                     blockPair={blockPair}
                                     // if second to last visivle, to load next blocks in advanced
                                     isLast={index === confirmedList.length - 2}
                                     newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
-                                /> :
+                                />
+                            )) : 
+                            receivableList.map((blockPair: CustomBlockPair, index) => (
                                 <BlockCard
                                     key={blockPair.block1.hash}
                                     blockPair={blockPair}
-                                /> 
-                        ))}
+                                    // if second to last visivle, to load next blocks in advanced
+                                    isLast={index === confirmedList.length - 2}
+                                    newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
+                                />
+                            ))
+                        }
                     </div>
-                </> 
-                : 
+                </> : 
                 <>
                     <div className="text-lg font-medium py-2 px-4">
                         <p>Recently Confirmed Transactions</p>
@@ -142,13 +149,15 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                     <div className="min-w-0 flex flex-col h-fit">
                         {confirmedList.map((blockPair: CustomBlockPair, index) => (
                             <BlockCard
-                                key={blockPair.block1.hash}
-                                blockPair={blockPair}
+                            key={blockPair.block1.hash}
+                            blockPair={blockPair}
                             />
-                        ))}
+                            ))}
                     </div>
                 </>
             }
+            {confirmedList.length === 0 ? 
+                <SkeletonBlockPair/> : null}
         </div>
     )
 }

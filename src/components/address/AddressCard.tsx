@@ -4,10 +4,11 @@ import AddressBalance from './AddressBalance'
 import AddressQrCode from './AddressQrCode'
 import AddressReceivableBalance from './AddressReceivableBalance'
 import AddressRepresentativeInfo from './AddressRepresentativeInfo'
-import AddressWeight from './AddressWeight'
+import AddressWeight from '../representative/RepresentativeWeight'
 import SkeletonTextWide from '../skeletons/SkeletonTextWide'
 
 import { Suspense } from 'react'
+import SkeletonText from '../skeletons/SkeletonText'
 
 export default function AddressCard(props: { nanoAddress: string }) {
 
@@ -20,7 +21,7 @@ export default function AddressCard(props: { nanoAddress: string }) {
                     <div className='flex flex-col'>
                         <p className='text-gray-400'>Address</p>
                         <Suspense fallback={<div className='flex flex-col'>
-                            <SkeletonTextWide />
+                            <SkeletonText />
                             <SkeletonTextWide />
                         </div>}>
                             <AddressAlias nanoAddress={props.nanoAddress} />
@@ -32,8 +33,8 @@ export default function AddressCard(props: { nanoAddress: string }) {
                         <div className='flex flex-col'>
                             <p className='text-gray-400'>Balance</p>
                             <Suspense fallback={<div className='flex flex-col'>
-                                <SkeletonTextWide />
-                                <SkeletonTextWide />
+                                <SkeletonText />
+                                <SkeletonText />
                             </div>}>
                                 {/* @ts-expect-error Server Component */}
                                 <AddressBalance nanoAddress={props.nanoAddress} />
@@ -43,8 +44,8 @@ export default function AddressCard(props: { nanoAddress: string }) {
                         <div className='flex flex-col'>
                             <p className='text-gray-400'>Receiveable Balance</p>
                             <Suspense fallback={<div className='flex flex-col'>
-                                <SkeletonTextWide />
-                                <SkeletonTextWide />
+                                <SkeletonText />
+                                <SkeletonText />
                             </div>}>
                                 {/* @ts-expect-error Server Component */}
                                 <AddressReceivableBalance nanoAddress={props.nanoAddress} />
@@ -58,13 +59,9 @@ export default function AddressCard(props: { nanoAddress: string }) {
                         <AddressRepresentativeInfo nanoAddress={props.nanoAddress} />
                     </div>
 
-
-                    {/* @ts-expect-error Server Component */}
-                    <AddressWeight nanoAddress={props.nanoAddress} />
-
                 </div>
 
-                <div className='flex-1 w-[27.625rem]'/>
+                <div className='flex-1 w-[27.625rem]' />
 
                 <div className='shrink-0'>
                     <p className='text-gray-400'>Address QR Code</p>

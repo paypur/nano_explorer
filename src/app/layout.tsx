@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body className='flex justify-center bg-black font-sans font-normal text-base text-gray-100 antialiased'>
                 <div className='min-w-0 mx-16'>
                     <div className='flex flex-col w-full'>
-                        <Image className='self-center my-8 min-w-[245px] min-h-[20px]' src={NANVIGATOR} alt="Nanvigator"/>
+                        <Image className='self-center my-8 min-w-[245px] min-h-[20px]' src={NANVIGATOR} alt="Nanvigator" priority={true}/>
                         <SearchBar />
                         {children}
                     </div>

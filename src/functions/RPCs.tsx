@@ -193,7 +193,7 @@ export async function getDelegatorsCount(nanoAddress: string) {
             "action": "delegators_count",
             "account": nanoAddress
         }),
-        next: { revalidate: 10 }
+        next: { revalidate: 3600 }
     })
     const data = await result.json()
     return data.count
@@ -235,7 +235,7 @@ export async function getNodeTelemetry(): Promise<Telemetry> {
             "address": "127.0.0.1",
             "port": "7075"
         }),
-        next: { revalidate: 60 }
+        next: { revalidate: 600 }
     })
     const data = await result.json()
     return data
