@@ -12,7 +12,6 @@ export default async function RepresentativeCard(props: {nanoAddress: string}) {
 
         return (
             <div className="flex flex-col my-8 mx-4 space-y-4">
-
                 <p className='text-lg font-medium'>Representative Information</p>
                     <div>
                         <p className='text-gray-400'>Representative Status</p>

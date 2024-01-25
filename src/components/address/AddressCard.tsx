@@ -4,7 +4,6 @@ import AddressBalance from './AddressBalance'
 import AddressQrCode from './AddressQrCode'
 import AddressReceivableBalance from './AddressReceivableBalance'
 import AddressRepresentativeInfo from './AddressRepresentativeInfo'
-import AddressWeight from '../representative/RepresentativeWeight'
 import SkeletonTextWide from '../skeletons/SkeletonTextWide'
 
 import { Suspense } from 'react'

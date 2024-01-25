@@ -1,22 +1,26 @@
 "use client"
 
-import { useState } from "react"
-import { MdOutlineHome } from "react-icons/md"
-import { FaServer } from "react-icons/fa"
 import { NODE_ADDRESS } from "@/constants/Constants"
+
+import isValid from 'nano-address-validator'
+
+import { FaServer } from "react-icons/fa"
+import { MdOutlineHome } from "react-icons/md"
+import { useRouter } from "next/navigation"
 
 export default function SearchBar() {
 
-    const [input, setInput] = useState("")
+    const router = useRouter()
 
-    const search = () => { 
-        if (input.length == 65) {
-            https://github.com/microsoft/TypeScript/issues/48949#issuecomment-1203967132
-            (window as Window).location = "/address/" + input
-        } else if (input.length == 64) {
-            (window as Window).location = "/block/" + input
-        } else {
-            console.error("Invalid input " + input)
+    function search(term: string) {
+        const trimmed = term.trim()
+        switch (trimmed.length) {
+            case 64:
+                if (trimmed.slice(0,4) !== "nano") { router.push(`/block/${trimmed}`) }
+                break
+            case 65:
+                if (isValid(trimmed)) { router.push(`/address/${trimmed}`) }
+                break
         }
     }
 
@@ -24,33 +28,25 @@ export default function SearchBar() {
         <div className="justify-center flex flex-row">
             <button
                 className='py-2 px-4 flex-none'
-                onClick={() => {(window as Window).location = "/"}}
+                onClick={() => router.push("/")}
                 title="Home"
             >
                 <MdOutlineHome size="1.25rem" />
             </button>
             <button
                 className='py-2 px-4 flex-none'
-                onClick={() => {(window as Window).location = "/node"}}
+                onClick={() => router.push("/node")}
                 title="Node"
             >
                 <FaServer size="1.25rem" />
             </button>
             <input
-                className='flex-initial w-[42rem] py-2 px-4 bg-black font-mono placeholder:text-gray-400 truncate'
+                className='flex-initial w-[42.75rem] py-2 px-4 bg-black font-mono placeholder:text-gray-400 truncate'
                 placeholder={NODE_ADDRESS}
                 title="Enter a valid Nano address or block hash"
-                autoComplete="on"
                 maxLength={65}
-                onChange={(e) => setInput(e.target.value)} />
-            <button
-                className='py-2 px-4 flex-none'
-                type="button"
-                onClick={search}
-                title="Search"
-            >
-                Search
-            </button>
+                onChange={(e) => search(e.target.value)} 
+            />
         </div>
     )
 }
