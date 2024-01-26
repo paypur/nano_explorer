@@ -4,10 +4,10 @@ import AddressBalance from './AddressBalance'
 import AddressQrCode from './AddressQrCode'
 import AddressReceivableBalance from './AddressReceivableBalance'
 import AddressRepresentativeInfo from './AddressRepresentativeInfo'
+import SkeletonText from '../skeletons/SkeletonText'
 import SkeletonTextWide from '../skeletons/SkeletonTextWide'
 
 import { Suspense } from 'react'
-import SkeletonText from '../skeletons/SkeletonText'
 
 export default function AddressCard(props: { nanoAddress: string }) {
 

@@ -240,3 +240,18 @@ export async function getNodeTelemetry(): Promise<Telemetry> {
     const data = await result.json()
     return data
 }
+
+// export async function getNodeTelemetryByAddress(nanoAddress: string): Promise<Telemetry> {
+//     const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC!, {
+//         method: "POST",
+//         body: JSON.stringify({
+//             "action": "telemetry",
+//             "raw" : "true",
+//             "address": "127.0.0.1",
+//             "port": "7075"
+//         }),
+//         next: { revalidate: 600 }
+//     })
+//     const data = await result.json()
+//     return data
+// }

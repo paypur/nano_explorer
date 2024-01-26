@@ -1,4 +1,4 @@
-import { getAccountWeight } from "@/functions/RPCs"
+import { getAccountWeight, getNodeTelemetry } from "@/functions/RPCs"
 import RepresentativeWeight from "./RepresentativeWeight"
 import { Suspense } from "react"
 import SkeletonTextWide from "../skeletons/SkeletonTextWide"
@@ -19,6 +19,7 @@ export default async function RepresentativeCard(props: {nanoAddress: string}) {
                             <SkeletonText/> 
                         </div>}> {/* @ts-expect-error Server Component */}
                             <RepresentativeStatus nanoAddress={props.nanoAddress}/>
+                            {/* <p>Seconds of uptime {telemetry.uptime}</p> */}
                         </Suspense>
                     </div>
 
