@@ -1,17 +1,16 @@
 "use client"
 
 import { AccountHistoryBlock, CustomBlockPair, WSBlock } from "@/constants/Types"
-import { pushBlock, pushBlocks, unshiftBlock } from "@/functions/Functions"
 import { WSC } from "@/constants/Socket"
+import BlockCard from "./BlockCard"
+import { pushBlock, pushBlocks, unshiftBlock } from "@/functions/Functions"
 import { getAccountBlockCount, getAccountHistory, getAccountHistoryNext, getAccountReceivable, getBlockInfo } from "@/functions/RPCs"
 import { AHBlockToCustomBlock, RPCBlockToCustomBlock, WSBlockToCustomBlock, getBlockPairData } from "@/functions/ServerFunctions"
-import SkeletonTextSmall from "./skeletons/SkeletonTextSmall"
+import SkeletonTextSmall from "../skeletons/SkeletonTextSmall"
+import SkeletonBlockPair from "../skeletons/SkeletonBlockPair"
 
 import useAsyncEffect from "use-async-effect"
 import { useState } from "react"
-import BlockCard from "./BlockCard"
-import SkeletonTextWide from "./skeletons/SkeletonTextWide"
-import SkeletonBlockPair from "./skeletons/SkeletonBlockPair"
 
 export default function BlockManager(props: { nanoAddress: string, subscription: any }) {
 
@@ -23,11 +22,12 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
     const [receivableList, setReceivableList] = useState<CustomBlockPair[]>([])
     const [receivableCount, setReceivableCount] = useState("")
 
+    const [head, setHead] = useState("")
+    
     const [confirmedTab, setConfirmedTab] = useState(true)
 
-    const [head, setHead] = useState("")
-
     useAsyncEffect(async () => {
+
         if (props.nanoAddress !== "") {
             // get Recieved Blocks
             // push all blocks at once to so there is only 1 refresh
@@ -49,16 +49,16 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                 receivablePairArray.push(await getBlockPairData(await RPCBlockToCustomBlock(await getBlockInfo(hash), hash)))
             }
             pushBlocks(receivableList, setReceivableList, receivablePairArray, MAX_BLOCKS)
-            
+
             // get number of Recieveable Blocks
             setReceivableCount(receivablePairArray.length.toString())
         }
-        
+
         // https://elixirforum.com/t/websocket-is-closed-before-the-connection-is-established/40481/5
         WSC.onopen = () => {
             WSC.send(JSON.stringify(props.subscription))
         }
-    
+
         WSC.onmessage = async (msg: any) => {
             let data: WSBlock = JSON.parse(msg.data)
             if (data.topic === "confirmation" && confirmedList.filter((e: CustomBlockPair) => e.block1.hash === data.message.hash).length === 0) {
@@ -100,7 +100,7 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
     return (
         <div className=" my-8">
 
-            {props.nanoAddress !== "" ? 
+            {props.nanoAddress !== "" ?
                 <>
                     <div className="flex flex-row justify-between">
                         <button className={`text-lg ${confirmedTab ? "font-medium" : "font-normal text-gray-400"} flex flex-row py-2 px-4`} onClick={() => setConfirmedTab(true)}>
@@ -120,7 +120,7 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                     </div>
 
                     <div className="min-w-0 flex flex-col h-fit">
-                        {confirmedTab ? 
+                        {confirmedTab ?
                             confirmedList.map((blockPair: CustomBlockPair, index) => (
                                 <BlockCard
                                     key={blockPair.block1.hash}
@@ -129,7 +129,7 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                                     isLast={index === confirmedList.length - 2}
                                     newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
                                 />
-                            )) : 
+                            )) :
                             receivableList.map((blockPair: CustomBlockPair, index) => (
                                 <BlockCard
                                     key={blockPair.block1.hash}
@@ -141,7 +141,7 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                             ))
                         }
                     </div>
-                </> : 
+                </> :
                 <>
                     <div className="text-lg font-medium py-2 px-4">
                         <p>Recently Confirmed Transactions</p>
@@ -149,15 +149,15 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                     <div className="min-w-0 flex flex-col h-fit">
                         {confirmedList.map((blockPair: CustomBlockPair, index) => (
                             <BlockCard
-                            key={blockPair.block1.hash}
-                            blockPair={blockPair}
+                                key={blockPair.block1.hash}
+                                blockPair={blockPair}
                             />
-                            ))}
+                        ))}
                     </div>
                 </>
             }
-            {confirmedList.length === 0 ? 
-                <SkeletonBlockPair/> : null}
+            {confirmedList.length === 0 ?
+                <SkeletonBlockPair /> : null}
         </div>
     )
 }

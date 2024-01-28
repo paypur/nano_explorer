@@ -1,4 +1,4 @@
-import { getAccountWeight, getNodeTelemetry } from "@/functions/RPCs"
+import { getAccountWeight } from "@/functions/RPCs"
 import RepresentativeWeight from "./RepresentativeWeight"
 import { Suspense } from "react"
 import SkeletonTextWide from "../skeletons/SkeletonTextWide"
@@ -14,12 +14,12 @@ export default async function RepresentativeCard(props: {nanoAddress: string}) {
             <div className="flex flex-col my-8 mx-4 space-y-4">
                 <p className='text-lg font-medium'>Representative Information</p>
                     <div>
-                        <p className='text-gray-400'>Representative Status</p>
+                        <p className='text-gray-400'>Status</p>
                         <Suspense fallback={<div className="flex flex-row">
                             <SkeletonText/> 
                         </div>}> {/* @ts-expect-error Server Component */}
                             <RepresentativeStatus nanoAddress={props.nanoAddress}/>
-                            {/* <p>Seconds of uptime {telemetry.uptime}</p> */}
+                            <p className='max-h-[1.5rem] truncate'><span className='font-mono'>0</span> seconds of uptime</p>
                         </Suspense>
                     </div>
 
@@ -36,7 +36,7 @@ export default async function RepresentativeCard(props: {nanoAddress: string}) {
                     </div>
 
                     <div>
-                        <p className='text-gray-400'>Delegator Count</p>
+                        <p className='text-gray-400'>Delegators</p>
                         <Suspense fallback={<>
                             <SkeletonText/>
                         </>}> {/* @ts-expect-error Server Component */}

@@ -1,11 +1,11 @@
 import { CustomBlock } from "@/constants/Types"
-import FormatLink from "./FormatLink"
-import SkeletonTextWide from "./skeletons/SkeletonTextWide"
+import FormatLink from "../FormatLink"
+import SkeletonTextWide from "../skeletons/SkeletonTextWide"
 
 import { tools } from "nanocurrency-web"
 import { Suspense } from "react"
-import AddressAlias from "./address/AddressAlias"
-import SkeletonText from "./skeletons/SkeletonText"
+import AddressAlias from "../address/AddressAlias"
+import SkeletonText from "../skeletons/SkeletonText"
 
 export default function BlockHalf(props: { block: CustomBlock }) {
     if (props.block.hash !== undefined) {
