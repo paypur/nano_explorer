@@ -1,4 +1,4 @@
-import BlockManager from "@/components/BlockManager"
+import BlockManager from "@/components/block/BlockManager"
 
 export default function Home() {
     const subscription = {

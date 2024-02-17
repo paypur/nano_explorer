@@ -1,6 +1,6 @@
 import AddressCard from '@/components/address/AddressCard'
 import RepresentativeCard from '@/components/representative/RepresentativeCard'
-import BlockManager from '@/components/BlockManager'
+import BlockManager from '@/components/block/BlockManager'
 import { headers } from 'next/headers'
 
 export default function AddressPage() {

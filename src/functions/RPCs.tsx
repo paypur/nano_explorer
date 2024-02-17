@@ -231,7 +231,7 @@ export async function getNodeTelemetry(): Promise<Telemetry> {
         method: "POST",
         body: JSON.stringify({
             "action": "telemetry",
-            "raw" : "true",
+            "raw": "true",
             "address": "127.0.0.1",
             "port": "7075"
         }),
