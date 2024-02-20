@@ -81,12 +81,14 @@ export async function getNodeWeights() {
     // setup db connection
     const client = new MongoClient("mongodb://127.0.0.1:27017");
     await client.connect();
-    const dbName = "test"
+    const dbName = "nodes"
     const db = client.db(dbName);
 
     let dataSet: ChartData[] = []
 
     let collections = await db.listCollections().toArray()
+
+    console.log(collections)
 
     for (const collectionOBJ of collections) {
         const collection = db.collection(collectionOBJ.name)
@@ -94,11 +96,11 @@ export async function getNodeWeights() {
         dataSet.push({
             fill: true,
             label: collectionOBJ.name,
-            data: docs,
+            data: docs
         })
     }
 
-    dataSet.sort((a, b) => b.data[0].weight - a.data[0].weight)
+    dataSet.sort((a, b) => b.data[0].rawWeight - a.data[0].rawWeight)
 
     return dataSet.slice(0, 10)
 }

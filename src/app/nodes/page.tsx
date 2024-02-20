@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useState } from 'react';
+import { ChartData } from '@/constants/Types';
+import { getNodeWeights } from '@/functions/ServerFunctions';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -13,8 +14,8 @@ import {
     TimeScale,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { getNodeWeights } from '@/functions/ServerFunctions';
-import { ChartData } from '@/constants/Types';
+import { useState } from 'react';
+import useAsyncEffect from "use-async-effect"
 
 ChartJS.register(
     CategoryScale,
@@ -30,11 +31,8 @@ export default function Page() {
 
     const [dataset, setDataset] = useState<ChartData[]>([])
 
-    useEffect(() => {
-        const update = async () => {
-            setDataset(await getNodeWeights())
-        }
-        update()
+    useAsyncEffect(async () => {
+        setDataset(await getNodeWeights())
     }, [])
 
     ChartJS.defaults.color = '#f3f4f6';
@@ -62,7 +60,7 @@ export default function Page() {
         maintainAspectRatio: true,
         parsing: {
             xAxisKey: 'time',
-            yAxisKey: 'weight'
+            yAxisKey: 'rawWeight'
         },
         plugins: {
             legend: {
@@ -76,10 +74,8 @@ export default function Page() {
     };
 
     return (
-        <>
-            <div className='border border-sky-600 rounded my-8 w-[72rem]'>
-                <Line className='py-2 px-4' options={options} data={data}/>
-            </div>
-        </>
+        <div className='w-[85.25rem] my-8'>
+            <Line className='py-2 px-4' options={options} data={data} />
+        </div>
     )
 }

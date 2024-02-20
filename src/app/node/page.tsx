@@ -22,7 +22,7 @@ export default async function Node() {
         <div className="w-full min-w-0 my-8 px-4">
 
 
-            <p className='text-lg font-medium'>paypur's Node</p>
+            <p className='text-lg font-medium'>paypur&#39;s Node</p>
             <FormatLink path={NODE_ADDRESS} type={"address"} />
 
             <p className='text-lg font-medium'>Hardware</p>

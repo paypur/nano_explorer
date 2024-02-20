@@ -76,11 +76,6 @@ export type AccountHistoryBlock = {
     signature: string
 }
 
-type WeightData = {
-    weight: string
-    time: number
-}
-
 export type ChartData = {
     fill: boolean
     label: string
