@@ -10,8 +10,13 @@ import {
     PointElement,
     LineElement,
     Title,
-    Tooltip
+    Tooltip,
+    TimeSeriesScale
 } from 'chart.js';
+
+import 'chartjs-adapter-date-fns';
+import { enUS } from 'date-fns/locale';
+
 import { Line } from 'react-chartjs-2';
 import { useState } from 'react';
 import useAsyncEffect from "use-async-effect"
@@ -25,6 +30,7 @@ ChartJS.register(
     Filler,
     Title,
     Tooltip,
+    TimeSeriesScale,
 );
 
 export default function Page() {
@@ -33,6 +39,7 @@ export default function Page() {
 
     useAsyncEffect(async () => {
         setDataset(await getNodeWeights())
+        console.log(await dataset[0])
     }, [])
 
     ChartJS.defaults.color = '#f3f4f6';
@@ -42,15 +49,24 @@ export default function Page() {
         scales: {
             y: {
                 beginAtZero: true,
-                stacked: false,
+                stacked: true,
                 border: {
                     color: '#f3f4f6'
                 }
             },
             x: {
+                adapters: {
+                    date: {
+                        locale: enUS
+                    }
+                },
                 border: {
                     color: '#f3f4f6'
-                }
+                },
+                time: {
+                    round: 'day'
+                },
+                type: 'timeseries',
             }
         },
         interaction: {
