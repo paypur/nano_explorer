@@ -1,17 +1,16 @@
 "use client"
 
-import { ChartData } from '@/constants/Types';
 import { getNodeWeights } from '@/functions/ServerFunctions';
 import {
     Chart as ChartJS,
     CategoryScale,
     Colors,
+    Filler,
     LinearScale,
     PointElement,
     LineElement,
     Title,
-    Tooltip,
-    TimeScale,
+    Tooltip
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { useState } from 'react';
@@ -23,13 +22,14 @@ ChartJS.register(
     LineElement,
     PointElement,
     Colors,
+    Filler,
     Title,
     Tooltip,
 );
 
 export default function Page() {
 
-    const [dataset, setDataset] = useState<ChartData[]>([])
+    const [dataset, setDataset] = useState<any[]>([])
 
     useAsyncEffect(async () => {
         setDataset(await getNodeWeights())
@@ -78,4 +78,5 @@ export default function Page() {
             <Line className='py-2 px-4' options={options} data={data} />
         </div>
     )
+
 }

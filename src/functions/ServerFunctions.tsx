@@ -86,21 +86,26 @@ export async function getNodeWeights() {
 
     let dataSet: ChartData[] = []
 
-    let collections = await db.listCollections().toArray()
-
-    console.log(collections)
+    // filter interal mongodb stuff
+    let collections = await db.listCollections({ name: { $not: { $regex: "^system.*" } } }).toArray()
 
     for (const collectionOBJ of collections) {
-        const collection = db.collection(collectionOBJ.name)
-        const docs = await collection.find({}).project({ _id: 0 }).sort({ time: 1 }).toArray()
+        const account = db.collection(collectionOBJ.name)
+        
+        const documents = await account.find({})
+            .limit(30)
+            .project({ _id: 0 }) // exclude id
+            .sort({ time: 1 })
+            .toArray();
+
         dataSet.push({
             fill: true,
             label: collectionOBJ.name,
-            data: docs
+            data: documents
         })
     }
 
     dataSet.sort((a, b) => b.data[0].rawWeight - a.data[0].rawWeight)
 
-    return dataSet.slice(0, 10)
+    return dataSet.slice(0, 20)
 }
