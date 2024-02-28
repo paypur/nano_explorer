@@ -8,8 +8,8 @@ import AddressAlias from "../address/AddressAlias"
 import SkeletonText from "../skeletons/SkeletonText"
 
 export default function BlockHalf(props: { block: CustomBlock }) {
+    const amount = props.block.amount !== undefined ? <span className='font-mono'>&nbsp;Ӿ{parseFloat(tools.convert(props.block.amount, 'RAW', 'NANO')).toFixed(6)}</span> : null
     if (props.block.hash !== undefined) {
-        const amount = props.block.amount !== undefined ? <span className='font-mono'>&nbsp;Ӿ{parseFloat(tools.convert(props.block.amount, 'RAW', 'NANO')).toFixed(6)}</span> : null
         const date = new Date(parseInt(props.block.timestamp))
         return (
             <div className="flex flex-col min-w-0">
@@ -30,7 +30,7 @@ export default function BlockHalf(props: { block: CustomBlock }) {
         // really bad
         return (
             <div className="flex flex-col w-[40.625rem] min-w-0">
-                <p className="text-emerald-600">RECEIVEABLE</p>
+                <p className="text-emerald-600">RECEIVEABLE {amount}</p>
                 <Suspense fallback={<div className='flex flex-col'>
                     <SkeletonText />
                     <SkeletonTextWide />

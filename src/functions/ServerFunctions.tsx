@@ -1,7 +1,7 @@
 "use server"
 
 import { AccountHistoryBlock, ChartData, CustomBlock, CustomBlockPair, NanoTOResponse, RPCBlock, WSBlock } from "@/constants/Types"
-import { getBlockInfoReceiveHash, getBlockInfo } from "./RPCs"
+import { getBlockInfoReceiveHash, getBlockInfo, getAccountHistory, getAccountReceivable, getAccountHistoryNext } from "./RPCs"
 
 import { MongoClient } from "mongodb"
 
@@ -66,7 +66,8 @@ export async function getBlockPairData(block: CustomBlock) {
         }
         else {
             blockPair["block2"] = {
-                account: block.account_link
+                account: block.account_link,
+                amount: block.amount
             } as CustomBlock
         }
     }
@@ -74,6 +75,30 @@ export async function getBlockPairData(block: CustomBlock) {
         blockPair["block2"] = await RPCBlockToCustomBlock(await getBlockInfo(block.link), block.link)
     }
     return blockPair
+}
+
+export async function getAccountLatestBlocks(nanoAddress: string) {
+    let pairArray: CustomBlockPair[] = []
+    for (const block of await getAccountHistory(nanoAddress)) {
+        pairArray.push(await getBlockPairData(await AHBlockToCustomBlock(block, nanoAddress)))
+    }
+    return pairArray
+}
+
+export async function getAccountReceivableBlocks(nanoAddress: string) {
+    let pairArray: CustomBlockPair[] = []
+    for (const hash of await getAccountReceivable(nanoAddress)) {
+        pairArray.push(await getBlockPairData(await RPCBlockToCustomBlock(await getBlockInfo(hash), hash)))
+    }
+    return pairArray
+}
+
+export async function convertWSBlock(data: WSBlock) {
+    return await getBlockPairData(await WSBlockToCustomBlock(data))
+}
+
+export async function getAHN(nanoAddress: string, head: string) {
+    return await getBlockPairData(await AHBlockToCustomBlock(await getAccountHistoryNext(nanoAddress, head), nanoAddress))
 }
 
 export async function getNodeWeights() {
@@ -91,7 +116,7 @@ export async function getNodeWeights() {
 
     for (const collectionOBJ of collections) {
         const account = db.collection(collectionOBJ.name)
-        
+
         const documents = await account.find({})
             .limit(30)
             .project({ _id: 0 }) // exclude id
@@ -107,5 +132,5 @@ export async function getNodeWeights() {
 
     dataSet.sort((a, b) => b.data[0].rawWeight - a.data[0].rawWeight)
 
-    return dataSet.slice(0, 20)
+    return dataSet.slice(0, 10)
 }

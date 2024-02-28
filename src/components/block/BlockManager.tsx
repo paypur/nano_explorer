@@ -5,7 +5,7 @@ import { WSC } from "@/constants/Socket"
 import BlockCard from "./BlockCard"
 import { pushBlock, pushBlocks, unshiftBlock } from "@/functions/Functions"
 import { getAccountBlockCount, getAccountHistory, getAccountHistoryNext, getAccountReceivable, getBlockInfo } from "@/functions/RPCs"
-import { AHBlockToCustomBlock, RPCBlockToCustomBlock, WSBlockToCustomBlock, getBlockPairData } from "@/functions/ServerFunctions"
+import { AHBlockToCustomBlock, RPCBlockToCustomBlock, WSBlockToCustomBlock, convertWSBlock, getAHN, getAccountLatestBlocks, getAccountReceivableBlocks, getBlockPairData } from "@/functions/ServerFunctions"
 import SkeletonTextSmall from "../skeletons/SkeletonTextSmall"
 import SkeletonBlockPair from "../skeletons/SkeletonBlockPair"
 
@@ -14,7 +14,7 @@ import { useState } from "react"
 
 export default function BlockManager(props: { nanoAddress: string, subscription: any }) {
 
-    const MAX_BLOCKS = Number.MAX_SAFE_INTEGER
+    const MAX_BLOCKS = 100
 
     const [confirmedList, setConfirmedList] = useState<CustomBlockPair[]>([])
     const [confirmedCount, setConfirmedCount] = useState("")
@@ -23,31 +23,36 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
     const [receivableCount, setReceivableCount] = useState("")
 
     const [head, setHead] = useState("")
-    
+
     const [confirmedTab, setConfirmedTab] = useState(true)
+
+    // const [cps, setCps] = useState(0);
+    // const calcCps = useMemo(() => {
+    //     const count = confirmedList.length
+    //     if (count !== 0) {
+    //         const first = confirmedList[0]
+    //         const last = confirmedList[count - 1]
+
+    //         const diff = parseInt(first.block2.timestamp !== undefined ? first.block2.timestamp : first.block1.timestamp)
+    //             - parseInt(last.block2.timestamp !== undefined ? last.block2.timestamp : last.block1.timestamp)
+    //         setCps(diff / (1000 * count))
+    //     }
+    // }, [confirmedList])
 
     useAsyncEffect(async () => {
 
         if (props.nanoAddress !== "") {
             // get Recieved Blocks
             // push all blocks at once to so there is only 1 refresh
-            const confirmedPairArray: CustomBlockPair[] = []
-            const blocks: AccountHistoryBlock[] = await getAccountHistory(props.nanoAddress)
-            for (const block of blocks) {
-                confirmedPairArray.push(await getBlockPairData(await AHBlockToCustomBlock(block, props.nanoAddress)))
-            }
-            pushBlocks(confirmedList, setConfirmedList, confirmedPairArray, MAX_BLOCKS)
+            pushBlocks(confirmedList, setConfirmedList, await getAccountLatestBlocks(props.nanoAddress), MAX_BLOCKS)
 
             // get Number of Recieved Blocks
             setConfirmedCount(await getAccountBlockCount(props.nanoAddress))
 
             // get Recieveable Blocks
             // push all blocks at once to so there is only 1 refresh
-            const receivablePairArray: CustomBlockPair[] = []
-            const hashes: string[] = await getAccountReceivable(props.nanoAddress)
-            for (const hash of hashes) {
-                receivablePairArray.push(await getBlockPairData(await RPCBlockToCustomBlock(await getBlockInfo(hash), hash)))
-            }
+
+            let receivablePairArray = await getAccountReceivableBlocks(props.nanoAddress)
             pushBlocks(receivableList, setReceivableList, receivablePairArray, MAX_BLOCKS)
 
             // get number of Recieveable Blocks
@@ -63,10 +68,13 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
             let data: WSBlock = JSON.parse(msg.data)
             if (data.topic === "confirmation" && confirmedList.filter((e: CustomBlockPair) => e.block1.hash === data.message.hash).length === 0) {
                 if (props.nanoAddress === "" || data.message.account === props.nanoAddress) {
-                    unshiftBlock(confirmedList, setConfirmedList, await getBlockPairData(await WSBlockToCustomBlock(data)), MAX_BLOCKS)
+                    // TODO: make one func
+                    unshiftBlock(confirmedList, setConfirmedList, await convertWSBlock(data), MAX_BLOCKS)
                     if (props.nanoAddress !== "") {
                         setConfirmedCount((parseInt(confirmedCount) + 1).toString())
                     }
+
+
                     // if (data.message.block.type == "receive") {
                     //     matchBlockPair(WSBlockToCustomBlock(data))
                     // }
@@ -93,13 +101,12 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
 
     useAsyncEffect(async () => {
         if (head !== "" && confirmedList.length < parseInt(confirmedCount)) {
-            pushBlock(confirmedList, setConfirmedList, await getBlockPairData(await AHBlockToCustomBlock(await getAccountHistoryNext(props.nanoAddress, head), props.nanoAddress)), MAX_BLOCKS)
+            pushBlock(confirmedList, setConfirmedList, await getAHN(props.nanoAddress, head), MAX_BLOCKS)
         }
     }, [head])
 
     return (
         <div className=" my-8">
-
             {props.nanoAddress !== "" ?
                 <>
                     <div className="flex flex-row justify-between">
@@ -143,8 +150,9 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                     </div>
                 </> :
                 <>
-                    <div className="text-lg font-medium py-2 px-4">
-                        <p>Recently Confirmed Transactions</p>
+                    <div className="flex flex-row justify-between">
+                        <p className="text-lg font-medium py-2 px-4">Recently Confirmed Transactions</p>
+                        <p className="text-lg font-medium py-2 px-4">CPS: 0</p>
                     </div>
                     <div className="min-w-0 flex flex-col h-fit">
                         {confirmedList.map((blockPair: CustomBlockPair, index) => (
