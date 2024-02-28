@@ -67,7 +67,8 @@ export async function getBlockPairData(block: CustomBlock) {
         else {
             blockPair["block2"] = {
                 account: block.account_link,
-                amount: block.amount
+                amount: block.amount,
+                alias: await getAlias(block.account_link)
             } as CustomBlock
         }
     }

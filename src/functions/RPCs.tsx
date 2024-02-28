@@ -1,6 +1,6 @@
 "use server"
 
-import { RPCBlock, Telemetry } from "@/constants/Types"
+import { AccountHistoryBlock, RPCBlock, Telemetry } from "@/constants/Types"
 
 // use server causes caching??
 
@@ -91,7 +91,7 @@ export async function getAccountRepresentative(nanoAddress: string) {
 }
 
 
-export async function getAccountHistory(nanoAddress: string) {
+export async function getAccountHistory(nanoAddress: string): Promise<AccountHistoryBlock[]> {
     const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC!, {
         method: "POST",
         body: JSON.stringify({
@@ -106,7 +106,7 @@ export async function getAccountHistory(nanoAddress: string) {
     return data.history
 }
 
-export async function getAccountHistoryNext(nanoAddress: string, head: string) {
+export async function getAccountHistoryNext(nanoAddress: string, head: string): Promise<AccountHistoryBlock> {
     const result = await fetch(process.env.NEXT_PUBLIC_NODE_RPC!, {
         method: "POST",
         body: JSON.stringify({

@@ -1,6 +1,6 @@
-import { getAccountRepresentative } from "@/functions/RPCs"
-import AddressAlias from "./AddressAlias"
 import RepresentativeStatus from "../representative/RepresentativeStatus"
+import { getAccountRepresentative } from "@/functions/RPCs"
+import AddressAliasAsync from "./AddressAliasAsync"
 
 export default async function AccountRepresentativeInfo(props: { nanoAddress: string }) {
     const repAddress = await getAccountRepresentative(props.nanoAddress)
@@ -8,7 +8,8 @@ export default async function AccountRepresentativeInfo(props: { nanoAddress: st
         <>
             {/* @ts-expect-error Server Component */}
             <RepresentativeStatus nanoAddress={repAddress} />
-            <AddressAlias nanoAddress={repAddress} />
+            {/* @ts-expect-error Server Component */}
+            <AddressAliasAsync nanoAddress={repAddress} />
         </>
     )
 }

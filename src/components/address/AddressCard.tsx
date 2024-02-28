@@ -1,5 +1,4 @@
 
-import AddressAlias from './AddressAlias'
 import AddressBalance from './AddressBalance'
 import AddressQrCode from './AddressQrCode'
 import AddressReceivableBalance from './AddressReceivableBalance'
@@ -8,6 +7,7 @@ import SkeletonText from '../skeletons/SkeletonText'
 import SkeletonTextWide from '../skeletons/SkeletonTextWide'
 
 import { Suspense } from 'react'
+import AddressAliasAsync from './AddressAliasAsync'
 
 export default function AddressCard(props: { nanoAddress: string }) {
 
@@ -23,7 +23,8 @@ export default function AddressCard(props: { nanoAddress: string }) {
                             <SkeletonText />
                             <SkeletonTextWide />
                         </div>}>
-                            <AddressAlias nanoAddress={props.nanoAddress} />
+                            {/* @ts-expect-error Server Component */}
+                            <AddressAliasAsync nanoAddress={props.nanoAddress} />
                         </Suspense>
                     </div>
 
