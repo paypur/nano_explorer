@@ -1,62 +1,46 @@
 "use client"
 
-import { AccountHistoryBlock, CustomBlockPair, WSBlock } from "@/constants/Types"
+import { CustomBlockPair, WSBlock } from "@/constants/Types"
 import { WSC } from "@/constants/Socket"
 import BlockCard from "./BlockCard"
-import { pushBlock, pushBlocks, unshiftBlock } from "@/functions/Functions"
-import { getAccountBlockCount, getAccountHistory, getAccountHistoryNext, getAccountReceivable, getBlockInfo } from "@/functions/RPCs"
-import { AHBlockToCustomBlock, RPCBlockToCustomBlock, WSBlockToCustomBlock, convertWSBlock, getAHN, getAccountLatestBlocks, getAccountReceivableBlocks, getBlockPairData } from "@/functions/ServerFunctions"
-import SkeletonTextSmall from "../skeletons/SkeletonTextSmall"
+import { getAccountBlockCount } from "@/functions/RPCs"
+import { convertWSBlock, getAHN, getAccountLatestBlocks, getAccountReceivableBlocks } from "@/functions/ServerFunctions"
 import SkeletonBlockPair from "../skeletons/SkeletonBlockPair"
 
 import useAsyncEffect from "use-async-effect"
 import { useState } from "react"
+import { SkeletonText2rem } from "../skeletons/SkeletonText"
 
 export default function BlockManager(props: { nanoAddress: string, subscription: any }) {
 
-    const MAX_BLOCKS = 100
+    const MAX_BLOCKS = 64
 
     const [confirmedList, setConfirmedList] = useState<CustomBlockPair[]>([])
-    const [confirmedCount, setConfirmedCount] = useState("")
+    const [confirmedTotal, setConfirmedTotal] = useState<number|null>(null)
 
     const [receivableList, setReceivableList] = useState<CustomBlockPair[]>([])
-    const [receivableCount, setReceivableCount] = useState("")
 
     const [head, setHead] = useState("")
 
     const [confirmedTab, setConfirmedTab] = useState(true)
 
-    // const [cps, setCps] = useState(0);
-    // const calcCps = useMemo(() => {
-    //     const count = confirmedList.length
-    //     if (count !== 0) {
-    //         const first = confirmedList[0]
-    //         const last = confirmedList[count - 1]
-
-    //         const diff = parseInt(first.block2.timestamp !== undefined ? first.block2.timestamp : first.block1.timestamp)
-    //             - parseInt(last.block2.timestamp !== undefined ? last.block2.timestamp : last.block1.timestamp)
-    //         setCps(diff / (1000 * count))
-    //     }
-    // }, [confirmedList])
-
     useAsyncEffect(async () => {
-
+        
         if (props.nanoAddress !== "") {
             // get Recieved Blocks
             // push all blocks at once to so there is only 1 refresh
-            pushBlocks(confirmedList, setConfirmedList, await getAccountLatestBlocks(props.nanoAddress), MAX_BLOCKS)
+            const latestBlocks = await getAccountLatestBlocks(props.nanoAddress)
+            // adds to end
+            setConfirmedList(latestBlocks)
 
-            // get Number of Recieved Blocks
-            setConfirmedCount(await getAccountBlockCount(props.nanoAddress))
+            // get total Number of Recieved Blocks
+            setConfirmedTotal(await getAccountBlockCount(props.nanoAddress))
 
             // get Recieveable Blocks
             // push all blocks at once to so there is only 1 refresh
-
-            let receivablePairArray = await getAccountReceivableBlocks(props.nanoAddress)
-            pushBlocks(receivableList, setReceivableList, receivablePairArray, MAX_BLOCKS)
-
-            // get number of Recieveable Blocks
-            setReceivableCount(receivablePairArray.length.toString())
+            const receivablePairArray = await getAccountReceivableBlocks(props.nanoAddress)
+            // adds to end
+            setReceivableList((prev: any) => [...prev, ...receivablePairArray])
         }
 
         // https://elixirforum.com/t/websocket-is-closed-before-the-connection-is-established/40481/5
@@ -68,12 +52,18 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
             let data: WSBlock = JSON.parse(msg.data)
             if (data.topic === "confirmation" && confirmedList.filter((e: CustomBlockPair) => e.block1.hash === data.message.hash).length === 0) {
                 if (props.nanoAddress === "" || data.message.account === props.nanoAddress) {
-                    // TODO: make one func
-                    unshiftBlock(confirmedList, setConfirmedList, await convertWSBlock(data), MAX_BLOCKS)
+                    const block =  await convertWSBlock(data)
+                    // adds to front
                     if (props.nanoAddress !== "") {
-                        setConfirmedCount((parseInt(confirmedCount) + 1).toString())
+                        setConfirmedList((prev: any) => [block, ...prev])
+                    }
+                    else {
+                        setConfirmedList((prev: any) => [block, ...prev].splice(0, MAX_BLOCKS))
                     }
 
+                    if (props.nanoAddress !== "") {
+                        setConfirmedTotal(confirmedTotal + 1)
+                    }
 
                     // if (data.message.block.type == "receive") {
                     //     matchBlockPair(WSBlockToCustomBlock(data))
@@ -100,8 +90,10 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
     // }
 
     useAsyncEffect(async () => {
-        if (head !== "" && confirmedList.length < parseInt(confirmedCount)) {
-            pushBlock(confirmedList, setConfirmedList, await getAHN(props.nanoAddress, head), MAX_BLOCKS)
+        if (head !== "" && confirmedList.length < confirmedTotal) {
+            const block = await getAHN(props.nanoAddress, head)
+            // adds to end
+            setConfirmedList((prev: any) => [...prev, block])
         }
     }, [head])
 
@@ -113,16 +105,16 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                         <button className={`text-lg ${confirmedTab ? "font-medium" : "font-normal text-gray-400"} flex flex-row py-2 px-4`} onClick={() => setConfirmedTab(true)}>
                             <p>Confirmed Transactions</p>
                             <p className="font-mono">&nbsp;</p>
-                            {confirmedCount !== "" ?
-                                <p className="font-mono">({confirmedCount})</p> :
-                                <SkeletonTextSmall />}
+                            {confirmedTotal !== null ?
+                                <p className="font-mono">({confirmedTotal})</p> :
+                                <SkeletonText2rem />}
                         </button>
                         <button className={`text-lg ${confirmedTab ? "font-normal text-gray-400" : "font-medium"} flex flex-row py-2 px-4`} onClick={() => setConfirmedTab(false)}>
                             <p>Receivable Transactions</p>
                             <p className="font-mono">&nbsp;</p>
-                            {receivableCount !== "" ?
-                                <p className="font-mono">({receivableCount})</p> :
-                                <SkeletonTextSmall />}
+                            {receivableList.length !== null ?
+                                <p className="font-mono">({receivableList.length})</p> :
+                                <SkeletonText2rem />}
                         </button>
                     </div>
 
