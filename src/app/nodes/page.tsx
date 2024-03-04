@@ -49,10 +49,10 @@ export default function Page() {
         scales: {
             y: {
                 beginAtZero: true,
-                stacked: true,
                 border: {
                     color: '#f3f4f6'
-                }
+                },
+                stacked: true,
             },
             x: {
                 adapters: {
@@ -82,6 +82,11 @@ export default function Page() {
             legend: {
                 display: false
             },
+            tooltip: {
+                bodyFont: {
+                    family: "consolas"
+                }
+            }
         },
     }
 
@@ -91,6 +96,7 @@ export default function Page() {
 
     return (
         <div className='w-[85.25rem] my-8'>
+            {/* @ts-expect-error Server Component */}
             <Line className='py-2 px-4' options={options} data={data} />
         </div>
     )

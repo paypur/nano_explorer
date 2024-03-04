@@ -26,11 +26,12 @@ export default function BlockCard(props: { blockPair: CustomBlockPair, isLast?: 
             {props.blockPair.block1.type !== "epoch" ? 
             <>
                 <BlockHalf block={props.blockPair.block1} />
-                {props.blockPair.block1.type === "send" ? <MdOutlineEast className='mx-2 text-rose-600 min-w-fit self-center' /> : null}
-                {props.blockPair.block1.type === "receive" ? <MdOutlineWest className='mx-2 text-emerald-600 min-w-fit self-center' /> : null}
+                {props.blockPair.block1.type === "send" ? <MdOutlineEast className='mx-2 min-w-fit self-center' /> : null}
+                {props.blockPair.block1.type === "receive" ? <MdOutlineWest className='mx-2 min-w-fit self-center' /> : null}
                 {/* https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator */}
                 {props.blockPair.block1.type !== "change" ? <BlockHalf block={props.blockPair.block2!} /> : null}
-            </>  : 
+            </>  
+            : 
             <p className='text-yellow-700'>TODO: EPOCH BLOCK</p>}
         </div>
     )

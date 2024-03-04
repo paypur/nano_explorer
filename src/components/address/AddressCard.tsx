@@ -3,8 +3,7 @@ import AddressBalance from './AddressBalance'
 import AddressQrCode from './AddressQrCode'
 import AddressReceivableBalance from './AddressReceivableBalance'
 import AddressRepresentativeInfo from './AddressRepresentativeInfo'
-import SkeletonText from '../skeletons/SkeletonText'
-import SkeletonTextWide from '../skeletons/SkeletonTextWide'
+import { SkeletonText40rem, SkeletonText4rem } from '../skeletons/SkeletonText'
 
 import { Suspense } from 'react'
 import AddressAliasAsync from './AddressAliasAsync'
@@ -20,8 +19,8 @@ export default function AddressCard(props: { nanoAddress: string }) {
                     <div className='flex flex-col'>
                         <p className='text-gray-400'>Address</p>
                         <Suspense fallback={<div className='flex flex-col'>
-                            <SkeletonText />
-                            <SkeletonTextWide />
+                            <SkeletonText4rem />
+                            <SkeletonText40rem />
                         </div>}>
                             {/* @ts-expect-error Server Component */}
                             <AddressAliasAsync nanoAddress={props.nanoAddress} />
@@ -33,8 +32,8 @@ export default function AddressCard(props: { nanoAddress: string }) {
                         <div className='flex flex-col'>
                             <p className='text-gray-400'>Balance</p>
                             <Suspense fallback={<div className='flex flex-col'>
-                                <SkeletonText />
-                                <SkeletonText />
+                                <SkeletonText4rem />
+                                <SkeletonText4rem />
                             </div>}>
                                 {/* @ts-expect-error Server Component */}
                                 <AddressBalance nanoAddress={props.nanoAddress} />
@@ -44,8 +43,8 @@ export default function AddressCard(props: { nanoAddress: string }) {
                         <div className='flex flex-col'>
                             <p className='text-gray-400'>Receiveable Balance</p>
                             <Suspense fallback={<div className='flex flex-col'>
-                                <SkeletonText />
-                                <SkeletonText />
+                                <SkeletonText4rem />
+                                <SkeletonText4rem />
                             </div>}>
                                 {/* @ts-expect-error Server Component */}
                                 <AddressReceivableBalance nanoAddress={props.nanoAddress} />
