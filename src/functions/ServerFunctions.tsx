@@ -1,14 +1,16 @@
 "use server"
 
-import { AccountHistoryBlock, ChartData, CustomBlock, CustomBlockPair, NanoTOResponse, RPCBlock, WSBlock } from "@/constants/Types"
+import { AccountHistoryBlock, ChartData, CustomBlock, CustomBlockPair, NanoTONames, NanoTOResponse, RPCBlock, WSBlock } from "@/constants/Types"
 import { getBlockInfoReceiveHash, getBlockInfo, getAccountHistory, getAccountReceivable, getAccountHistoryNext } from "./RPCs"
 
 import { MongoClient } from "mongodb"
 
+import fs from "fs/promises";
+
 export async function getAlias(nanoAddress: string) {
-    const result = await fetch(`https://nano.to/.well-known/nano-currency.json?names=${nanoAddress}`, { next: { revalidate: 3600 } })
-    const data: Promise<NanoTOResponse> = await result.json()
-    return ((await data).names.length !== 0) ? (await data).names[0]["name"] : null
+    const file: NanoTONames[] = JSON.parse(await fs.readFile("./src/known.json", "utf8"))
+    const query = file.find((e) => e.address === nanoAddress)
+    return query !== undefined ? query.name : null
 }
 
 export async function getNanoUSD() {
