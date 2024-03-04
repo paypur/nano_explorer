@@ -8,7 +8,7 @@ import { convertWSBlock, getAHN, getAccountLatestBlocks, getAccountReceivableBlo
 import SkeletonBlockPair from "../skeletons/SkeletonBlockPair"
 
 import useAsyncEffect from "use-async-effect"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { SkeletonText2rem } from "../skeletons/SkeletonText"
 
 export default function BlockManager(props: { nanoAddress: string, subscription: any }) {
@@ -16,7 +16,7 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
     const MAX_BLOCKS = 64
 
     const [confirmedList, setConfirmedList] = useState<CustomBlockPair[]>([])
-    const [confirmedTotal, setConfirmedTotal] = useState<number|null>(null)
+    const [confirmedTotal, setConfirmedTotal] = useState<number | null>(null)
 
     const [receivableList, setReceivableList] = useState<CustomBlockPair[]>([])
 
@@ -24,8 +24,15 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
 
     const [confirmedTab, setConfirmedTab] = useState(true)
 
+    const [time, setTime] = useState(0)
+    const [prev, setPrev] = useState(0)
+
+    const [diff, setDiff] = useState(0)
+
+    const [cps, setCps] = useState(0)
+
     useAsyncEffect(async () => {
-        
+
         if (props.nanoAddress !== "") {
             // get Recieved Blocks
             // push all blocks at once to so there is only 1 refresh
@@ -52,7 +59,9 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
             let data: WSBlock = JSON.parse(msg.data)
             if (data.topic === "confirmation" && confirmedList.filter((e: CustomBlockPair) => e.block1.hash === data.message.hash).length === 0) {
                 if (props.nanoAddress === "" || data.message.account === props.nanoAddress) {
-                    const block =  await convertWSBlock(data)
+                    setTime(new Date().getTime())
+
+                    const block = await convertWSBlock(data)
                     // adds to front
                     if (props.nanoAddress !== "") {
                         setConfirmedList((prev: any) => [block, ...prev])
@@ -62,12 +71,8 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                     }
 
                     if (props.nanoAddress !== "") {
-                        setConfirmedTotal(confirmedTotal + 1)
+                        setConfirmedTotal(confirmedTotal! + 1)
                     }
-
-                    // if (data.message.block.type == "receive") {
-                    //     matchBlockPair(WSBlockToCustomBlock(data))
-                    // }
                 }
             }
         }
@@ -78,24 +83,25 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
 
     }, [])
 
-    // const matchBlockPair = (block: CustomBlock) => {
-    //     let array = [...confirmedList] 
-    //     for (let i = 0; i < array.length; i ++) {
-    //         if (block.link === array[i].block1.hash) {
-    //             //doesnt work
-    //             //https://stackoverflow.com/questions/36326612/how-to-delete-an-item-from-state-array
-    //             array.unshift({block1: block, block2: array.splice(i, 1)[0].block1})
-    //         }
-    //     }
-    // }
-
     useAsyncEffect(async () => {
-        if (head !== "" && confirmedList.length < confirmedTotal) {
+        if (head !== "" && confirmedList.length < confirmedTotal!) {
             const block = await getAHN(props.nanoAddress, head)
             // adds to end
             setConfirmedList((prev: any) => [...prev, block])
         }
     }, [head])
+
+    useEffect(() => {
+        setDiff(time - prev)
+        setPrev(time)
+    }, [time])
+
+    useEffect(() => {
+        const length = confirmedList.length
+        if (props.nanoAddress === "" && length !== 0) {
+            setCps((cps * length + (1000 / diff)) / (length + 1))
+        }
+    }, [diff])
 
     return (
         <div className=" my-8">
@@ -144,7 +150,7 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                 <>
                     <div className="flex flex-row justify-between">
                         <p className="text-lg font-medium py-2 px-4">Recently Confirmed Transactions</p>
-                        <p className="text-lg font-medium py-2 px-4">CPS: 0</p>
+                        <p className="text-lg font-medium py-2 px-4">CPS: {cps.toFixed(2)}</p>
                     </div>
                     <div className="min-w-0 flex flex-col h-fit">
                         {confirmedList.map((blockPair: CustomBlockPair, index) => (
