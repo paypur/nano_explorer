@@ -1,8 +1,8 @@
 import FormatLink from "@/components/FormatLink";
 import RepresentativeDelegators from "@/components/representative/RepresentativeDelegators";
 import RepresentativeWeight from "@/components/representative/RepresentativeWeight";
-import SkeletonText from "@/components/skeletons/SkeletonText";
-import SkeletonTextWide from "@/components/skeletons/SkeletonTextWide";
+import { SkeletonText40rem, SkeletonText4rem } from "@/components/skeletons/SkeletonText";
+
 import { NODE_ADDRESS } from "@/constants/Constants";
 import { getNodeTelemetry } from "@/functions/RPCs";
 import { Suspense } from "react";
@@ -41,12 +41,18 @@ export default async function Node() {
             <p>V{tem.major_version}.{tem.minor_version}</p>
             <p className="text-gray-400">Protocol</p>
             <p>{tem.protocol_version}</p>
-            <p className="text-gray-400">Block Count</p>
-            <p>{tem.block_count}</p>
-            <p className="text-gray-400">Cemented Count</p>
-            <p>{tem.cemented_count}</p>
-            <p className="text-gray-400">Unchecked Count</p>
-            <p>{tem.unchecked_count}</p>
+
+            <div>
+                <p className='text-lg font-medium'>Block Info</p>
+                <p className="text-gray-400">Block Count</p>
+                <p>{tem.block_count}</p>
+                <p className="text-gray-400">Cemented Count</p>
+                <p>{tem.cemented_count}</p>
+                <p className="text-gray-400">Unchecked Count</p>
+                <p>{tem.unchecked_count}</p>
+
+            </div>
+
 
             <p className="text-gray-400">Peers</p>
             <p>{tem.peer_count}</p>
@@ -59,15 +65,15 @@ export default async function Node() {
 
             <p className='text-gray-400'>Voting Weight</p>
             <Suspense fallback={<>
-                <SkeletonTextWide />
-                <SkeletonTextWide />
+                <SkeletonText40rem />
+                <SkeletonText40rem />
             </>}> {/* @ts-expect-error Server Component */}
                 <RepresentativeWeight nanoAddress={NODE_ADDRESS} />
             </Suspense>
 
             <p className='text-gray-400'>Delegators</p>
             <Suspense fallback={<>
-                <SkeletonText />
+                <SkeletonText4rem />
             </>}> {/* @ts-expect-error Server Component */}
                 <RepresentativeDelegators nanoAddress={NODE_ADDRESS} />
             </Suspense>

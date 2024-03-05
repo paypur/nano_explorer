@@ -24,11 +24,12 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
 
     const [confirmedTab, setConfirmedTab] = useState(true)
 
-    const [time, setTime] = useState(0)
-    const [prev, setPrev] = useState(0)
+    // const [time, setTime] = useState(0)
+    // const [prev, setPrev] = useState(0)
 
-    const [diff, setDiff] = useState(0)
+    // const [diff, setDiff] = useState(0)
 
+    // TODO: is wrong
     const [cps, setCps] = useState(0)
 
     useAsyncEffect(async () => {
@@ -59,7 +60,7 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
             let data: WSBlock = JSON.parse(msg.data)
             if (data.topic === "confirmation" && confirmedList.filter((e: CustomBlockPair) => e.block1.hash === data.message.hash).length === 0) {
                 if (props.nanoAddress === "" || data.message.account === props.nanoAddress) {
-                    setTime(new Date().getTime())
+                    // setTime(new Date().getTime())
 
                     const block = await convertWSBlock(data)
                     // adds to front
@@ -91,17 +92,17 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
         }
     }, [head])
 
-    useEffect(() => {
-        setDiff(time - prev)
-        setPrev(time)
-    }, [time])
+    // useEffect(() => {
+    //     setDiff(time - prev)
+    //     setPrev(time)
+    // }, [time])
 
-    useEffect(() => {
-        const length = confirmedList.length
-        if (props.nanoAddress === "" && length !== 0) {
-            setCps((cps * length + (1000 / diff)) / (length + 1))
-        }
-    }, [diff])
+    // useEffect(() => {
+    //     const length = confirmedList.length
+    //     if (props.nanoAddress === "" && length !== 0) {
+    //         setCps((cps * length + (1000 / diff)) / (length + 1))
+    //     }
+    // }, [diff])
 
     return (
         <div className=" my-8">
