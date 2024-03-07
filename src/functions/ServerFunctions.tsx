@@ -5,10 +5,11 @@ import { getBlockInfoReceiveHash, getBlockInfo, getAccountHistory, getAccountRec
 
 import { MongoClient } from "mongodb"
 
-import fs from "fs/promises";
+import fs from "fs";
+
+const file: NanoTONames[] = JSON.parse(fs.readFileSync("./src/known.json", "utf8"))
 
 export async function getAlias(nanoAddress: string) {
-    const file: NanoTONames[] = JSON.parse(await fs.readFile("./src/known.json", "utf8"))
     const query = file.find((e) => e.address === nanoAddress)
     return query !== undefined ? query.name : null
 }
@@ -104,36 +105,86 @@ export async function getAHN(nanoAddress: string, head: string) {
     return await getBlockPairData(await AHBlockToCustomBlock(await getAccountHistoryNext(nanoAddress, head), nanoAddress))
 }
 
-export async function getNodeWeights() {
+export async function getTopNodeWeights() {
 
-    // setup db connection
-    const client = new MongoClient("mongodb://127.0.0.1:27017");
-    await client.connect();
-    const dbName = "nodes"
-    const db = client.db(dbName);
+    const username = encodeURIComponent(process.env.MONGODB_USER!)
+    const password = encodeURIComponent(process.env.MONGODB_PASS!)
+    const clusterUrl = process.env.MONGODB_URL!
+    const authMechanism = "DEFAULT"
+
+    const client = new MongoClient(`mongodb://${username}:${password}@${clusterUrl}/?authMechanism=${authMechanism}`)
 
     let dataSet: ChartData[] = []
 
-    // filter interal mongodb stuff
-    let collections = await db.listCollections({ name: { $not: { $regex: "^system.*" } } }).toArray()
+    try {
+        await client.connect()
+        const db = client.db("nodes")
 
-    for (const collectionOBJ of collections) {
-        const account = db.collection(collectionOBJ.name)
+        // filter interal mongodb stuff
+        let collections = await db.listCollections({ name: { $not: { $regex: "^system.*" } } }).toArray()
 
-        const documents = await account.find({})
+        for (const collectionOBJ of collections) {
+            const documents = await db.collection(collectionOBJ.name).find({})
+                .limit(30)
+                .project({ _id: 0 }) // exclude id
+                .sort({ time: 1 })
+                .toArray()
+
+            dataSet.push({
+                fill: true,
+                label: collectionOBJ.name,
+                data: documents
+            })
+        }
+        // sort by weight
+        dataSet.sort((a, b) => b.data[0].rawWeight - a.data[0].rawWeight)
+        return dataSet.slice(0, 10)
+    }
+    catch (error) {
+        console.error(error)
+        return null
+    }
+    finally {
+        client.close()
+    }
+    
+}
+
+export async function getNodeWeightsAdresss(nanoAddress: string) {
+
+    const username = encodeURIComponent(process.env.MONGODB_USER!)
+    const password = encodeURIComponent(process.env.MONGODB_PASS!)
+    const clusterUrl = process.env.MONGODB_URL!
+    const authMechanism = "DEFAULT"
+
+    const client = new MongoClient(`mongodb://${username}:${password}@${clusterUrl}/?authMechanism=${authMechanism}`)
+
+    let dataSet: ChartData[] = []
+
+    try {
+        await client.connect()
+        const db = client.db("nodes")
+
+        const documents = await db.collection(nanoAddress)
+            .find({})
             .limit(30)
             .project({ _id: 0 }) // exclude id
             .sort({ time: 1 })
-            .toArray();
+            .toArray()
 
-        dataSet.push({
+        dataSet = [{
             fill: true,
-            label: collectionOBJ.name,
+            label: nanoAddress,
             data: documents
-        })
+        }]
+        return dataSet
+    }
+    catch (error) {
+        console.error(error)
+        return null
+    }
+    finally {
+        await client.close()
     }
 
-    dataSet.sort((a, b) => b.data[0].rawWeight - a.data[0].rawWeight)
-
-    return dataSet.slice(0, 10)
 }

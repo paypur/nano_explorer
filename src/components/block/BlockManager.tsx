@@ -66,15 +66,12 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                     // adds to front
                     if (props.nanoAddress !== "") {
                         setConfirmedList((prev: any) => [block, ...prev])
-                    }
-                    else {
+                        setConfirmedTotal(confirmedTotal! + 1)
+                    } else {
                         setConfirmedList((prev: any) => [block, ...prev].splice(0, MAX_BLOCKS))
                     }
-
-                    if (props.nanoAddress !== "") {
-                        setConfirmedTotal(confirmedTotal! + 1)
-                    }
                 }
+
             }
         }
 
@@ -100,7 +97,7 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
     // useEffect(() => {
     //     const length = confirmedList.length
     //     if (props.nanoAddress === "" && length !== 0) {
-    //         setCps((cps * length + (1000 / diff)) / (length + 1))
+    //         setCps((cps * (length - 1) + (1000 / diff)) / length)
     //     }
     // }, [diff])
 
@@ -131,7 +128,7 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                                 <BlockCard
                                     key={blockPair.block1.hash}
                                     blockPair={blockPair}
-                                    // if second to last visivle, to load next blocks in advanced
+                                    // if second to last visible, to load next blocks in advanced
                                     isLast={index === confirmedList.length - 2}
                                     newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
                                 />
@@ -140,9 +137,7 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                                 <BlockCard
                                     key={blockPair.block1.hash}
                                     blockPair={blockPair}
-                                    // if second to last visivle, to load next blocks in advanced
-                                    isLast={index === confirmedList.length - 2}
-                                    newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
+                                // if second to last visible, to load next blocks in advanced
                                 />
                             ))
                         }

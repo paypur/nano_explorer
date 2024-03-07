@@ -1,6 +1,6 @@
 "use client"
 
-import { getTopNodeWeights } from '@/functions/ServerFunctions';
+import { getNodeWeightsAdresss } from '@/functions/ServerFunctions';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -33,12 +33,12 @@ ChartJS.register(
     TimeSeriesScale,
 );
 
-export default function Page() {
+export default function RepresentativeWeightGraph(props: { nanoAddress: string }) {
 
     const [dataset, setDataset] = useState<any[]>([])
 
     useAsyncEffect(async () => {
-        setDataset(await getTopNodeWeights())
+        setDataset(await getNodeWeightsAdresss(props.nanoAddress))
     }, [])
 
     ChartJS.defaults.color = '#f3f4f6';
@@ -72,7 +72,7 @@ export default function Page() {
             mode: 'index' as const,
             intersect: false,
         },
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         parsing: {
             xAxisKey: 'time',
             yAxisKey: 'rawWeight'
@@ -94,7 +94,7 @@ export default function Page() {
     };
 
     return (
-        <div className='w-[85.25rem] my-8'>
+        <div className='w-[40rem]'>
             {/* @ts-expect-error Server Component */}
             <Line className='py-2 px-4' options={options} data={data} />
         </div>

@@ -194,8 +194,14 @@ export async function getDelegatorsCount(nanoAddress: string) {
         }),
         next: { revalidate: 3600 }
     })
-    const data = await result.json()
-    return data.count
+    try {
+        const data = await result.json()
+        return data.count
+    }
+    catch {
+        console.error(`getDelegatorsCount(${nanoAddress}) timed out`)
+        return null
+    }
 }
 
 export async function getAccountBlockCount(nanoAddress: string) {
