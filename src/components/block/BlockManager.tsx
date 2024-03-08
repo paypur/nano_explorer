@@ -102,18 +102,18 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
     // }, [diff])
 
     return (
-        <div className=" my-8">
+        <div className="flex flex-col my-8 mx-4 space-y-2">
             {props.nanoAddress !== "" ?
                 <>
                     <div className="flex flex-row justify-between">
-                        <button className={`text-lg ${confirmedTab ? "font-medium" : "font-normal text-gray-400"} flex flex-row py-2 px-4`} onClick={() => setConfirmedTab(true)}>
+                        <button className={`text-lg ${confirmedTab ? "font-medium" : "font-normal text-gray-400"} flex flex-row`} onClick={() => setConfirmedTab(true)}>
                             <p>Confirmed Transactions</p>
                             <p className="font-mono">&nbsp;</p>
                             {confirmedTotal !== null ?
                                 <p className="font-mono">({confirmedTotal})</p> :
                                 <SkeletonText2rem />}
                         </button>
-                        <button className={`text-lg ${confirmedTab ? "font-normal text-gray-400" : "font-medium"} flex flex-row py-2 px-4`} onClick={() => setConfirmedTab(false)}>
+                        <button className={`text-lg ${confirmedTab ? "font-normal text-gray-400" : "font-medium"} flex flex-row`} onClick={() => setConfirmedTab(false)}>
                             <p>Receivable Transactions</p>
                             <p className="font-mono">&nbsp;</p>
                             {receivableList.length !== null ?
@@ -122,7 +122,7 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                         </button>
                     </div>
 
-                    <div className="min-w-0 flex flex-col h-fit">
+                    <div className="flex flex-col min-w-0 space-y-2">
                         {confirmedTab ?
                             confirmedList.map((blockPair: CustomBlockPair, index) => (
                                 <BlockCard
@@ -145,8 +145,8 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                 </> :
                 <>
                     <div className="flex flex-row justify-between">
-                        <p className="text-lg font-medium py-2 px-4">Recently Confirmed Transactions</p>
-                        <p className="text-lg font-medium py-2 px-4">CPS: {cps.toFixed(2)}</p>
+                        <p className="text-lg font-medium">Recently Confirmed Transactions</p>
+                        <p className="text-lg font-medium">CPS: {cps.toFixed(2)}</p>
                     </div>
                     <div className="min-w-0 flex flex-col h-fit">
                         {confirmedList.map((blockPair: CustomBlockPair, index) => (

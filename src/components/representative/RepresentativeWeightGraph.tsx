@@ -94,9 +94,9 @@ export default function RepresentativeWeightGraph(props: { nanoAddress: string }
     };
 
     return (
-        <div className='w-[40rem]'>
+        <div className='w-[40rem] h-[184px]'>
             {/* @ts-expect-error Server Component */}
-            <Line className='py-2 px-4' options={options} data={data} />
+            <Line options={options} data={data} />
         </div>
     )
 

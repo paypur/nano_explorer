@@ -109,10 +109,10 @@ export async function getTopNodeWeights() {
 
     const username = encodeURIComponent(process.env.MONGODB_USER!)
     const password = encodeURIComponent(process.env.MONGODB_PASS!)
-    const clusterUrl = process.env.MONGODB_URL!
+    const url = process.env.MONGODB_URL!
     const authMechanism = "DEFAULT"
 
-    const client = new MongoClient(`mongodb://${username}:${password}@${clusterUrl}/?authMechanism=${authMechanism}`)
+    const client = new MongoClient(`mongodb://${username}:${password}@${url}/?authMechanism=${authMechanism}`)
 
     let dataSet: ChartData[] = []
 
@@ -142,7 +142,7 @@ export async function getTopNodeWeights() {
     }
     catch (error) {
         console.error(error)
-        return null
+        return []
     }
     finally {
         client.close()
@@ -154,10 +154,10 @@ export async function getNodeWeightsAdresss(nanoAddress: string) {
 
     const username = encodeURIComponent(process.env.MONGODB_USER!)
     const password = encodeURIComponent(process.env.MONGODB_PASS!)
-    const clusterUrl = process.env.MONGODB_URL!
+    const url = process.env.MONGODB_URL!
     const authMechanism = "DEFAULT"
 
-    const client = new MongoClient(`mongodb://${username}:${password}@${clusterUrl}/?authMechanism=${authMechanism}`)
+    const client = new MongoClient(`mongodb://${username}:${password}@${url}/?authMechanism=${authMechanism}`)
 
     let dataSet: ChartData[] = []
 
@@ -181,7 +181,7 @@ export async function getNodeWeightsAdresss(nanoAddress: string) {
     }
     catch (error) {
         console.error(error)
-        return null
+        return []
     }
     finally {
         await client.close()

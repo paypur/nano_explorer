@@ -10,10 +10,11 @@ export default async function RepresentativeCard(props: { nanoAddress: string })
     // check if address is a rep
     if ((await getAccountWeight(props.nanoAddress)) !== "0") {
         return (
-            <div className="flex flex-col my-8 mx-4 space-y-4">
+            <div className="flex flex-col my-8 mx-4 space-y-2">
                 <p className='text-lg font-medium'>Representative Information</p>
                 <div className="flex flex-row justify-between">
-                    <div>
+                    <div className="flex flex-col space-y-2">
+
                         <div>
                             <p className='text-gray-400'>Status</p>
                             <Suspense fallback={<div className="flex flex-row">
@@ -25,28 +26,32 @@ export default async function RepresentativeCard(props: { nanoAddress: string })
                             </Suspense>
                         </div>
 
-                        <div className="flex flex-row space-x-4">
-                            <div>
-                                <p className='text-gray-400'>Voting Weight</p>
-                                <Suspense fallback={<>
-                                    <SkeletonText40rem />
-                                    <SkeletonText40rem />
-                                </>}> {/* @ts-expect-error Server Component */}
-                                    <RepresentativeWeight nanoAddress={props.nanoAddress} />
-                                </Suspense>
-                            </div>
+                        <div>
+                            <p className='text-gray-400'>Voting Weight</p>
+                            <Suspense fallback={<>
+                                <SkeletonText40rem />
+                                <SkeletonText40rem />
+                            </>}> {/* @ts-expect-error Server Component */}
+                                <RepresentativeWeight nanoAddress={props.nanoAddress} />
+                            </Suspense>
 
-                            <div>
-                                <p className='text-gray-400'>Delegators</p>
-                                <Suspense fallback={<>
-                                    <SkeletonText4rem />
-                                </>}> {/* @ts-expect-error Server Component */}
-                                    <RepresentativeDelegators nanoAddress={props.nanoAddress} />
-                                </Suspense>
-                            </div>
                         </div>
+                        
+                        <div>
+                            <p className='text-gray-400'>Delegators</p>
+                            <Suspense fallback={<>
+                                <SkeletonText4rem />
+                            </>}> {/* @ts-expect-error Server Component */}
+                                <RepresentativeDelegators nanoAddress={props.nanoAddress} />
+                            </Suspense>
+                        </div>
+
                     </div>
-                    <RepresentativeWeightGraph nanoAddress={props.nanoAddress} />
+
+                    <div>
+                        <p className='text-gray-400'>Voting Weight over Time</p>
+                        <RepresentativeWeightGraph nanoAddress={props.nanoAddress} />
+                    </div>
                 </div>
 
 

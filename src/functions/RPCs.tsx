@@ -200,7 +200,7 @@ export async function getDelegatorsCount(nanoAddress: string) {
     }
     catch {
         console.error(`getDelegatorsCount(${nanoAddress}) timed out`)
-        return null
+        return undefined
     }
 }
 
