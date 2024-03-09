@@ -112,7 +112,7 @@ export async function getTopNodeWeights() {
     const url = process.env.MONGODB_URL!
     const authMechanism = "DEFAULT"
 
-    const client = new MongoClient(`mongodb://${username}:${password}@${url}/?authMechanism=${authMechanism}`)
+    const client = new MongoClient(`mongodb://${username}:${password}@${url}/?authMechanism=${authMechanism}`, { tls: true })
 
     let dataSet: ChartData[] = []
 
@@ -157,7 +157,7 @@ export async function getNodeWeightsAdresss(nanoAddress: string) {
     const url = process.env.MONGODB_URL!
     const authMechanism = "DEFAULT"
 
-    const client = new MongoClient(`mongodb://${username}:${password}@${url}/?authMechanism=${authMechanism}`)
+    const client = new MongoClient(`mongodb://${username}:${password}@${url}/?authMechanism=${authMechanism}`, { tls: true })
 
     let dataSet: ChartData[] = []
 
