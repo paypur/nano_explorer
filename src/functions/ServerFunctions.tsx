@@ -111,14 +111,15 @@ export async function getTopNodeWeights() {
     const password = encodeURIComponent(process.env.MONGODB_PASS!)
     const url = process.env.MONGODB_URL!
     const authMechanism = "DEFAULT"
+    const database = "nodes"
 
-    const client = new MongoClient(`mongodb://${username}:${password}@${url}/?authMechanism=${authMechanism}`, { tls: true })
+    const client = new MongoClient(`mongodb://${username}:${password}@${url}/?authMechanism=${authMechanism}&authSource=${database}`, { tls: true })
 
     let dataSet: ChartData[] = []
 
     try {
         await client.connect()
-        const db = client.db("nodes")
+        const db = client.db(database)
 
         // filter interal mongodb stuff
         let collections = await db.listCollections({ name: { $not: { $regex: "^system.*" } } }).toArray()
@@ -156,14 +157,15 @@ export async function getNodeWeightsAdresss(nanoAddress: string) {
     const password = encodeURIComponent(process.env.MONGODB_PASS!)
     const url = process.env.MONGODB_URL!
     const authMechanism = "DEFAULT"
+    const database = "nodes"
 
-    const client = new MongoClient(`mongodb://${username}:${password}@${url}/?authMechanism=${authMechanism}`, { tls: true })
+    const client = new MongoClient(`mongodb://${username}:${password}@${url}/?authMechanism=${authMechanism}&authSource=${database}`, { tls: true })
 
     let dataSet: ChartData[] = []
 
     try {
         await client.connect()
-        const db = client.db("nodes")
+        const db = client.db(database)
 
         const documents = await db.collection(nanoAddress)
             .find({})
