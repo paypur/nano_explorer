@@ -1,4 +1,4 @@
-import { getDelegatorsCount } from "@/functions/RPCs"
+import { getDelegatorsCount } from "@/serverFunctions/RPCs"
 
 export default async function RepresentativeDelegators(props: {nanoAddress: string}) {
     

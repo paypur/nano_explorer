@@ -1,6 +1,7 @@
 "use client"
 
-import { getNodeWeightsAdresss } from '@/functions/ServerFunctions';
+import { getNodeWeightsAdress } from '@/serverFunctions/MongoDB';
+
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -38,7 +39,7 @@ export default function RepresentativeWeightGraph(props: { nanoAddress: string }
     const [dataset, setDataset] = useState<any[]>([])
 
     useAsyncEffect(async () => {
-        setDataset(await getNodeWeightsAdresss(props.nanoAddress))
+        setDataset(await getNodeWeightsAdress(props.nanoAddress))
     }, [])
 
     ChartJS.defaults.color = '#f3f4f6';

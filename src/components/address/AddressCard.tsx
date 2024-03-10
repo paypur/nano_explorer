@@ -10,7 +10,7 @@ import AddressAliasAsync from './AddressAliasAsync'
 export default function AddressCard(props: { nanoAddress: string }) {
 
     return (
-        <div className="flex flex-col my-8 mx-4 space-y-2">
+        <div className="flex flex-col my-8 px-4 space-y-2">
             <p className='text-lg font-medium'>Account Information</p>
             <div className='flex flex-row space-x-4 justify-between'>
                 <div className='flex flex-col space-y-2 min-w-0'>

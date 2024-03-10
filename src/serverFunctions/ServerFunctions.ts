@@ -1,18 +1,8 @@
 "use server"
 
-import { AccountHistoryBlock, ChartData, CustomBlock, CustomBlockPair, NanoTONames, NanoTOResponse, RPCBlock, WSBlock } from "@/constants/Types"
+import { getAlias } from "./Alias"
 import { getBlockInfoReceiveHash, getBlockInfo, getAccountHistory, getAccountReceivable, getAccountHistoryNext } from "./RPCs"
-
-import { MongoClient } from "mongodb"
-
-import fs from "fs";
-
-const file: NanoTONames[] = JSON.parse(fs.readFileSync("./src/known.json", "utf8"))
-
-export async function getAlias(nanoAddress: string) {
-    const query = file.find((e) => e.address === nanoAddress)
-    return query !== undefined ? query.name : null
-}
+import { AccountHistoryBlock, CustomBlock, CustomBlockPair, RPCBlock, WSBlock } from "@/constants/Types"
 
 export async function getNanoUSD() {
     const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=nano&vs_currencies=usd", { next: { revalidate: 600 } })
@@ -97,96 +87,14 @@ export async function getAccountReceivableBlocks(nanoAddress: string) {
     return pairArray
 }
 
-export async function convertWSBlock(data: WSBlock) {
-    return await getBlockPairData(await WSBlockToCustomBlock(data))
-}
-
-export async function getAHN(nanoAddress: string, head: string) {
+export async function convertAHN(nanoAddress: string, head: string) {
     return await getBlockPairData(await AHBlockToCustomBlock(await getAccountHistoryNext(nanoAddress, head), nanoAddress))
 }
 
-export async function getTopNodeWeights() {
+// export async function BlockInfo(blockHash: string) {
+//     return await RPCBlockToCustomBlock(await getBlockInfo(blockHash), blockHash)
+// }
 
-    const username = encodeURIComponent(process.env.MONGODB_USER!)
-    const password = encodeURIComponent(process.env.MONGODB_PASS!)
-    const url = process.env.MONGODB_URL!
-    const authMechanism = "DEFAULT"
-    const database = "nodes"
-
-    const client = new MongoClient(`mongodb://${username}:${password}@${url}/?authMechanism=${authMechanism}&authSource=${database}`, { tls: true })
-
-    let dataSet: ChartData[] = []
-
-    try {
-        await client.connect()
-        const db = client.db(database)
-
-        // filter interal mongodb stuff
-        let collections = await db.listCollections({ name: { $not: { $regex: "^system.*" } } }).toArray()
-
-        for (const collectionOBJ of collections) {
-            const documents = await db.collection(collectionOBJ.name).find({})
-                .limit(30)
-                .project({ _id: 0 }) // exclude id
-                .sort({ time: 1 })
-                .toArray()
-
-            dataSet.push({
-                fill: true,
-                label: collectionOBJ.name,
-                data: documents
-            })
-        }
-        // sort by weight
-        dataSet.sort((a, b) => b.data[0].rawWeight - a.data[0].rawWeight)
-        return dataSet.slice(0, 10)
-    }
-    catch (error) {
-        console.error(error)
-        return []
-    }
-    finally {
-        client.close()
-    }
-    
-}
-
-export async function getNodeWeightsAdresss(nanoAddress: string) {
-
-    const username = encodeURIComponent(process.env.MONGODB_USER!)
-    const password = encodeURIComponent(process.env.MONGODB_PASS!)
-    const url = process.env.MONGODB_URL!
-    const authMechanism = "DEFAULT"
-    const database = "nodes"
-
-    const client = new MongoClient(`mongodb://${username}:${password}@${url}/?authMechanism=${authMechanism}&authSource=${database}`, { tls: true })
-
-    let dataSet: ChartData[] = []
-
-    try {
-        await client.connect()
-        const db = client.db(database)
-
-        const documents = await db.collection(nanoAddress)
-            .find({})
-            .limit(30)
-            .project({ _id: 0 }) // exclude id
-            .sort({ time: 1 })
-            .toArray()
-
-        dataSet = [{
-            fill: true,
-            label: nanoAddress,
-            data: documents
-        }]
-        return dataSet
-    }
-    catch (error) {
-        console.error(error)
-        return []
-    }
-    finally {
-        await client.close()
-    }
-
+export async function convertWSBlock(data: WSBlock) {
+        return await getBlockPairData(await WSBlockToCustomBlock(data))
 }

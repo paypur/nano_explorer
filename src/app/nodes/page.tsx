@@ -1,6 +1,6 @@
 "use client"
 
-import { getTopNodeWeights } from '@/functions/ServerFunctions';
+import { getNodeWeightsTop } from '@/serverFunctions/MongoDB';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -38,7 +38,7 @@ export default function Page() {
     const [dataset, setDataset] = useState<any[]>([])
 
     useAsyncEffect(async () => {
-        setDataset(await getTopNodeWeights())
+        setDataset(await getNodeWeightsTop())
     }, [])
 
     ChartJS.defaults.color = '#f3f4f6';

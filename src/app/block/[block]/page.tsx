@@ -1,7 +1,7 @@
 import { CustomBlock, RPCBlock } from '@/constants/Types'
 import BlockHalf from '@/components/block/BlockHalf'
-import { getBlockInfo } from '@/functions/RPCs'
-import { RPCBlockToCustomBlock } from '@/functions/ServerFunctions'
+import { getBlockInfo } from '@/serverFunctions/RPCs'
+import { RPCBlockToCustomBlock } from '@/serverFunctions/ServerFunctions'
 
 import { headers } from 'next/headers'
 
@@ -24,8 +24,8 @@ export default async function BlockPage() {
                 <BlockHalf block={customBlock} />
             </div>
             <div className='overflow-x-scroll'>
-                <p className=' text-gray-400'>Raw Block JSON</p>
-                <pre className='px-4 py-2 border-sky-700 text-sm'><code>{JSON.stringify(blockJson, null, 4)}</code></pre>
+                <p className='text-gray-400'>Raw Block JSON</p>
+                <pre className='text-sm'><code>{JSON.stringify(blockJson, null, 4)}</code></pre>
             </div>
         </div>
     )

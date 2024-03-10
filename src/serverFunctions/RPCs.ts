@@ -231,7 +231,7 @@ export async function getAccountReceivable(nanoAddress: string) {
     return data.blocks !== "" ? data.blocks[nanoAddress] : []
 }
 
-export async function getNodeTelemetry(): Promise<Telemetry> {
+export async function getNodeTelemetryLocal(): Promise<Telemetry> {
     const result = await fetch(process.env.NODE_RPC!, {
         method: "POST",
         body: JSON.stringify({
@@ -246,17 +246,17 @@ export async function getNodeTelemetry(): Promise<Telemetry> {
     return data
 }
 
-// export async function getNodeTelemetryByAddress(nanoAddress: string): Promise<Telemetry> {
-//     const result = await fetch(process.env.NODE_RPC!, {
-//         method: "POST",
-//         body: JSON.stringify({
-//             "action": "telemetry",
-//             "raw" : "true",
-//             "address": "127.0.0.1",
-//             "port": "7075"
-//         }),
-//         next: { revalidate: 600 }
-//     })
-//     const data = await result.json()
-//     return data
-// }
+export async function getNodeTelemetryNodeID(nodeIDddress: string): Promise<Telemetry> {
+    const result = await fetch(process.env.NODE_RPC!, {
+        method: "POST",
+        body: JSON.stringify({
+            "action": "telemetry",
+            "raw": "true",
+            "address": nodeIDddress,
+            "port": "7075"
+        }),
+        next: { revalidate: 600 }
+    })
+    const data = await result.json()
+    return data
+}

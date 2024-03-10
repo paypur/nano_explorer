@@ -1,4 +1,4 @@
-import { getAccountWeight, getConfirmationQuorum } from "@/functions/RPCs"
+import { getAccountWeight, getConfirmationQuorum } from "@/serverFunctions/RPCs"
 import { tools } from "nanocurrency-web"
 
 export default async function RepresentativeWeight (props: { nanoAddress: string }) {

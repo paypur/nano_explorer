@@ -3,8 +3,8 @@
 import { CustomBlockPair, WSBlock } from "@/constants/Types"
 import { WSC } from "@/constants/Socket"
 import BlockCard from "./BlockCard"
-import { getAccountBlockCount } from "@/functions/RPCs"
-import { convertWSBlock, getAHN, getAccountLatestBlocks, getAccountReceivableBlocks } from "@/functions/ServerFunctions"
+import { getAccountBlockCount } from "@/serverFunctions/RPCs"
+import { convertWSBlock, convertAHN, getAccountLatestBlocks, getAccountReceivableBlocks } from "@/serverFunctions/ServerFunctions"
 import SkeletonBlockPair from "../skeletons/SkeletonBlockPair"
 
 import useAsyncEffect from "use-async-effect"
@@ -83,7 +83,7 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
 
     useAsyncEffect(async () => {
         if (head !== "" && confirmedList.length < confirmedTotal!) {
-            const block = await getAHN(props.nanoAddress, head)
+            const block = await convertAHN(props.nanoAddress, head)
             // adds to end
             setConfirmedList((prev: any) => [...prev, block])
         }
@@ -102,23 +102,19 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
     // }, [diff])
 
     return (
-        <div className="flex flex-col my-8 mx-4 space-y-2">
+        <div className="flex flex-col my-8 px-4 space-y-2">
             {props.nanoAddress !== "" ?
                 <>
                     <div className="flex flex-row justify-between">
                         <button className={`text-lg ${confirmedTab ? "font-medium" : "font-normal text-gray-400"} flex flex-row`} onClick={() => setConfirmedTab(true)}>
                             <p>Confirmed Transactions</p>
                             <p className="font-mono">&nbsp;</p>
-                            {confirmedTotal !== null ?
-                                <p className="font-mono">({confirmedTotal})</p> :
-                                <SkeletonText2rem />}
+                            {confirmedTotal !== null ? <p className="font-mono">({confirmedTotal})</p> : <SkeletonText2rem />}
                         </button>
                         <button className={`text-lg ${confirmedTab ? "font-normal text-gray-400" : "font-medium"} flex flex-row`} onClick={() => setConfirmedTab(false)}>
                             <p>Receivable Transactions</p>
                             <p className="font-mono">&nbsp;</p>
-                            {receivableList.length !== null ?
-                                <p className="font-mono">({receivableList.length})</p> :
-                                <SkeletonText2rem />}
+                            {receivableList.length !== null ? <p className="font-mono">({receivableList.length})</p> : <SkeletonText2rem />}
                         </button>
                     </div>
 
@@ -137,7 +133,6 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                                 <BlockCard
                                     key={blockPair.block1.hash}
                                     blockPair={blockPair}
-                                // if second to last visible, to load next blocks in advanced
                                 />
                             ))
                         }
@@ -148,7 +143,7 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                         <p className="text-lg font-medium">Recently Confirmed Transactions</p>
                         <p className="text-lg font-medium">CPS: {cps.toFixed(2)}</p>
                     </div>
-                    <div className="min-w-0 flex flex-col h-fit">
+                    <div className="min-w-0 flex flex-col space-y-2">
                         {confirmedList.map((blockPair: CustomBlockPair, index) => (
                             <BlockCard
                                 key={blockPair.block1.hash}
@@ -158,8 +153,7 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                     </div>
                 </>
             }
-            {confirmedList.length === 0 ?
-                <SkeletonBlockPair /> : null}
+            {confirmedList.length === 0 ? <SkeletonBlockPair /> : null}
         </div>
     )
 }

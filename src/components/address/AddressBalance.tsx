@@ -1,5 +1,5 @@
-import { getAccountBalance } from "@/functions/RPCs"
-import { getNanoUSD } from "@/functions/ServerFunctions"
+import { getAccountBalance } from "@/serverFunctions/RPCs"
+import { getNanoUSD } from "@/serverFunctions/ServerFunctions"
 import { tools } from "nanocurrency-web"
 
 export default async function AddressBalance (props: { nanoAddress: string }) {

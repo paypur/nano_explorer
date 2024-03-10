@@ -1,5 +1,5 @@
 import AddressAlias from "./AddressAlias";
-import { getAlias } from "@/functions/ServerFunctions";
+import { getAlias } from "@/serverFunctions/Alias";
 
 export default async function AddressAliasAsync(props: { nanoAddress: string }) {
 

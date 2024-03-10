@@ -1,6 +1,6 @@
 
 
-import { getRepresentativesOnline } from "@/functions/RPCs";
+import { getRepresentativesOnline } from "@/serverFunctions/RPCs";
 
 export default async function representativesPage() {
 

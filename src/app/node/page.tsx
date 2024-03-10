@@ -1,15 +1,15 @@
+import { NODE_ADDRESS } from "@/constants/Constants";
 import FormatLink from "@/components/FormatLink";
 import RepresentativeDelegators from "@/components/representative/RepresentativeDelegators";
 import RepresentativeWeight from "@/components/representative/RepresentativeWeight";
 import { SkeletonText40rem, SkeletonText4rem } from "@/components/skeletons/SkeletonText";
+import { getNodeTelemetryLocal } from "@/serverFunctions/RPCs";
 
-import { NODE_ADDRESS } from "@/constants/Constants";
-import { getNodeTelemetry } from "@/functions/RPCs";
 import { Suspense } from "react";
 
 export default async function Node() {
 
-    const tem = await getNodeTelemetry()
+    const tem = await getNodeTelemetryLocal()
 
     const hardware = {
         cpu: "Intel i5-8400",

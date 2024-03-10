@@ -1,8 +1,9 @@
 "use client"
 
-import { CustomBlockPair } from '@/constants/Types'
-import { useEffect, useRef } from 'react'
 import BlockHalf from './BlockHalf';
+import { CustomBlockPair } from '@/constants/Types'
+
+import { useEffect, useRef } from 'react'
 import { MdOutlineEast, MdOutlineWest } from 'react-icons/md';
 
 export default function BlockCard(props: { blockPair: CustomBlockPair, isLast?: boolean, newHead?: any }) {
