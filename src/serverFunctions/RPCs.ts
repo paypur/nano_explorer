@@ -218,12 +218,15 @@ export async function getAccountBlockCount(nanoAddress: string) {
 }
 
 export async function getAccountReceivable(nanoAddress: string) {
+    // explodes for large queries
+    // limit of 2MB
+    // cap to 100 for now
     const result = await fetch(process.env.NODE_RPC!, {
         method: "POST",
         body: JSON.stringify({
             "action": "accounts_receivable",
             "accounts": [nanoAddress],
-            "count": "-1"
+            "count": "100"
         }),
         next: { revalidate: 10 }
     })
