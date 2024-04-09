@@ -27,7 +27,7 @@ export default function SearchBar() {
     }
 
     return (
-        <div className="justify-center flex flex-row">
+        <div className="justify-center flex flex-row backdrop-blur-sm bg-white/20 rounded-md">
             <button
                 className='py-2 px-4 flex-none'
                 onClick={() => router.push("/")}
@@ -49,7 +49,7 @@ export default function SearchBar() {
                 <GrCluster size="1.25rem" />
             </button>
             <input
-                className='flex-initial w-[42.75rem] py-2 px-4 bg-black font-mono placeholder:text-gray-400 truncate'
+                className='flex-initial w-[42.75rem] py-2 px-4 bg-transparent font-mono placeholder:text-gray-400 truncate'
                 placeholder={NODE_ADDRESS}
                 title="Enter a valid Nano address or block hash"
                 maxLength={65}
