@@ -7,12 +7,12 @@ const username = encodeURIComponent(process.env.MONGODB_USER!)
 const password = encodeURIComponent(process.env.MONGODB_PASS!)
 const url = process.env.MONGODB_URL!
 const authMechanism = "DEFAULT"
-const database = "nodes"
+const database = "NodeWeights"
 
 export async function getNodeWeightsTop() {
 
     let dataSet: ChartData[] = []
-    
+
     const client = new MongoClient(`mongodb://${username}:${password}@${url}/?authMechanism=${authMechanism}&authSource=${database}`, { tls: true })
 
     try {
@@ -25,8 +25,8 @@ export async function getNodeWeightsTop() {
         for (const collectionOBJ of collections) {
             const documents = await db.collection(collectionOBJ.name).find({})
                 .limit(30)
-                .project({ _id: 0 }) // exclude id
-                .sort({ time: 1 })
+                .project({ _id: 0, extrapolation: 0 }) // exclude id and extrapolation
+                .sort({ time: -1 }) // still returns oldest to newest
                 .toArray()
 
             dataSet.push({
@@ -44,9 +44,9 @@ export async function getNodeWeightsTop() {
         return []
     }
     finally {
-        client.close()
+        setTimeout(() => client.close(), 1000)
     }
-    
+
 }
 
 export async function getNodeWeightsAdress(nanoAddress: string) {
@@ -62,8 +62,8 @@ export async function getNodeWeightsAdress(nanoAddress: string) {
         const documents = await db.collection(nanoAddress)
             .find({})
             .limit(30)
-            .project({ _id: 0 }) // exclude id
-            .sort({ time: 1 })
+            .project({ _id: 0, extrapolation: 0 }) // exclude id and extrapolation
+            .sort({ time: -1 }) // still returns oldest to newest
             .toArray()
 
         dataSet = [{
@@ -71,6 +71,7 @@ export async function getNodeWeightsAdress(nanoAddress: string) {
             label: nanoAddress,
             data: documents
         }]
+
         return dataSet
     }
     catch (error) {
@@ -78,7 +79,7 @@ export async function getNodeWeightsAdress(nanoAddress: string) {
         return []
     }
     finally {
-        await client.close()
+        setTimeout(() => client.close(), 1000)
     }
 
 }
