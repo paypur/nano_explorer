@@ -23,10 +23,12 @@ export default async function representativesPage() {
     return (
         <div className="flex flex-col my-8 px-4 space-y-2">
             <p className="text-lg text-white">Representatives</p>
-            {repWeightArray.map((rep) => (
-                <div className="flex flex-row space-x-2">
+            {repWeightArray.map((rep, index) => (
+                <div className="flex flex-row space-x-2" key={index}>
                     <div className="flex flex-col">
+                        {/* @ts-expect-error Server Component */}
                         <RepresentativeStatus nanoAddress={rep[0]} />
+                        {/* @ts-expect-error Server Component */}
                         <AddressAliasAsync nanoAddress={rep[0]} />
                     </div>
                     <p className="font-mono self-end">Ӿ{tools.convert(rep[1], 'RAW', 'NANO').split(".")[0]} ({(rep[1] / onlineStakeTotal * 100).toFixed(2)}%)</p>
