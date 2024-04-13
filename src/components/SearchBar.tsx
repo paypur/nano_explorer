@@ -27,29 +27,29 @@ export default function SearchBar() {
     }
 
     return (
-        <div className="justify-center flex flex-row backdrop-blur-sm bg-white/20 rounded-md">
+        <div className="flex flex-row bg-white/25 backdrop-blur-sm shadow-lg rounded-md z-10">
             <button
-                className='py-2 px-4 flex-none'
+                className='py-2 px-4 flex-none hover:bg-white/30 transition-colors rounded-md'
                 onClick={() => router.push("/")}
                 title="Home"
             >
                 <MdOutlineHome size="1.25rem" />
             </button>
             <button
-                className='py-2 px-4 flex-none'
+                className='py-2 px-4 flex-none hover:bg-white/30 transition-colors rounded-md'
                 onClick={() => router.push("/node")}
                 title="Node"
             >
                 <FaServer size="1.25rem" />
             </button>
             <button
-                className='py-2 px-4 flex-none invert'
+                className='py-2 px-4 flex-none hover:bg-white/30 transition-colors rounded-md'
                 onClick={() => router.push("/representatives")}
                 title="Representatives">
-                <GrCluster size="1.25rem" />
+                <GrCluster className="invert" size="1.25rem" />
             </button>
             <input
-                className='flex-initial w-[42.75rem] py-2 px-4 bg-transparent font-mono placeholder:text-gray-400 truncate'
+                className='flex-initial w-[42.75rem] py-2 px-4 bg-transparent font-mono placeholder:text-gray-400 truncate hover:bg-white/30 transition-colors rounded-md'
                 placeholder={NODE_ADDRESS}
                 title="Enter a valid Nano address or block hash"
                 maxLength={65}

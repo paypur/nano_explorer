@@ -95,6 +95,12 @@ export type NanoTONames = {
     expires_unix: string
 }
 
+export type RepWeight = {
+    address: string
+    weight: number
+}
+
+// unused
 export type Telemetry = {
     block_count: string
     cemented_count: string

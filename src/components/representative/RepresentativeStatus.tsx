@@ -1,4 +1,6 @@
 import { getConfirmationQuorum, getAccountWeight, getRepresentativesOnlineByAddress } from "@/serverFunctions/RPCs"
+import RepresentativeHealth from "./RepresentativeHealth"
+import RepresentativeType from "./RepresentativeType"
 
 export default async function RepresentativeStatus(props: { nanoAddress: string }) {
     const isOnline = ((await getRepresentativesOnlineByAddress(props.nanoAddress))[0] === props.nanoAddress)
@@ -9,12 +11,10 @@ export default async function RepresentativeStatus(props: { nanoAddress: string 
     
     return (
         <div className="flex flex-row space-x-2 py-[1px]">
-            <div className={`py-0.5 px-1.5 w-fit rounded border ${precentVotingWeight > 0.001 ? "border-violet-700" : "border-sky-700"}`}>
-                <p className="text-xs text-gray-400 truncate">{precentVotingWeight > 0.001 ? "Principal Representative" : "Representative"}</p>
-            </div>
-            <div className={`py-0.5 px-1.5 w-fit rounded border ${isOnline ? "border-emerald-600" : "border-rose-600"}`}>
-                <p className="text-xs text-gray-400 truncate">{isOnline ? "Online" : "Offline"}</p>
-            </div>
+            {/* @ts-expect-error Server Component */}
+            <RepresentativeType nanoAddress={props.nanoAddress}/>
+            {/* @ts-expect-error Server Component */}
+            <RepresentativeHealth nanoAddress={props.nanoAddress}/>
         </div>
     )
 }

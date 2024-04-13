@@ -1,39 +1,46 @@
-import AddressAliasAsync from "@/components/address/AddressAliasAsync";
-import RepresentativeStatus from "@/components/representative/RepresentativeStatus";
+import RepresentativeTableEntry from "@/components/representative/RepresentativeTableEntry";
+import { RepWeight } from "@/constants/Types";
 import { getConfirmationQuorum, getRepresentativesOnline } from "@/serverFunctions/RPCs";
-
-import { tools } from "nanocurrency-web";
 
 export default async function representativesPage() {
 
     const reps: any[] = await getRepresentativesOnline()
     const onlineStakeTotal = await getConfirmationQuorum()
 
-    let repWeightArray: any[][] = []
+    let repWeightArray: RepWeight[] = []
 
     for (var key in reps) {
         if (reps.hasOwnProperty(key)) {
             // repWeightArray.push(key + " -> " + reps[key].weight)
-            repWeightArray.push([key, reps[key].weight])
+            repWeightArray.push({ address: key, weight: reps[key].weight})
         }
     }
 
-    repWeightArray.sort((a, b) => b[1] - a[1])
+    // sort by weight descending
+    repWeightArray.sort((a, b) => b.weight - a.weight)
 
     return (
-        <div className="flex flex-col my-8 px-4 space-y-2">
-            <p className="text-lg text-white">Representatives</p>
-            {repWeightArray.map((rep, index) => (
-                <div className="flex flex-row space-x-2" key={index}>
-                    <div className="flex flex-col">
-                        {/* @ts-expect-error Server Component */}
-                        <RepresentativeStatus nanoAddress={rep[0]} />
-                        {/* @ts-expect-error Server Component */}
-                        <AddressAliasAsync nanoAddress={rep[0]} />
-                    </div>
-                    <p className="font-mono self-end">Ӿ{tools.convert(rep[1], 'RAW', 'NANO').split(".")[0]} ({(rep[1] / onlineStakeTotal * 100).toFixed(2)}%)</p>
-                </div>
-            ))}
+        <div className="my-8 px-4 space-y-2">
+            <table>
+                <thead className="sticky top-[180px]">
+                    <tr>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Alias</th>
+                        <th>Address</th>
+                        <th>Weight</th>
+                        <th>Percent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {repWeightArray.map((repWeight, index) => (
+                        <>
+                            {/* @ts-expect-error Server Component */}
+                            <RepresentativeTableEntry repWeight={repWeight} onlineStakeTotal={onlineStakeTotal}  />
+                        </>
+                    ))}
+                </tbody>
+            </table>
         </div>
     )
 
