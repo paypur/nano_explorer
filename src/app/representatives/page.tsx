@@ -11,7 +11,6 @@ export default async function representativesPage() {
 
     for (var key in reps) {
         if (reps.hasOwnProperty(key)) {
-            // repWeightArray.push(key + " -> " + reps[key].weight)
             repWeightArray.push({ address: key, weight: reps[key].weight})
         }
     }

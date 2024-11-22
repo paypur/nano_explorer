@@ -141,7 +141,7 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                 <>
                     <div className="flex flex-row justify-between">
                         <p className="text-lg font-medium">Recently Confirmed Transactions</p>
-                        <p className="text-lg font-medium">CPS: {cps.toFixed(2)}</p>
+                        {/* <p className="text-lg font-medium">CPS: {cps.toFixed(2)}</p> */}
                     </div>
                     <div className="min-w-0 flex flex-col space-y-2">
                         {confirmedList.map((blockPair: CustomBlockPair, index) => (

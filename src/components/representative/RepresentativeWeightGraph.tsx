@@ -19,7 +19,7 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
 import { Line } from 'react-chartjs-2';
-import { useState } from 'react';
+import { cache, useState } from 'react';
 import useAsyncEffect from "use-async-effect"
 
 ChartJS.register(
@@ -38,8 +38,11 @@ export default function RepresentativeWeightGraph(props: { nanoAddress: string }
 
     const [dataset, setDataset] = useState<any[]>([])
 
+    // TODO: doesnt work
+    const getData = cache(async (a: string) => { return await getNodeWeightsAdress(a) })
+
     useAsyncEffect(async () => {
-        setDataset(await getNodeWeightsAdress(props.nanoAddress))
+        setDataset(await getData(props.nanoAddress))
     }, [])
 
     ChartJS.defaults.color = '#f3f4f6';

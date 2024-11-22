@@ -20,7 +20,7 @@ const roboto_mono = Roboto_Mono({
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en" className={`${roboto.variable} ${roboto_mono.variable}`}>
+        <html lang="en" className={`${roboto.variable} ${roboto_mono.variable} dark`}>
             <body className='flex justify-center bg-black font-sans font-normal text-base text-gray-100 antialiased min-w-0 mx-16'>
                 <div className='flex flex-col'>
                     <div className='flex flex-col sticky top-0 self-center min-w-0'>

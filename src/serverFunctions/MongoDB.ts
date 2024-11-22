@@ -23,8 +23,9 @@ export async function getNodeWeightsTop() {
         let collections = await db.listCollections({ name: { $not: { $regex: "^system.*" } } }).toArray()
 
         for (const collectionOBJ of collections) {
-            const documents = await db.collection(collectionOBJ.name).find({})
-                .limit(30)
+            const documents = await db.collection(collectionOBJ.name)
+                .find({})
+                .limit(365)
                 .project({ _id: 0, extrapolation: 0 }) // exclude id and extrapolation
                 .sort({ time: -1 }) // still returns oldest to newest
                 .toArray()
@@ -37,6 +38,8 @@ export async function getNodeWeightsTop() {
         }
         // sort by weight
         dataSet.sort((a, b) => b.data[0].rawWeight - a.data[0].rawWeight)
+        // drop last 30 zeros
+        dataSet.forEach(node => node.data.forEach(data => data.rawWeight = data.rawWeight.slice(0, -30)))
         return dataSet.slice(0, 10)
     }
     catch (error) {
@@ -61,7 +64,7 @@ export async function getNodeWeightsAdress(nanoAddress: string) {
 
         const documents = await db.collection(nanoAddress)
             .find({})
-            .limit(30)
+            .limit(365)
             .project({ _id: 0, extrapolation: 0 }) // exclude id and extrapolation
             .sort({ time: -1 }) // still returns oldest to newest
             .toArray()
@@ -71,7 +74,8 @@ export async function getNodeWeightsAdress(nanoAddress: string) {
             label: nanoAddress,
             data: documents
         }]
-
+        // drop last 30 zeros
+        dataSet[0].data.forEach(data => data.rawWeight = data.rawWeight.slice(0, -30))
         return dataSet
     }
     catch (error) {

@@ -26,10 +26,10 @@ export default async function RepresentativeTableEntry(props: { repWeight: RepWe
                 <FormatLink path={props.repWeight.address} type="address"/>
             </td>
             <td className="px-2 py-1">
-                <p className="font-mono">Ӿ{tools.convert(props.repWeight.weight, 'RAW', 'NANO').split(".")[0]}</p>
+                <p className="font-mono text-right">Ӿ{tools.convert(props.repWeight.weight.toString(), 'RAW', 'NANO').split(".")[0]}</p>
             </td>
             <td className="px-2 py-1">
-                <p className="font-mono">({(props.repWeight.weight / props.onlineStakeTotal * 100).toFixed(2)}%)</p>
+                <p className="font-mono text-right">({(props.repWeight.weight / props.onlineStakeTotal * 100).toFixed(2)}%)</p>
             </td>
         </tr>
     )
