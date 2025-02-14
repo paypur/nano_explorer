@@ -96,5 +96,18 @@ export async function convertAHN(nanoAddress: string, head: string) {
 // }
 
 export async function convertWSBlock(data: WSBlock) {
-        return await getBlockPairData(await WSBlockToCustomBlock(data))
+    return await getBlockPairData(await WSBlockToCustomBlock(data))
+}
+
+export async function getAutoComplete(prefix: string): Promise<[string] | undefined> {
+    const result = await fetch("http://localhost:8000/api/" + prefix)
+    const data = await result.json()
+
+    if (Object.keys(data)[0] == "error") {
+        // return data["error"]
+    } else if (Object.keys(data)[0] == "data") {
+        return data["data"]["addresses"]
+    }
+
+    console.error("Invalid Response")
 }

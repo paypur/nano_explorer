@@ -10,7 +10,6 @@ export default function AddressQrCode(props: { nanoAddress: string }) {
             <SVG
                 text={`nano:${props.nanoAddress}`}
                 options={{
-                    level: 'L',
                     margin: 2,
                     width: 208,
                     color: {

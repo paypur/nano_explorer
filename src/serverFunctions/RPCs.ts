@@ -34,6 +34,7 @@ export async function getBlockInfoReceiveHash(blockHash: string) {
         return data.blocks[hash].receive_hash
     }
 }
+
 export async function getBlocksInfo(blockHash: string[]) {
     const result = await fetch(process.env.NODE_RPC!, {
         method: "POST",

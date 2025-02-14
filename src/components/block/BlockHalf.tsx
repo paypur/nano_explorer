@@ -23,7 +23,7 @@ export default function BlockHalf(props: { block: CustomBlock }) {
         // really bad
         return (
             <div className="flex flex-col w-[40.625rem] min-w-0">
-                <p className="max-h-[1.5rem] text-emerald-600">RECEIVEABLE {amount}</p>
+                <p className="max-h-[1.5rem] text-emerald-600">RECEIVABLE {amount}</p>
                 <AddressAlias nanoAddress={props.block.account} alias={props.block.alias} />
                 <SkeletonText40rem />
                 <SkeletonText27rem />

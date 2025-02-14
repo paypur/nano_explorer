@@ -24,18 +24,10 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
 
     const [confirmedTab, setConfirmedTab] = useState(true)
 
-    // const [time, setTime] = useState(0)
-    // const [prev, setPrev] = useState(0)
-
-    // const [diff, setDiff] = useState(0)
-
-    // TODO: is wrong
-    const [cps, setCps] = useState(0)
-
     useAsyncEffect(async () => {
 
         if (props.nanoAddress !== "") {
-            // get Recieved Blocks
+            // get Received Blocks
             // push all blocks at once to so there is only 1 refresh
             const latestBlocks = await getAccountLatestBlocks(props.nanoAddress)
             // adds to end
@@ -44,7 +36,7 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
             // get total Number of Recieved Blocks
             setConfirmedTotal(await getAccountBlockCount(props.nanoAddress))
 
-            // get Recieveable Blocks
+            // get Receiveable Blocks
             // push all blocks at once to so there is only 1 refresh
             const receivablePairArray = await getAccountReceivableBlocks(props.nanoAddress)
             // adds to end
@@ -89,18 +81,6 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
         }
     }, [head])
 
-    // useEffect(() => {
-    //     setDiff(time - prev)
-    //     setPrev(time)
-    // }, [time])
-
-    // useEffect(() => {
-    //     const length = confirmedList.length
-    //     if (props.nanoAddress === "" && length !== 0) {
-    //         setCps((cps * (length - 1) + (1000 / diff)) / length)
-    //     }
-    // }, [diff])
-
     return (
         <div className="flex flex-col my-8 px-4 space-y-2">
             {props.nanoAddress !== "" ?
@@ -141,7 +121,6 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                 <>
                     <div className="flex flex-row justify-between">
                         <p className="text-lg font-medium">Recently Confirmed Transactions</p>
-                        {/* <p className="text-lg font-medium">CPS: {cps.toFixed(2)}</p> */}
                     </div>
                     <div className="min-w-0 flex flex-col space-y-2">
                         {confirmedList.map((blockPair: CustomBlockPair, index) => (
