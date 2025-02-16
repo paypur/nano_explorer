@@ -26,6 +26,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
     "reconnecting-websocket": "^4.4.0",
+    "regex": "^6.0.1",
     "server-only": "^0.0.1",
     "sharp": "^0.33.2",
     "systeminformation": "^5.22.0",

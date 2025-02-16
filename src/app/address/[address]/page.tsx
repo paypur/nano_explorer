@@ -2,6 +2,7 @@ import AddressCard from '@/components/address/AddressCard'
 import RepresentativeCard from '@/components/representative/RepresentativeCard'
 import BlockManager from '@/components/block/BlockManager'
 import { headers } from 'next/headers'
+import isValid from "nano-address-validator";
 
 export default function AddressPage() {
 
@@ -20,14 +21,18 @@ export default function AddressPage() {
         }
     }
 
-    return (
-        // div required for margin collapsing
-        // https://www.joshwcomeau.com/css/rules-of-margin-collapse/
-        <div>
-            <AddressCard nanoAddress={nanoAddress} />
-            {/* @ts-expect-error Server Component */}
-            <RepresentativeCard nanoAddress={nanoAddress} />
-            <BlockManager nanoAddress={nanoAddress} subscription={subscription} />
-        </div>
-    )
+    if (isValid(nanoAddress)) {
+        return (
+            // div required for margin collapsing
+            // https://www.joshwcomeau.com/css/rules-of-margin-collapse/
+            <div>
+                <AddressCard nanoAddress={nanoAddress} />
+                {/* @ts-expect-error Server Component */}
+                <RepresentativeCard nanoAddress={nanoAddress} />
+                <BlockManager nanoAddress={nanoAddress} subscription={subscription} />
+            </div>
+        )
+    }
+
+    return (<div><p>Error 422 - Invalid Nano Address!</p></div>)
 }

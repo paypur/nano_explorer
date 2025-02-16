@@ -99,15 +99,24 @@ export async function convertWSBlock(data: WSBlock) {
     return await getBlockPairData(await WSBlockToCustomBlock(data))
 }
 
-export async function getAutoComplete(prefix: string): Promise<[string] | undefined> {
-    const result = await fetch("http://localhost:8000/api/" + prefix)
-    const data = await result.json()
+export async function getAutoComplete(word: string): Promise<[string]> {
+    let url = "http://localhost:8000/api/" + word
+    try {
+        const result = await fetch(url)
+        const data = await result.json()
 
-    if (Object.keys(data)[0] == "error") {
-        // return data["error"]
-    } else if (Object.keys(data)[0] == "data") {
-        return data["data"]["addresses"]
+        if (Object.keys(data)[0] == "error") {
+            // return data["error"]
+            console.error("Invalid Query")
+            return []
+        } else if (Object.keys(data)[0] == "data") {
+            return data["data"]["addresses"]
+        } else {
+            console.error("Invalid Response")
+            return []
+        }
+    } catch (e) {
+        console.error(`Fetch to ${url} failed`)
+        return[]
     }
-
-    console.error("Invalid Response")
 }

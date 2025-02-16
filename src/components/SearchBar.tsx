@@ -9,13 +9,15 @@ import { MdOutlineHome } from "react-icons/md"
 import { GrCluster } from "react-icons/gr"
 
 import { useRouter } from "next/navigation"
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {getAutoComplete} from "@/serverFunctions/ServerFunctions";
 
 export default function SearchBar() {
 
     const router = useRouter()
 
+    // https://react.dev/learn/separating-events-from-effects
+    const [searchSelected, setSearchSelected] = useState(false)
     const [autoComplete, setAutoComplete] = useState<[string]>([])
 
     async function search(term: string) {
@@ -32,16 +34,13 @@ export default function SearchBar() {
                 }
                 break
             default:
-                if (trimmed !== "nano_") {
-                    // setSearching(true)
+                // could use regex
+                // could debounce, probably not though
+                if (trimmed.length > 0 && trimmed !== "nano_") {
                     let response = await getAutoComplete(term)
-                    // https://www.geeksforgeeks.org/create-dropdowns-ui-with-next-js-and-tailwind-css/
-                    if (response !== undefined) {
-                        setAutoComplete(response)
-                    } else {
-                        setAutoComplete([])
-                    }
-                    break
+                    setAutoComplete(response)
+                } else {
+                    setAutoComplete([])
                 }
         }
     }
@@ -67,19 +66,49 @@ export default function SearchBar() {
                     className='py-2 px-4 flex-none hover:bg-white/30 transition-colors rounded-md'
                     onClick={() => router.push("/representatives")}
                     title="Representatives">
-                    <GrCluster className="invert" size="1.25rem" />
+                    <GrCluster size="1.25rem" />
                 </button>
-                <input
-                    className='flex-initial w-[42.75rem] py-2 px-4 bg-transparent font-mono placeholder:text-gray-400 truncate hover:bg-white/30 transition-colors rounded-md'
-                    placeholder={NODE_ADDRESS}
-                    title="Enter a valid Nano address or block hash"
-                    maxLength={65}
-                    onChange={(e) => search(e.target.value)}
-                />
+                <div
+                    className={'w-[42.75rem]'}
+                >
+                    {/*TODO: add when selected state*/}
+                    <input
+                        id={"search"}
+                        type={"search"}
+                        autoComplete={"off"}
+                        title={"Enter a valid Nano address or block hash"}
+                        placeholder={NODE_ADDRESS}
+                        maxLength={65}
+                        onChange={(e) => search(e.target.value)}
+                        onFocus={() => {
+                            if (!searchSelected) {
+                                setSearchSelected(true)
+                            }
+                        }}
+                        onBlur={(e) => {
+                            if (searchSelected) {
+                                setTimeout(() => {
+                                    setSearchSelected(false)
+                                }, 1000);
+                            }
+                        }}
+                        className='flex-initial py-2 px-4 w-full bg-transparent font-mono font-light placeholder:text-gray-400 truncate hover:bg-white/30 transition-colors rounded-md'
+                    />
+                    {searchSelected && autoComplete.length > 0 ?
+                        // TODO: blur doesnt work
+                        <div className={'absolute flex flex-col w-[42.75rem] backdrop-blur-sm bg-white/25 -z-100'}>
+                            {autoComplete.map((str: String) => (
+                                <button className='py-1 px-4 hover:bg-white/30 font-mono font-light' onClick={() => {
+
+                                    console.log("clicked")
+                                    router.push(`/address/${str}`)}} >
+                                    {str}
+                                </button>
+                            ))}
+                        </div> :
+                        <></>}
+                </div>
             </div>
-            {autoComplete.length !== 0 ? <div>
-                {autoComplete.map((str: String) => (<p>{str}</p>)) }
-            </div> : <></>}
         </>
     )
 }
