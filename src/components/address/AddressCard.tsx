@@ -40,7 +40,7 @@ export default function AddressCard(props: { nanoAddress: string }) {
                         </div>
 
                         <div className='flex flex-col'>
-                            <p className='text-gray-400'>Receiveable Balance</p>
+                            <p className='text-gray-400'>Receivable Balance</p>
                             <Suspense fallback={<div className='flex flex-col'>
                                 <SkeletonText4rem />
                                 <SkeletonText2rem />
@@ -53,6 +53,7 @@ export default function AddressCard(props: { nanoAddress: string }) {
                     </div>
 
                     <div className='flex flex-col min-w-0'>
+                        <p className='text-gray-400'>Representative</p>
                         {/* @ts-expect-error Server Component */}
                         <AddressRepresentativeInfo nanoAddress={props.nanoAddress} />
                     </div>

@@ -76,7 +76,7 @@ export default function SearchBar() {
                         id={"search"}
                         type={"search"}
                         autoComplete={"off"}
-                        title={"Enter a valid Nano address or block hash"}
+                        title={"Enter a valid Nano address (prefix not required) or Block hash"}
                         placeholder={NODE_ADDRESS}
                         maxLength={65}
                         onChange={(e) => search(e.target.value)}
@@ -96,11 +96,9 @@ export default function SearchBar() {
                     />
                     {searchSelected && autoComplete.length > 0 ?
                         // TODO: blur doesnt work
-                        <div className={'absolute flex flex-col w-[42.75rem] backdrop-blur-sm bg-white/25 -z-100'}>
+                        <div className={'absolute flex flex-col w-[42.75rem] backdrop-blur-sm bg-white/25 z-10'}>
                             {autoComplete.map((str: String) => (
                                 <button className='py-1 px-4 hover:bg-white/30 font-mono font-light' onClick={() => {
-
-                                    console.log("clicked")
                                     router.push(`/address/${str}`)}} >
                                     {str}
                                 </button>
