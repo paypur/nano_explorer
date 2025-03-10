@@ -10,5 +10,9 @@
     {
         "name": "Nautilus Node",
         "address": "nano_38713x95zyjsqzx6nm1dsom1jmm668owkeb9913ax6nfgj15az3nu8xkx579"
+    },
+    {
+        "name": "Natrium Node",
+        "address": "nano_1natrium1o3z5519ifou7xii8crpxpk8y65qmkih8e8bpsjri651ozoza8imdd"
     }
 ]

@@ -27,13 +27,12 @@ export default async function RepresentativeCard(props: { nanoAddress: string })
         }
 
         return (
-            <div className="flex flex-col my-8 px-4 space-y-2">
+            <div className="flex flex-col my-4 px-4 space-y-1">
                 <p className='text-lg font-medium'>Representative Information</p>
                 <div className="flex flex-row justify-between">
-                    <div className="flex flex-col space-y-2">
-
+                    <div className="flex flex-col space-y-1">
                         <div>
-                            <p className='text-gray-400'>Node ID</p>
+                            <p className='text-neutral-400'>Node ID</p>
                             <Suspense fallback={<div className="flex flex-row">
                                 <SkeletonText4rem />
                             </div>}>
@@ -45,7 +44,7 @@ export default async function RepresentativeCard(props: { nanoAddress: string })
                         </div>
 
                         <div>
-                            <p className='text-gray-400'>Voting Weight</p>
+                            <p className='text-neutral-400'>Voting Weight</p>
                             <Suspense fallback={<>
                                 <SkeletonText40rem />
                                 <SkeletonText40rem />
@@ -57,7 +56,7 @@ export default async function RepresentativeCard(props: { nanoAddress: string })
                         </div>
 
                         <div>
-                            <p className='text-gray-400'>Delegators</p>
+                            <p className='text-neutral-400'>Delegators</p>
                             <Suspense fallback={<>
                                 <SkeletonText4rem />
                             </>}>
@@ -65,11 +64,10 @@ export default async function RepresentativeCard(props: { nanoAddress: string })
                                 <RepresentativeDelegators nanoAddress={props.nanoAddress} />
                             </Suspense>
                         </div>
-
                     </div>
 
                     <div>
-                        <p className='text-gray-400'>Voting Weight over Time</p>
+                        <p className='text-neutral-400'>Historical Voting Weight</p>
                         <RepresentativeWeightGraph nanoAddress={props.nanoAddress} />
                     </div>
                 </div>

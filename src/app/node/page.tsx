@@ -45,7 +45,7 @@ export default async function Node() {
     }
 
     return (
-        <div className="min-w-0 my-8 px-4 space-y-4">
+        <div className="min-w-0 my-4 px-4 space-y-2">
             <div>
                 <div className={"flex flex-row items-center space-x-4"}>
                     <p className='text-2xl font-medium'>paypur&#39;s Node</p>

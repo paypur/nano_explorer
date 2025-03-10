@@ -69,7 +69,7 @@ export default function SearchBar() {
                     <GrCluster size="1.25rem" />
                 </button>
                 <div
-                    className={'w-[42.75rem]'}
+                    className={'w-[43.75rem]'}
                 >
                     {/*TODO: add when selected state*/}
                     <input
@@ -96,7 +96,7 @@ export default function SearchBar() {
                     />
                     {searchSelected && autoComplete.length > 0 ?
                         // TODO: blur doesnt work
-                        <div className={'absolute flex flex-col w-[42.75rem] backdrop-blur-sm bg-white/25 z-10'}>
+                        <div className={'absolute flex flex-col w-[43.75rem] backdrop-blur-sm bg-white/25 z-10'}>
                             {autoComplete.map((str: String) => (
                                 <button className='py-1 px-4 hover:bg-white/30 font-mono font-light' onClick={() => {
                                     router.push(`/address/${str}`)}} >

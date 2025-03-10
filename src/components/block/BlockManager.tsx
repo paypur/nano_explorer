@@ -82,17 +82,17 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
     }, [head])
 
     return (
-        <div className="flex flex-col my-8 px-4 space-y-2">
+        <div className="flex flex-col my-4 px-4 space-y-2">
             {props.nanoAddress !== "" ?
                 <>
                     <div className="flex flex-row justify-between">
-                        <button className={`text-lg ${confirmedTab ? "font-medium" : "font-normal text-gray-400"} flex flex-row`} onClick={() => setConfirmedTab(true)}>
-                            <p>Confirmed Transactions</p>
+                        <button className={`${confirmedTab ? "font-medium bg-neutral-50 text-black" : "font-normal text-neutral-50 border"} flex flex-row rounded py-0.5 px-2`} onClick={() => setConfirmedTab(true)}>
+                            <p className={"pt-[1px]"}>Confirmed Transactions</p>
                             <p className="font-mono">&nbsp;</p>
                             {confirmedTotal !== null ? <p className="font-mono">({confirmedTotal})</p> : <SkeletonText2rem />}
                         </button>
-                        <button className={`text-lg ${confirmedTab ? "font-normal text-gray-400" : "font-medium"} flex flex-row`} onClick={() => setConfirmedTab(false)}>
-                            <p>Receivable Transactions</p>
+                        <button className={`${confirmedTab ? "font-normal text-neutral-50 border" : "font-medium bg-neutral-50 text-black"} flex flex-row rounded py-0.5 px-2`} onClick={() => setConfirmedTab(false)}>
+                            <p className={"pt-[1px]"}>Receivable Transactions</p>
                             <p className="font-mono">&nbsp;</p>
                             {receivableList.length !== null ? <p className="font-mono">({receivableList.length})</p> : <SkeletonText2rem />}
                         </button>
@@ -101,13 +101,18 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
                     <div className="flex flex-col min-w-0 space-y-2">
                         {confirmedTab ?
                             confirmedList.map((blockPair: CustomBlockPair, index) => (
-                                <BlockCard
-                                    key={blockPair.block1.hash}
-                                    blockPair={blockPair}
-                                    // if second to last visible, to load next blocks in advanced
-                                    isLast={index === confirmedList.length - 2}
-                                    newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
-                                />
+                                <>
+                                    <BlockCard
+                                        key={blockPair.block1.hash}
+                                        blockPair={blockPair}
+                                        // if second to last visible, to load next blocks in advanced
+                                        isLast={index === confirmedList.length - 2}
+                                        newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
+                                    />
+                                    {/*<div className={'absolute w-[41.25rem] h-[7.5rem] min-w-0 bg-neutral-950 -z-10'}>*/}
+                                    {/*    e*/}
+                                    {/*</div>*/}
+                                </>
                             )) :
                             receivableList.map((blockPair: CustomBlockPair, index) => (
                                 <BlockCard

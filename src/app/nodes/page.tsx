@@ -66,6 +66,10 @@ export default function Page() {
                     round: 'day'
                 },
                 type: 'timeseries',
+                ticks: {
+                    autoSkip: false,
+                    maxTicksLimit: 12
+                }
             }
         },
         interaction: {

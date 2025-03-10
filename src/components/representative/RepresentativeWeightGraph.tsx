@@ -70,6 +70,10 @@ export default function RepresentativeWeightGraph(props: { nanoAddress: string }
                     round: 'day'
                 },
                 type: 'timeseries',
+                ticks: {
+                    autoSkip: false,
+                    maxTicksLimit: 12
+                }
             }
         },
         interaction: {
@@ -98,7 +102,7 @@ export default function RepresentativeWeightGraph(props: { nanoAddress: string }
     };
 
     return (
-        <div className='w-[40rem] h-[184px]'>
+        <div className='w-[42rem] h-[176px]'>
             {/* @ts-expect-error Server Component */}
             <Line options={options} data={data} />
         </div>

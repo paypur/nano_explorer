@@ -7,10 +7,10 @@ import { useEffect, useRef } from 'react'
 import { MdOutlineEast, MdOutlineWest } from 'react-icons/md';
 
 export default function BlockCard(props: { blockPair: CustomBlockPair, isLast?: boolean, newHead?: any }) {
-    //https://stackoverflow.com/questions/74297001/type-mutablerefobjecthtmlinputelement-undefined-is-not-assignable-to-type
+    // https://stackoverflow.com/questions/74297001/type-mutablerefobjecthtmlinputelement-undefined-is-not-assignable-to-type
     const cardRef = useRef<HTMLInputElement>(null);
 
-    https://www.freecodecamp.org/news/how-to-implement-infinite-scroll-in-next-js/
+    // https://www.freecodecamp.org/news/how-to-implement-infinite-scroll-in-next-js/
     useEffect(() => {
         if (!cardRef?.current) return;
         const observer = new IntersectionObserver(([entry]) => {
