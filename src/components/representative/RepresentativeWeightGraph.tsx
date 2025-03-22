@@ -1,6 +1,6 @@
 "use client"
 
-import { getNodeWeightsAdress } from '@/serverFunctions/MongoDB';
+import { getNodeWeightsAdress } from '@/server_functions/MongoDB';
 
 import {
     Chart as ChartJS,

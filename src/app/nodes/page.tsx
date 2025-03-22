@@ -1,6 +1,6 @@
 "use client"
 
-import { getNodeWeightsTop } from '@/serverFunctions/MongoDB';
+import { getNodeWeightsTop } from '@/server_functions/MongoDB';
 import {
     Chart as ChartJS,
     CategoryScale,

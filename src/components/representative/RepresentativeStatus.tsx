@@ -1,4 +1,4 @@
-import { getConfirmationQuorum, getAccountWeight, getRepresentativesOnlineByAddress } from "@/serverFunctions/RPCs"
+import { getConfirmationQuorum, getAccountWeight, getRepresentativesOnlineByAddress } from "@/server_functions/RPCs"
 import RepresentativeHealth from "./RepresentativeHealth"
 import RepresentativeType from "./RepresentativeType"
 

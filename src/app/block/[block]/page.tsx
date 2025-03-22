@@ -1,7 +1,7 @@
 import { CustomBlock, RPCBlock } from '@/constants/Types'
 import BlockHalf from '@/components/block/BlockHalf'
-import { getBlockInfo } from '@/serverFunctions/RPCs'
-import { RPCBlockToCustomBlock } from '@/serverFunctions/ServerFunctions'
+import { getBlockInfo } from '@/server_functions/RPCs'
+import { RPCBlockToCustomBlock } from '@/server_functions/ServerFunctions'
 
 import { headers } from 'next/headers'
 

@@ -2,7 +2,7 @@ import { RepWeight } from "@/constants/Types"
 import RepresentativeHealth from "./RepresentativeHealth"
 import RepresentativeType from "./RepresentativeType"
 import FormatLink from "../FormatLink"
-import { getAlias } from "@/serverFunctions/Alias"
+import { getAlias } from "@/server_functions/Alias"
 import { tools } from "nanocurrency-web"
 
 export default async function RepresentativeTableEntry(props: { repWeight: RepWeight, onlineStakeTotal: any }) {

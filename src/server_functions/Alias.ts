@@ -4,8 +4,8 @@ import { NanoTONames } from "@/constants/Types";
 
 import fs from "fs";
 
-const fileSelf: NanoTONames[] = JSON.parse(fs.readFileSync("./src/serverFunctions/aliases_self.json", "utf8"))
-const file: NanoTONames[] = JSON.parse(fs.readFileSync("./src/serverFunctions/aliases.json", "utf8"))
+const fileSelf: NanoTONames[] = JSON.parse(fs.readFileSync("./src/server_functions/aliases_self.json", "utf8"))
+const file: NanoTONames[] = JSON.parse(fs.readFileSync("./src/server_functions/aliases.json", "utf8"))
 
 export async function getAlias(nanoAddress: string) {
     let query = fileSelf.find((e) => e.address === nanoAddress)

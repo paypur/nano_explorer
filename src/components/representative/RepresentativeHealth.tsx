@@ -1,4 +1,4 @@
-import { getRepresentativesOnlineByAddress } from "@/serverFunctions/RPCs"
+import { getRepresentativesOnlineByAddress } from "@/server_functions/RPCs"
 
 export default async function RepresentativeHealth(props: { nanoAddress: string }) {
     const isOnline = ((await getRepresentativesOnlineByAddress(props.nanoAddress))[0] === props.nanoAddress)

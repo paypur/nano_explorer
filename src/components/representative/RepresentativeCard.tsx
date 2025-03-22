@@ -3,13 +3,13 @@ import RepresentativeDelegators from "./RepresentativeDelegators"
 import RepresentativeStatus from "./RepresentativeStatus"
 import RepresentativeWeightGraph from "./RepresentativeWeightGraph"
 import { SkeletonText40rem, SkeletonText4rem } from "../skeletons/SkeletonText"
-import { getAccountWeight } from "@/serverFunctions/RPCs"
+import { getAccountWeight } from "@/server_functions/RPCs"
 
-import { addressToID } from "@/serverFunctions/MapNode"
+import { addressToID } from "@/server_functions/MapNode"
 import FormatLink from "../FormatLink"
 
 import { Suspense } from "react"
-import { getAlias } from "@/serverFunctions/Alias"
+import { getAlias } from "@/server_functions/Alias"
 
 export default async function RepresentativeCard(props: { nanoAddress: string }) {
     // check if address is a rep

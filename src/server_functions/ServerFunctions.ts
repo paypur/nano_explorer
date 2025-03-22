@@ -100,17 +100,17 @@ export async function convertWSBlock(data: WSBlock) {
 }
 
 export async function getAutoComplete(word: string): Promise<[string]> {
-    let url = "http://localhost:8000/api/" + word
+    let url = process.env.AUTOCOMPLETE_URL + word
     try {
-        const result = await fetch(url)
+        const result = await fetch(process.env.AUTOCOMPLETE_URL + word)
         const data = await result.json()
 
-        if (Object.keys(data)[0] == "error") {
-            // return data["error"]
+        if (Object.keys(data)[0] == "data") {
+            return data["data"]["addresses"]
+        // return data["error"]
+        } else if (Object.keys(data)[0] == "error") {
             console.error("Invalid Query")
             return []
-        } else if (Object.keys(data)[0] == "data") {
-            return data["data"]["addresses"]
         } else {
             console.error("Invalid Response")
             return []

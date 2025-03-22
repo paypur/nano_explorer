@@ -1,4 +1,4 @@
-import { getConfirmationQuorum, getAccountWeight } from "@/serverFunctions/RPCs"
+import { getConfirmationQuorum, getAccountWeight } from "@/server_functions/RPCs"
 
 export default async function RepresentativeType(props: { nanoAddress: string }) {
     const votingWeight = await getAccountWeight(props.nanoAddress)

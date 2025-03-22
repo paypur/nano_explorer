@@ -3,8 +3,8 @@
 import { CustomBlockPair, WSBlock } from "@/constants/Types"
 import { WSC } from "@/constants/Socket"
 import BlockCard from "./BlockCard"
-import { getAccountBlockCount } from "@/serverFunctions/RPCs"
-import { convertWSBlock, convertAHN, getAccountLatestBlocks, getAccountReceivableBlocks } from "@/serverFunctions/ServerFunctions"
+import { getAccountBlockCount } from "@/server_functions/RPCs"
+import { convertWSBlock, convertAHN, getAccountLatestBlocks, getAccountReceivableBlocks } from "@/server_functions/ServerFunctions"
 import SkeletonBlockPair from "../skeletons/SkeletonBlockPair"
 
 import useAsyncEffect from "use-async-effect"

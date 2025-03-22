@@ -1,5 +1,5 @@
-import { getAccountReceivable, getBlockInfo } from "@/serverFunctions/RPCs"
-import { getNanoUSD } from "@/serverFunctions/ServerFunctions"
+import { getAccountReceivable, getBlockInfo } from "@/server_functions/RPCs"
+import { getNanoUSD } from "@/server_functions/ServerFunctions"
 import { tools } from "nanocurrency-web"
 
 export default async function AddressReceivableBalance(props: {nanoAddress: string}) {

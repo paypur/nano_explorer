@@ -9,8 +9,8 @@ import { MdOutlineHome } from "react-icons/md"
 import { GrCluster } from "react-icons/gr"
 
 import { useRouter } from "next/navigation"
-import {useEffect, useState} from "react";
-import {getAutoComplete} from "@/serverFunctions/ServerFunctions";
+import {useState} from "react";
+import {getAutoComplete} from "@/server_functions/ServerFunctions";
 
 export default function SearchBar() {
 
@@ -49,24 +49,24 @@ export default function SearchBar() {
         <>
             <div className="flex flex-row bg-white/25 backdrop-blur-sm shadow-lg rounded-md z-10">
                 <button
-                    className='py-2 px-4 flex-none hover:bg-white/30 transition-colors rounded-md'
+                    className='py-1 px-4 flex-none hover:bg-white/30 transition-colors rounded-md'
                     onClick={() => router.push("/")}
                     title="Home"
                 >
-                    <MdOutlineHome size="1.25rem" />
+                    <MdOutlineHome size="1rem" />
                 </button>
                 <button
-                    className='py-2 px-4 flex-none hover:bg-white/30 transition-colors rounded-md'
+                    className='py-1 px-4 flex-none hover:bg-white/30 transition-colors rounded-md'
                     onClick={() => router.push("/node")}
                     title="Node"
                 >
-                    <FaServer size="1.25rem" />
+                    <FaServer size="1rem" />
                 </button>
                 <button
-                    className='py-2 px-4 flex-none hover:bg-white/30 transition-colors rounded-md'
+                    className='py-1 px-4 flex-none hover:bg-white/30 transition-colors rounded-md'
                     onClick={() => router.push("/representatives")}
                     title="Representatives">
-                    <GrCluster size="1.25rem" />
+                    <GrCluster size="1rem" />
                 </button>
                 <div
                     className={'w-[43.75rem]'}
@@ -92,7 +92,7 @@ export default function SearchBar() {
                                 }, 1000);
                             }
                         }}
-                        className='flex-initial py-2 px-4 w-full bg-transparent font-mono font-light placeholder:text-gray-400 truncate hover:bg-white/30 transition-colors rounded-md'
+                        className='flex-initial py-1 px-4 w-full bg-transparent font-mono font-light placeholder:text-gray-400 truncate hover:bg-white/30 transition-colors rounded-md'
                     />
                     {searchSelected && autoComplete.length > 0 ?
                         // TODO: blur doesnt work

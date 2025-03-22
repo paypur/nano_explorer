@@ -1,6 +1,6 @@
 import RepresentativeTableEntry from "@/components/representative/RepresentativeTableEntry";
 import { RepWeight } from "@/constants/Types";
-import { getConfirmationQuorum, getRepresentativesOnline } from "@/serverFunctions/RPCs";
+import { getConfirmationQuorum, getRepresentativesOnline } from "@/server_functions/RPCs";
 
 export default async function representativesPage() {
 
@@ -19,9 +19,9 @@ export default async function representativesPage() {
     repWeightArray.sort((a, b) => b.weight - a.weight)
 
     return (
-        <div className="my-8 px-4 space-y-2">
+        <div className="my-4 px-4 space-y-2">
             <table>
-                <thead className="sticky top-[180px]">
+                <thead className="sticky top-[144px] bg-black">
                     <tr>
                         <th>Type</th>
                         <th>Status</th>

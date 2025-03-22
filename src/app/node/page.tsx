@@ -3,7 +3,7 @@ import FormatLink from "@/components/FormatLink";
 import RepresentativeDelegators from "@/components/representative/RepresentativeDelegators";
 import RepresentativeWeight from "@/components/representative/RepresentativeWeight";
 import { SkeletonText40rem, SkeletonText4rem } from "@/components/skeletons/SkeletonText";
-import { getNodeTelemetryLocal } from "@/serverFunctions/RPCs";
+import { getNodeTelemetryLocal } from "@/server_functions/RPCs";
 
 import { Suspense } from "react";
 import Link from "next/link";
