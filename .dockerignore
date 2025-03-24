@@ -1,0 +1,12 @@
+.git
+.next
+.vscode
+.idea
+node_modules
+
+.env
+next-env.d.ts
+.timetracker
+tsconfig.buildinfo
+LICENSE
+NOTES.txt

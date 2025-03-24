@@ -2,17 +2,14 @@ import { CustomBlock, RPCBlock } from '@/constants/Types'
 import BlockHalf from '@/components/block/BlockHalf'
 import { getBlockInfo } from '@/server_functions/RPCs'
 import { RPCBlockToCustomBlock } from '@/server_functions/ServerFunctions'
-
-import { headers } from 'next/headers'
+import {headers} from "next/headers";
 
 export default async function BlockPage() {
 
-    // https://github.com/vercel/next.js/issues/43704#issuecomment-1411186664
-    const headersList = headers();
-    // read the custom x-url header
-    const header_url = headersList.get('x-url') || ""
-
-    const blockHash = header_url.slice(-64)
+    const headerList = await headers();
+    const pathname = headerList.get("x-url");
+    // @ts-ignore
+    const blockHash = pathname.slice(-64)
     const blockJson: RPCBlock = await getBlockInfo(blockHash)
     const customBlock: CustomBlock = await RPCBlockToCustomBlock(blockJson, blockHash)
 
