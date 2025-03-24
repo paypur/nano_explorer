@@ -1,5 +1,7 @@
 FROM archlinux:latest
 
+WORKDIR /app
+
 RUN pacman-key --init && \
     pacman-key --populate && \
     pacman -Syu --noconfirm && \
@@ -8,12 +10,12 @@ RUN pacman-key --init && \
 
 COPY . .
 
-RUN npm i --force && \
-    npm run build && \
-    rm -rf node_modules/
+RUN npm i -f && \
+    npm run build
 
 EXPOSE 3000
 
+ENV NODE_ENV=production
 ENV PORT=3000
 
 CMD npm run start
