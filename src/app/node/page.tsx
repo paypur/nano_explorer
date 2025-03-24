@@ -38,8 +38,8 @@ export default async function Node() {
 
 
     const hardware = {
-        cpu: "Intel i5-8400",
-        ram: "Gskill 2x8GB DDR4-3000",
+        cpu: "Intel Core i5-8400",
+        ram: "GSkill 2x8GB DDR4-3000",
         disk: "Samsung 850 Evo SSD",
         bandwidth: `${tem.bandwidth_cap} B/s`
     }

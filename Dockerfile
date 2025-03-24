@@ -9,6 +9,11 @@ RUN pacman-key --init && \
 COPY . .
 
 RUN npm i --force && \
-    npm run build
+    npm run build && \
+    rm -rf node_modules/
+
+EXPOSE 3000
+
+ENV PORT=3000
 
 CMD npm run start
