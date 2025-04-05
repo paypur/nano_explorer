@@ -9,7 +9,7 @@ import SkeletonBlockPair from "../skeletons/SkeletonBlockPair"
 
 import useAsyncEffect from "use-async-effect"
 import { useEffect, useState } from "react"
-import { SkeletonText2rem } from "../skeletons/SkeletonText"
+import { SkeletonText2Rem } from "../skeletons/SkeletonText"
 
 export default function BlockManager(props: { nanoAddress: string, subscription: any }) {
 
@@ -86,33 +86,28 @@ export default function BlockManager(props: { nanoAddress: string, subscription:
             {props.nanoAddress !== "" ?
                 <>
                     <div className="flex flex-row justify-between">
-                        <button className={`${confirmedTab ? "font-medium bg-neutral-50 text-black" : "font-normal text-neutral-50 border"} flex flex-row rounded py-0.5 px-2`} onClick={() => setConfirmedTab(true)}>
-                            <p className={"pt-[1px]"}>Confirmed Transactions</p>
+                        <button className={`${confirmedTab ? "font-medium bg-neutral-50 text-black" : "font-normal text-neutral-50 border"} flex flex-row shrink-0 items-center rounded py-0.5 px-2`} onClick={() => setConfirmedTab(true)}>
+                            <p className={"pt-[2px]"}>Confirmed Transactions</p>
                             <p className="font-mono">&nbsp;</p>
-                            {confirmedTotal !== null ? <p className="font-mono">({confirmedTotal})</p> : <SkeletonText2rem />}
+                            {confirmedTotal !== null ? <p className="font-mono">({confirmedTotal})</p> : <SkeletonText2Rem />}
                         </button>
-                        <button className={`${confirmedTab ? "font-normal text-neutral-50 border" : "font-medium bg-neutral-50 text-black"} flex flex-row rounded py-0.5 px-2`} onClick={() => setConfirmedTab(false)}>
-                            <p className={"pt-[1px]"}>Receivable Transactions</p>
+                        <button className={`${confirmedTab ? "font-normal text-neutral-50 border" : "font-medium bg-neutral-50 text-black"} flex flex-row shrink-0 items-center rounded py-0.5 px-2`} onClick={() => setConfirmedTab(false)}>
+                            <p className={"pt-[2px]"}>Receivable Transactions</p>
                             <p className="font-mono">&nbsp;</p>
-                            {receivableList.length !== null ? <p className="font-mono">({receivableList.length})</p> : <SkeletonText2rem />}
+                            {receivableList.length !== null ? <p className="font-mono">({receivableList.length})</p> : <SkeletonText2Rem />}
                         </button>
                     </div>
 
                     <div className="flex flex-col min-w-0 space-y-2">
                         {confirmedTab ?
                             confirmedList.map((blockPair: CustomBlockPair, index) => (
-                                <>
-                                    <BlockCard
-                                        key={blockPair.block1.hash}
-                                        blockPair={blockPair}
-                                        // if second to last visible, to load next blocks in advanced
-                                        isLast={index === confirmedList.length - 2}
-                                        newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
-                                    />
-                                    {/*<div className={'absolute w-[41.25rem] h-[7.5rem] min-w-0 bg-neutral-950 -z-10'}>*/}
-                                    {/*    e*/}
-                                    {/*</div>*/}
-                                </>
+                                <BlockCard
+                                    key={blockPair.block1.hash}
+                                    blockPair={blockPair}
+                                    // if second to last visible, to load next blocks in advanced
+                                    isLast={index === confirmedList.length - 2}
+                                    newHead={() => setHead(confirmedList[confirmedList.length - 1].block1.hash)}
+                                />
                             )) :
                             receivableList.map((blockPair: CustomBlockPair, index) => (
                                 <BlockCard

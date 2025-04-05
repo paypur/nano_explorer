@@ -2,7 +2,7 @@ import { NODE_ADDRESS } from "@/constants/Constants";
 import FormatLink from "@/components/FormatLink";
 import RepresentativeDelegators from "@/components/representative/RepresentativeDelegators";
 import RepresentativeWeight from "@/components/representative/RepresentativeWeight";
-import { SkeletonText40rem, SkeletonText4rem } from "@/components/skeletons/SkeletonText";
+import { SkeletonText42Rem, SkeletonText4Rem } from "@/components/skeletons/SkeletonText";
 import { getNodeTelemetryLocal } from "@/server_functions/RPCs";
 
 import { Suspense } from "react";
@@ -108,15 +108,15 @@ export default async function Node() {
 
                 <p className='text-gray-400'>Voting Weight</p>
                 <Suspense fallback={<>
-                    <SkeletonText40rem />
-                    <SkeletonText40rem />
+                    <SkeletonText42Rem />
+                    <SkeletonText42Rem />
                 </>}> {/* @ts-expect-error Server Component */}
                     <RepresentativeWeight nanoAddress={NODE_ADDRESS} />
                 </Suspense>
 
                 <p className='text-gray-400'>Delegators</p>
                 <Suspense fallback={<>
-                    <SkeletonText4rem />
+                    <SkeletonText4Rem />
                 </>}> {/* @ts-expect-error Server Component */}
                     <RepresentativeDelegators nanoAddress={NODE_ADDRESS} />
                 </Suspense>

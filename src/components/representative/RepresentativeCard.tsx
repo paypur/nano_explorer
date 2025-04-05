@@ -2,7 +2,7 @@ import RepresentativeWeight from "./RepresentativeWeight"
 import RepresentativeDelegators from "./RepresentativeDelegators"
 import RepresentativeStatus from "./RepresentativeStatus"
 import RepresentativeWeightGraph from "./RepresentativeWeightGraph"
-import { SkeletonText40rem, SkeletonText4rem } from "../skeletons/SkeletonText"
+import { SkeletonText42Rem, SkeletonText4Rem } from "../skeletons/SkeletonText"
 import { getAccountWeight } from "@/server_functions/RPCs"
 
 import { addressToID } from "@/server_functions/MapNode"
@@ -34,7 +34,7 @@ export default async function RepresentativeCard(props: { nanoAddress: string })
                         <div>
                             <p className='text-neutral-400'>Node ID</p>
                             <Suspense fallback={<div className="flex flex-row">
-                                <SkeletonText4rem />
+                                <SkeletonText4Rem />
                             </div>}>
                                 {/* @ts-expect-error Server Component */}
                                 <RepresentativeStatus nanoAddress={props.nanoAddress} />
@@ -46,8 +46,8 @@ export default async function RepresentativeCard(props: { nanoAddress: string })
                         <div>
                             <p className='text-neutral-400'>Voting Weight</p>
                             <Suspense fallback={<>
-                                <SkeletonText40rem />
-                                <SkeletonText40rem />
+                                <SkeletonText42Rem />
+                                <SkeletonText42Rem />
                             </>}>
                                 {/* @ts-expect-error Server Component */}
                                 <RepresentativeWeight nanoAddress={props.nanoAddress} />
@@ -58,7 +58,7 @@ export default async function RepresentativeCard(props: { nanoAddress: string })
                         <div>
                             <p className='text-neutral-400'>Delegators</p>
                             <Suspense fallback={<>
-                                <SkeletonText4rem />
+                                <SkeletonText4Rem />
                             </>}>
                                 {/* @ts-expect-error Server Component */}
                                 <RepresentativeDelegators nanoAddress={props.nanoAddress} />

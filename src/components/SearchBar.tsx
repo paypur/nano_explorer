@@ -71,7 +71,6 @@ export default function SearchBar() {
                 <div
                     className={'w-[43.75rem]'}
                 >
-                    {/*TODO: add when selected state*/}
                     <input
                         id={"search"}
                         type={"search"}

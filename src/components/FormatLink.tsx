@@ -1,7 +1,8 @@
 import Link from "next/link"
 
 export default function FormatLink(props: { path: string, type: string }) {
-    // TOOD: copy paste broken
+    // TODO: copy paste broken
+    // using spans breaks truncation in the middle
     return <Link className="max-w-fit font-mono truncate select-all hover:underline" href={`/${props.type}/` + props.path}>
         {props.type == "address" ?
             <div className={"flex items-center shrink-0"}>
