@@ -21,7 +21,7 @@ export default async function representativesPage() {
     return (
         <div className="my-4 px-4 space-y-2">
             <table>
-                <thead className="sticky top-[144px] bg-black">
+                <thead className="sticky top-[150px] bg-black">
                     <tr>
                         <th>Type</th>
                         <th>Status</th>

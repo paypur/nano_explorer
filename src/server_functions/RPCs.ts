@@ -98,7 +98,7 @@ export async function getAccountHistory(nanoAddress: string): Promise<AccountHis
             "action": "account_history",
             "account": nanoAddress,
             "raw": "true",
-            "count": "5"
+            "count": "12"
         }),
         next: { revalidate: 10 }
     })

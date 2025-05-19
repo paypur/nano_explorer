@@ -121,3 +121,9 @@ export type Telemetry = {
     node_id: string
     signature: string
 }
+
+export type AliasedAddress = {
+    aliased: true
+    address: string
+    name: string
+}

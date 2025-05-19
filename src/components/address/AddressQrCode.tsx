@@ -11,7 +11,7 @@ export default function AddressQrCode(props: { nanoAddress: string }) {
                 text={`nano:${props.nanoAddress}`}
                 options={{
                     margin: 2,
-                    width: 186,
+                    width: 180,
                     color: {
                         dark: '#000000',
                         light: '#f3f4f6',

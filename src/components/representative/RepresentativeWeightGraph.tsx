@@ -93,13 +93,17 @@ export default function RepresentativeWeightGraph(props: { nanoAddress: string }
                 bodyFont: {
                     family: "consolas"
                 }
-            }
+            },
         },
     }
 
     const data = {
         datasets: dataset,
+        usePointStyle: true,
+        pointStyle: false
     };
+
+    // TODO: add some trend stats
 
     return (
         <div className='w-[42rem] h-[176px]'>

@@ -2,7 +2,7 @@
 
 import { getAlias } from "./Alias"
 import { getBlockInfoReceiveHash, getBlockInfo, getAccountHistory, getAccountReceivable, getAccountHistoryNext } from "./RPCs"
-import { AccountHistoryBlock, CustomBlock, CustomBlockPair, RPCBlock, WSBlock } from "@/constants/Types"
+import {AccountHistoryBlock, AliasedAddress, CustomBlock, CustomBlockPair, RPCBlock, WSBlock} from "@/constants/Types"
 
 export async function getNanoUSD() {
     const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=nano&vs_currencies=usd", { next: { revalidate: 600 } })
@@ -99,7 +99,7 @@ export async function convertWSBlock(data: WSBlock) {
     return await getBlockPairData(await WSBlockToCustomBlock(data))
 }
 
-export async function getAutoComplete(word: string): Promise<[string]|[]> {
+export async function getAutoComplete(word: string): Promise<[AliasedAddress]|[]> {
     let url = process.env.AUTOCOMPLETE_URL + word
     try {
         const result = await fetch(process.env.AUTOCOMPLETE_URL + word)
