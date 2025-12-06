@@ -6,9 +6,7 @@ export default async function AccountRepresentativeInfo(props: { nanoAddress: st
     const repAddress = await getAccountRepresentative(props.nanoAddress)
     return (
         <>
-            {/* @ts-expect-error Server Component */}
             <RepresentativeStatus nanoAddress={repAddress} />
-            {/* @ts-expect-error Server Component */}
             <AddressAliasAsync nanoAddress={repAddress} />
         </>
     )

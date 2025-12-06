@@ -36,9 +36,7 @@ export default async function RepresentativeCard(props: { nanoAddress: string })
                             <Suspense fallback={<div className="flex flex-row">
                                 <SkeletonText4Rem />
                             </div>}>
-                                {/* @ts-expect-error Server Component */}
                                 <RepresentativeStatus nanoAddress={props.nanoAddress} />
-                                {/* @ts-expect-error Server Component */}
                                 <Nodeid />
                             </Suspense>
                         </div>
@@ -49,7 +47,6 @@ export default async function RepresentativeCard(props: { nanoAddress: string })
                                 <SkeletonText42Rem />
                                 <SkeletonText42Rem />
                             </>}>
-                                {/* @ts-expect-error Server Component */}
                                 <RepresentativeWeight nanoAddress={props.nanoAddress} />
                             </Suspense>
 
@@ -60,7 +57,6 @@ export default async function RepresentativeCard(props: { nanoAddress: string })
                             <Suspense fallback={<>
                                 <SkeletonText4Rem />
                             </>}>
-                                {/* @ts-expect-error Server Component */}
                                 <RepresentativeDelegators nanoAddress={props.nanoAddress} />
                             </Suspense>
                         </div>

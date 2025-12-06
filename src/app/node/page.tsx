@@ -49,7 +49,6 @@ export default async function Node() {
             <div>
                 <div className={"flex flex-row items-center space-x-4"}>
                     <p className='text-2xl font-medium'>paypur&#39;s Node</p>
-                    {/* @ts-expect-error Server Component */}
                     <RepresentativeStatus nanoAddress={NODE_ADDRESS}/>
                 </div>
 
@@ -110,14 +109,14 @@ export default async function Node() {
                 <Suspense fallback={<>
                     <SkeletonText42Rem />
                     <SkeletonText42Rem />
-                </>}> {/* @ts-expect-error Server Component */}
+                </>}>
                     <RepresentativeWeight nanoAddress={NODE_ADDRESS} />
                 </Suspense>
 
                 <p className='text-gray-400'>Delegators</p>
                 <Suspense fallback={<>
                     <SkeletonText4Rem />
-                </>}> {/* @ts-expect-error Server Component */}
+                </>}>
                     <RepresentativeDelegators nanoAddress={NODE_ADDRESS} />
                 </Suspense>
             </div>

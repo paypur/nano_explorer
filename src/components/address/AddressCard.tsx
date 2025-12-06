@@ -21,7 +21,6 @@ export default function AddressCard(props: { nanoAddress: string }) {
                         <SkeletonText4Rem />
                         <SkeletonText42Rem />
                     </div>}>
-                        {/* @ts-expect-error Server Component */}
                         <AddressAliasAsync nanoAddress={props.nanoAddress} />
                     </Suspense>
                 </div>
@@ -34,7 +33,6 @@ export default function AddressCard(props: { nanoAddress: string }) {
                             <SkeletonText4Rem />
                             <SkeletonText2Rem />
                         </div>}>
-                            {/* @ts-expect-error Server Component */}
                             <AddressBalance nanoAddress={props.nanoAddress} />
                         </Suspense>
                     </div>
@@ -45,7 +43,6 @@ export default function AddressCard(props: { nanoAddress: string }) {
                             <SkeletonText4Rem />
                             <SkeletonText2Rem />
                         </div>}>
-                            {/* @ts-expect-error Server Component */}
                             <AddressReceivableBalance nanoAddress={props.nanoAddress} />
                         </Suspense>
                     </div>
@@ -54,7 +51,6 @@ export default function AddressCard(props: { nanoAddress: string }) {
 
                 <div className='flex flex-col min-w-0'>
                     <p className='text-neutral-400'>Representative</p>
-                    {/* @ts-expect-error Server Component */}
                     <AddressRepresentativeInfo nanoAddress={props.nanoAddress} />
                 </div>
 

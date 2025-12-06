@@ -12,11 +12,9 @@ export default async function RepresentativeTableEntry(props: { repWeight: RepWe
     return (
         <tr>
             <td className="px-2 py-1">
-                {/* @ts-expect-error Server Component */}
                 <RepresentativeType nanoAddress={props.repWeight.address}/>
             </td>
             <td className="px-2 py-1">
-                {/* @ts-expect-error Server Component */}
                 <RepresentativeHealth nanoAddress={props.repWeight.address}/>
             </td>
             <td className="px-2 py-1">

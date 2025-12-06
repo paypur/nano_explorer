@@ -18,4 +18,7 @@ EXPOSE 3000
 ENV NODE_ENV=production
 ENV PORT=3000
 
+RUN useradd nano_explorer
+USER nano_explorer
+
 CMD npm run start

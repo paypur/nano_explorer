@@ -11,9 +11,7 @@ export default async function RepresentativeStatus(props: { nanoAddress: string 
     
     return (
         <div className="flex flex-row space-x-2 py-[1px]">
-            {/* @ts-expect-error Server Component */}
             <RepresentativeType nanoAddress={props.nanoAddress}/>
-            {/* @ts-expect-error Server Component */}
             <RepresentativeHealth nanoAddress={props.nanoAddress}/>
         </div>
     )

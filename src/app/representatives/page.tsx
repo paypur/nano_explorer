@@ -34,7 +34,6 @@ export default async function representativesPage() {
                 <tbody>
                     {repWeightArray.map((repWeight, index) => (
                         <>
-                            {/* @ts-expect-error Server Component */}
                             <RepresentativeTableEntry repWeight={repWeight} onlineStakeTotal={onlineStakeTotal}  />
                         </>
                     ))}
